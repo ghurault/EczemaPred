@@ -1,0 +1,51 @@
+Package: EczemaPred
+Title: Predicting the evolution of eczema severity
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Guillem",
+           family = "Hurault",
+           role = c("aut", "cre"),
+           email = "guillem.hurault@hotmail.fr",
+           comment = c(ORCID = "0000-0002-1052-3564"))
+Description: A collection of models to serve as building blocks for predicting eczema severity.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Biarch: true
+Depends: 
+    R (>= 3.4.0)
+Imports: 
+    methods,
+    Rcpp (>= 0.12.0),
+    RcppParallel (>= 5.0.1),
+    rstan (>= 2.18.1),
+    rstantools (>= 2.1.1),
+    magrittr,
+    dplyr,
+    tidyr,
+    ggplot2,
+    markovchain,
+    HuraultMisc (>= 1.0.0),
+    stats,
+    scoringRules
+LinkingTo: 
+    BH (>= 1.66.0),
+    Rcpp (>= 0.12.0),
+    RcppEigen (>= 0.3.3.3.0),
+    RcppParallel (>= 5.0.1),
+    rstan (>= 2.18.1),
+    StanHeaders (>= 2.18.0)
+SystemRequirements: GNU make
+Suggests: 
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    KernSmooth,
+    cowplot,
+    forcats
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+Remotes: 
+    github::ghurault/HuraultMisc

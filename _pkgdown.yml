@@ -1,0 +1,41 @@
+reference:
+- title: "Longitudinal data models"
+- contents:
+  - prepare_data_lgtd
+  - get_index
+  - plot_ppc
+- subtitle: "Discrete models"
+- contents:
+  - fit_discrete
+  - sample_prior_discrete
+  - ends_with("_BinRW")
+  - ends_with("_BinMC")
+  - ends_with("_OrderedRW")
+  - plot_latent_OrderedRW
+  - ends_with("_RW")
+- subtitle: "Continuous models"
+- contents:
+  - fit_continuous
+  - sample_prior_continuous
+  - ends_with("_RW")
+  - ends_with("_Smoothing")
+  - ends_with("_AR1")
+  - ends_with("_MixedAR1")
+- title: "Other models"
+- contents:
+  - ends_with("_MC")
+- title: "Validation"
+  desc: "Utility functions for validating models"
+- contents:
+  - forward_chaining
+  - extract_metric
+  - add_predictions
+  - add_uniform_pred
+  - add_historical_pred
+- title: "Miscellaneous"
+- contents:
+  - generate_missing
+  - default_prior
+  - add_prior
+  - list_parameters
+  - extract_parameters

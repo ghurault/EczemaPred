@@ -1,0 +1,247 @@
+---
+title: "Markov Chain model"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{MC}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+params:
+  K: 5
+  t_max: 200
+---
+  
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+In this example, we will consider a Markov Chain with **K = `r params$K` states** and generate a time-series of length **t_max = `r params$t_max`**.
+
+```{r setup, warning=FALSE, message=FALSE}
+library(EczemaPred)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(rstan)
+rstan_options(auto_write = TRUE) # Save compiled model
+options(mc.cores = parallel::detectCores()) # Parallel computing
+
+set.seed(2021) # For reproducibility
+```
+
+```{r include=FALSE}
+pars <- expand_grid(i = 1:params$K, j = 1:params$K) %>%
+  mutate(paste0("p[", i, ",", j, "]")) %>%
+  pull()
+```
+  
+## Prior predictive distribution
+  
+The Stan model works with pairs of successive states rather than a time-series sequence.
+To generate a time-series from the prior predictive distribution, we can consider that all possible states at each time-point.
+  
+```{r}
+df0 <- data.frame(y0 = rep(1:params$K, each = params$t_max),
+                  y1 = 1, # does not matter
+                  dt = 1)
+prior1 <- sample_prior_MC(df0,
+                          K = params$K,
+                          chains = 1,
+                          refresh = 0)
+```
+  
+The default prior that we used was a uniform Dirichlet distribution (symmetric Dirichilet distribution with concentration parameter 1).
+We can inspect the empirical distribution of the transition probabilities.
+  
+```{r}
+rstan::plot(prior1, pars = "p", plotfun = "hist")
+```
+
+We can also plot the expected transition matrix as an heatmap.
+
+```{r}
+plot_transition_MC(prior1)
+```
+
+If the categories are ordinal, we may assume that the probabilities of transitioning from state `r params$K` to 1 is much smaller than the probability from transitioning from state `r params$K` to `r params$K - 1`.
+In that case, we could use an RBF-like Dirichlet prior for the transition probabilities, for example:
+
+```{r}
+prior_RBF_MC <- function(K, alpha, l) {
+  # RBF-like Dirichlet prior
+  # Each transition pmf is normalised to a pseudo-count of K
+  #
+  # Args:
+  # K : number of states
+  # alpha: scaling factor, determining the concentration of the Dirichlet distribution
+  # l: length scale
+  #
+  # Returns:
+  # K*K matrix
+  
+  p <- matrix(NA, nrow = K, ncol = K)
+  for (i in 1:K) {
+    for (j in 1:K) {
+      p[i, j] <- exp(-(i - j)^2 / 2 / l^2)
+    }
+    p[i, ] <- p[i, ] / sum(p[i, ])
+  }
+  p <- alpha * K * p
+  return(list(p = p))
+}
+
+prior2 <- sample_prior_MC(train = df0,
+                          K = params$K,
+                          prior = prior_RBF_MC(params$K, 1, 1),
+                          chains = 1,
+                          refresh = 0)
+
+plot_transition_MC(prior2)
+```
+
+This prior as the same information value (same number of pseudo-count) as the prior above, but favours neighbouring transitions.
+
+## Generating fake data
+
+In the following, we will consider the uniform Dirichlet prior.
+We can generate a sequence by taking a draw in the sample prior predictive distribution and assuming an initial state with the following
+
+```{r}
+draw <- 501
+initial <- 2
+
+yrep <- rstan::extract(prior1, pars = "y_rep")[[1]]
+
+yrep1 <- matrix(yrep[draw, ], ncol = params$t_max, byrow = TRUE)
+
+# Assemble sequence
+out <- rep(NA, params$t_max)
+out[1] <- initial
+for (i in 1:(params$t_max - 1)) {
+  out[i + 1] = yrep1[out[i], i]
+}
+df <- data.frame(t = 1:params$t_max, y = out)
+```
+
+The parameters used to generate this sequence can be extracted with:
+
+```{r}
+true_param <- rstan::extract(prior1, pars = "p") %>%
+  HuraultMisc::extract_draws(draw)
+```
+
+In practice, some values are often missing.
+We can generate missing values with the following:
+
+```{r warning=FALSE}
+t_mis <- which(generate_missing(params$t_max, type = "random", p_mis = 0.2))
+
+df %>%
+  mutate(y = replace(y, t %in% t_mis, NA)) %>%
+  ggplot(aes(x = t, y = y)) +
+  geom_point() +
+  geom_path() +
+  theme_bw(base_size = 15)
+
+df <- df %>% filter(!(t %in% t_mis))
+```
+
+## Fake data check
+
+Using this fake dataset, we can fit the model and try to recover the transition probabilities.
+We can also hold out some observations to evaluate the performance of the model.
+
+```{r}
+df_MC <- df %>%
+  rename(y0 = y) %>%
+  mutate(y1 = lead(y0),
+         dt = lead(t) - t) %>%
+  drop_na()
+
+train <- df_MC %>% filter(t <= 0.9 * params$t_max)
+test <- df_MC %>% filter(t > 0.9 * params$t_max)
+
+fit <- fit_MC(train = train,
+              test = test,
+              K = params$K,
+              chains = 1,
+              refresh = 0)
+```
+
+### Diagnostics
+
+First, we look for evidence of an absence of convergences by inspecting divergences and trace plots.
+
+```{r}
+check_hmc_diagnostics(fit)
+
+pairs(fit, pars = paste0("p[1,", 1:params$K, "]")) # transitions probabilities from state 1
+plot(fit, pars = paste0("p[1,", 1:params$K, "]"), plotfun = "trace")
+```
+
+### Posterior estimates
+
+Then, we visualise posterior estimates and compare them to their prior.
+
+```{r}
+par0 <- HuraultMisc::summary_statistics(prior1, pars = "p")
+par <- HuraultMisc::summary_statistics(fit, pars = "p")
+HuraultMisc::plot_prior_posterior(par0, par, pars = "p", match_exact = FALSE)
+```
+
+We can also quantify the influence of the prior on the posterior estimates by computing the posterior shrinkage and Mahalanobis distance between the mean posterior and the prior.
+The posterior shrinkage roughly quantifies how much the model is learning, and is defined for a parameter $\theta$ as $1 - \frac{\operatorname{Var}(\theta_\text{post})}{\operatorname{Var}(\theta_\text{prior}}$.
+The distance between the prior and posterior can be used to assess whether the prior is informative or not, where a distance greater than 2 or 3 could be interpreted as a posterior that is not "included" in the prior.
+
+```{r}
+HuraultMisc::plot_prior_influence(par0, par, pars = "p", match_exact = FALSE)
+```
+
+We also visualise the expected transition matrix:
+
+```{r}
+plot_transition_MC(fit)
+```
+
+### Can we recover the true parameters?
+
+We plot posterior estimates alongside the true parameters values that was used to generate the data.
+
+```{r}
+HuraultMisc::summary_statistics(fit, "p") %>%
+  full_join(true_param, by = c("Variable" = "Parameter", "Index")) %>%
+  rename(True = Value) %>%
+  ggplot(aes(x = Variable)) +
+  geom_pointrange(aes(y = Mean, ymin = `5%`, ymax = `95%`, colour = "Posterior")) +
+  geom_point(aes(y = True, colour = "Truth"), size = 2) +
+  coord_flip(ylim = c(0, 1)) +
+  scale_colour_manual(values = c("Posterior" = "black", "Truth" = "#E69F00")) +
+  labs(x = "", y = "Estimate", colour = "") +
+  theme_bw(base_size = 20) +
+  theme(legend.position = "top")
+```
+
+We can also quantify the "accuracy" of posterior estimates by computing the coverage probability of the parameters in the model, that is the proportion of parameters for which the x% credible interval includes the true value.
+For instance, we would expect that approximately 50% of the parameters have their 50% credible interval including the true value.
+
+```{r message=FALSE}
+HuraultMisc::plot_coverage(do.call(cbind, rstan::extract(fit, pars = true_param[["Parameter"]])),
+                           true_param[["Value"]])
+```
+
+### Performance
+
+Finally, we can compute the lpd and RPS for each observation in the test set, which metrics could later be compared to those of another model.
+
+```{r}
+test <- test %>%
+  mutate(lpd = extract_lpd(fit),
+         RPS = extract_RPS(fit))
+
+test %>%
+  pivot_longer(cols = c("lpd", "RPS"), names_to = "Metric", values_to = "Value") %>%
+  group_by(Metric) %>%
+  summarise(Mean = mean(Value), SD = sd(Value), SE = SD / sqrt(n()))
+```
