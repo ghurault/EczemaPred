@@ -2,6 +2,7 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/ghurault/EczemaPred/workflows/R-CMD-check/badge.svg)](https://github.com/ghurault/EczemaPred/actions)
+[![Codecov test coverage](https://codecov.io/gh/ghurault/EczemaPred/branch/main/graph/badge.svg)](https://codecov.io/gh/ghurault/EczemaPred?branch=main)
 <!-- badges: end -->
 
 EczemaPred is a R package implementing models to serve as building blocks for predicting the evolution severity, and provides a set of generic functions to manipulate these models.
