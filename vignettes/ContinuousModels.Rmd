@@ -29,7 +29,6 @@ library(tidyr)
 library(ggplot2)
 library(cowplot)
 library(rstan)
-rstan_options(auto_write = TRUE) # Save compiled model
 options(mc.cores = parallel::detectCores()) # Parallel computing
 
 set.seed(2021) # For reproducibility

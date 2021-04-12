@@ -28,7 +28,6 @@ library(tidyr)
 library(ggplot2)
 library(cowplot)
 library(rstan)
-rstan_options(auto_write = TRUE) # Save compiled model
 options(mc.cores = parallel::detectCores()) # Parallel computing
 
 model <- match.arg(params$model, c("BinRW", "BinMC", "OrderedRW"))
