@@ -41,6 +41,12 @@ inst/doc
 doc
 Meta
 
+# C++ generated files
+src/stanExports_*
+src/*.cpp
+*.o
+*.so
+
 # Custom
 src-i386/*
 
