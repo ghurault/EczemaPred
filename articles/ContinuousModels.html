@@ -181,6 +181,7 @@
                                       test <span class="op">=</span> <span class="va">test</span>,
                                       max_score <span class="op">=</span> <span class="va">max_score</span>,
                                       model <span class="op">=</span> <span class="va">mdl</span>,
+                                      chains <span class="op">=</span> <span class="fl">1</span>,
                                       refresh <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
                 
                 <span class="va">diag</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Divergences <span class="op">=</span> <span class="fu"><a href="https://mc-stan.org/rstan/reference/check_hmc_diagnostics.html">get_num_divergent</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>,
