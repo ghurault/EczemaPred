@@ -203,10 +203,11 @@ We inspect the posterior predictive trajectory to detect any discrepancies betwe
 ms <- min(1, 20 / (params$max_score + 1))
 pl <- lapply(sort(sample(1:N_patient, 4)),
        function(pid) {
-         plot_ppc_traj_pmf(fit, train = train, test = test, patient_id = pid, max_score = params$max_score, max_scale = ms) +
+         tryCatch({
+           plot_ppc_traj_pmf(fit, train = train, test = test, patient_id = pid, max_score = params$max_score, max_scale = ms) +
            labs(title = paste0("Patient ", pid))
+         }, error = function(e) {NULL})
        })
-
 plot_grid(
   get_legend(pl[[1]] + theme(legend.position = "top")),
   plot_grid(plotlist = lapply(pl, function(x) {x + theme(legend.position = "none")}),

@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 In this example, I will show how to use the continuous longitudinal models, i.e. the random walk model (RW), the exponential smoothing model (Smoothing), the autoregressive model of order 1 (AR1) and the mixed effect autoregressive model of order 1.
