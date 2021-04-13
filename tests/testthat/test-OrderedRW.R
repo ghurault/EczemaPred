@@ -1,4 +1,5 @@
 set.seed(2021)
+options(warn = -1)
 
 N_patient <- 10
 t_max <- rpois(N_patient, 25)

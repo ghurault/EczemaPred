@@ -1,4 +1,5 @@
 set.seed(2021)
+options(warn = -1)
 
 wrong_priors <- list(1,
                      list(sigma_mean = 0, sigma_sd = 1),
