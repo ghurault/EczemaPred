@@ -52,13 +52,14 @@ test_that("fit_AR1 returns a stanfit object", {
   expect_true(is_stanfit(fit))
 })
 
-par <- HuraultMisc::summary_statistics(fit, pars = param) %>%
-  left_join(l$TrueParameters, by = c("Variable" = "Parameter", "Index")) %>%
-  rename(True = Value) %>%
-  mutate(Coverage90 = (True > `5%` & True < `95%`),
-         NormError = abs(Mean - True) / sd)
-
 test_that("estimates from fit_AR1 are accurate", {
+  skip_on_ci()
+
+  par <- HuraultMisc::summary_statistics(fit, pars = param) %>%
+    left_join(l$TrueParameters, by = c("Variable" = "Parameter", "Index")) %>%
+    rename(True = Value) %>%
+    mutate(Coverage90 = (True > `5%` & True < `95%`),
+           NormError = abs(Mean - True) / sd)
   expect_lt(max(par[["NormError"]], na.rm = TRUE), 3.0)
 })
 
