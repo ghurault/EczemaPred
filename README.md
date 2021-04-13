@@ -27,7 +27,7 @@ The package is loaded with:
 library(EczemaPred)
 ```
 
-The list of functions and datasets is available on the [package website]() or by typing `help(package = "EczemaPred")`.
-Examples on how the package can be used are provided in [vignettes]() (long form documentation).
+The list of functions and datasets is available on the [package website](https://ghurault.github.io/EczemaPred/) or by typing `help(package = "EczemaPred")`.
+Examples on how the package can be used are provided in [vignettes](https://ghurault.github.io/EczemaPred/articles/) (long form documentation).
 
 NB: While the purpose of the package is to abstract the implementation to the user, the R code and Stan code can be accessed in the [R/](R/) and [inst/stan](inst/stan) directories, respectively.
