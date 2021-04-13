@@ -123,6 +123,7 @@ res <- lapply(mdl_names,
                                       test = test,
                                       max_score = max_score,
                                       model = mdl,
+                                      chains = 1,
                                       refresh = 0)
                 
                 diag <- data.frame(Divergences = get_num_divergent(fit),

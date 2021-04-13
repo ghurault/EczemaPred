@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 In this example, we will consider a Markov Chain with **K = `r params$K` states** and generate a time-series of length **t_max = `r params$t_max`**.
