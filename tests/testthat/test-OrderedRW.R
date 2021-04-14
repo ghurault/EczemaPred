@@ -12,6 +12,7 @@ test_that("default_prior_OrderedRW works", {
   for (m in seq(2, 10, 2)) {
     expect_null(stopifnot_prior_OrderedRW(default_prior_OrderedRW(m), m))
   }
+  expect_equal(default_prior_OrderedRW(5), default_prior(model = "OrderedRW", max_score = 5))
 })
 
 dprior <- default_prior_OrderedRW(max_score)

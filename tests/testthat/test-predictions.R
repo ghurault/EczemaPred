@@ -54,10 +54,23 @@ test_that("add_uniform_pred returns a correct dataframe (discrete)", {
 })
 
 test_that("add_uniform_pred returns samples when prompted", {
-  perf3 <- add_uniform_pred(test = l$Testing, max_score = max_score, discrete = FALSE, include_samples = TRUE, n_samples = 50)
-  expect_true(all(c("Samples") %in% colnames(perf3)))
-  expect_true(is.list(perf3[["Samples"]]))
-  expect_true(all(sapply(perf3[["Samples"]], length) == 50))
+
+  perf3 <- add_uniform_pred(test = l$Testing,
+                            max_score = max_score,
+                            discrete = FALSE,
+                            include_samples = TRUE,
+                            n_samples = 50)
+  perf4 <- add_uniform_pred(test = data.frame(Score = rbinom(1e2, 100, .5)),
+                            max_score = 100,
+                            discrete = TRUE,
+                            include_samples = TRUE,
+                            n_samples = 50)
+  for (x in list(perf3, perf4)) {
+    expect_true(all(c("Samples") %in% colnames(x)))
+    expect_true(is.list(x[["Samples"]]))
+    expect_true(all(sapply(x[["Samples"]], length) == 50))
+  }
+
 })
 
 test_that("add_uniform_pred catches incorrect inputs", {
@@ -87,11 +100,15 @@ test_that("add_historical_pred works with add_uniform=TRUE for discrete forecast
 })
 
 test_that("add_historical_pred returns samples when prompted", {
-  perf <- add_historical_pred(test = l$Testing, train = l$Training, max_score = max_score, discrete = FALSE, include_samples = TRUE, n_samples = 50)
-  expect_true(all(c("Samples") %in% colnames(perf)))
-  expect_true(is.list(perf[["Samples"]]))
-  expect_true(all(sapply(perf[["Samples"]], length) == 50))
-  expect_true(all(perf[["Samples"]][[1]] %in% l$Training[["Score"]]))
+  for (ns in list(50, NULL)) {
+    perf <- add_historical_pred(test = l$Testing, train = l$Training, max_score = max_score, discrete = FALSE, include_samples = TRUE, n_samples = ns)
+    expect_true(all(c("Samples") %in% colnames(perf)))
+    expect_true(is.list(perf[["Samples"]]))
+    if (!is.null(ns)) {
+      expect_true(all(sapply(perf[["Samples"]], length) == ns))
+    }
+    expect_true(all(perf[["Samples"]][[1]] %in% l$Training[["Score"]]))
+  }
 })
 
 test_that("add_historical_pred catches incorrect inputs", {
@@ -115,9 +132,11 @@ test_that("add_predictions returns a correct dataframe (continuous)", {
 # In test-metrics for discrete
 
 test_that("add_predictions returns samples when prompted", {
-  perf <- add_predictions(test = l$Testing, fit = fit, discrete = FALSE, include_samples = TRUE)
-  expect_true(all(c("Samples") %in% colnames(perf)))
-  expect_true(is.list(perf[["Samples"]]))
+  for (ns in list(50, NULL)) {
+    perf <- add_predictions(test = l$Testing, fit = fit, discrete = FALSE, include_samples = TRUE, n_samples = ns)
+    expect_true(all(c("Samples") %in% colnames(perf)))
+    expect_true(is.list(perf[["Samples"]]))
+  }
 })
 
 test_that("add_predictions catches incorrect inputs", {

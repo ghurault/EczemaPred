@@ -21,6 +21,7 @@ wrong_priors <- list(
 
 test_that("default_prior_AR1 works", {
   expect_null(stopifnot_prior_AR1(default_prior_AR1()))
+  expect_equal(default_prior_AR1(), default_prior(model = "AR1"))
 })
 
 # Test sample_prior_AR1 ---------------------------------------------

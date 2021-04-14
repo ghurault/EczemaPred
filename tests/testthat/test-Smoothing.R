@@ -20,6 +20,7 @@ wrong_priors <- list(
 
 test_that("default_prior_Smoothing works", {
   expect_null(stopifnot_prior_Smoothing(default_prior_Smoothing()))
+  expect_equal(default_prior_Smoothing(), default_prior(model = "Smoothing"))
 })
 
 # Test sample_prior_Smoothing ---------------------------------------------

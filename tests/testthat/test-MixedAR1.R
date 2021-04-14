@@ -11,6 +11,7 @@ param <- c(param_pop, "alpha", "y_inf", "b")
 
 test_that("default_prior_MixedAR1 works", {
   expect_null(stopifnot_prior_MixedAR1(default_prior_MixedAR1()))
+  expect_equal(default_prior_MixedAR1(), default_prior(model = "MixedAR1"))
 })
 
 dprior <- default_prior_MixedAR1()

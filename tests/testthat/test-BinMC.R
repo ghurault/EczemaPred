@@ -9,6 +9,7 @@ max_score <- 100
 
 test_that("default_prior_BinMC works", {
   expect_null(stopifnot_prior_BinMC(default_prior_BinMC()))
+  expect_equal(default_prior_BinMC(), default_prior(model = "BinMC"))
 })
 
 dprior <- default_prior_BinMC()
@@ -44,6 +45,7 @@ test_that("sample_prior_BinMC catches errors in prior", {
 
 l <- extract_fakedata(fit_prior = fit0,
                       draw = 5,
+                      pars = unlist(list_parameters("BinMC")),
                       N_patient = N_patient,
                       t_max = t_max,
                       horizon = 2)

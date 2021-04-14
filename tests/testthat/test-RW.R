@@ -11,6 +11,7 @@ wrong_priors <- list(1,
 
 test_that("default_prior_RW works", {
   expect_null(stopifnot_prior_RW(default_prior_RW()))
+  expect_equal(default_prior_RW(), default_prior(model = "RW"))
 })
 
 # Test fit_RW -------------------------------------------------------------

@@ -10,6 +10,7 @@ param <- c("sigma", "mu_logit_y0", "sigma_logit_y0", "logit_y0")
 
 test_that("default_prior_BinRW works", {
   expect_null(stopifnot_prior_BinRW(default_prior_BinRW()))
+  expect_equal(default_prior_BinRW(), default_prior(model = "BinRW"))
 })
 
 dprior <- default_prior_BinRW()
@@ -106,6 +107,22 @@ for (f in c(plot_post_traj_pmf, plot_post_traj_fanchart)) {
   })
 
 }
+
+test_that("plot_*_traj_pmf works when max_score is NA", {
+  expect_s3_class(plot_ppc_traj_pmf(fit, train = l$Train, test = l$Test, patient_id = 1, max_score = NA), "ggplot")
+})
+
+test_that("plot_*_traj_pmf works when test is NULL", {
+  expect_s3_class(plot_ppc_traj_pmf(fit, train = bind_rows(l$Train, l$Test), test = NULL, patient_id = 1, max_score = max_score), "ggplot")
+})
+
+test_that("add_trajectory works when missing values in df", {
+  l$Train %>%
+    mutate(Label = "Training") %>%
+    slice_sample(prop = 0.5) %>%
+    add_trajectory(df = .) %>%
+    expect_s3_class(., "ggplot")
+})
 
 ## Test plot_ppc_traj_*
 for (g in c(plot_ppc_traj_pmf, plot_ppc_traj_fanchart)) {
