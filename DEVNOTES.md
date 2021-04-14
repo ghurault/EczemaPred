@@ -13,7 +13,8 @@ roxygen2::roxygenize()
 
 ## Website
 
-Regenerate website with `pkgdown::build_site()`.
+The website is deployed to the "gh-pages" branch of the repository, using GitHub Actions.
+To regenerate the website locally, use `pkgdown::build_site()`.
 
 ## Stan-specific notes
 
