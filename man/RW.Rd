@@ -69,7 +69,7 @@ x2 should be positive.}
 \item The model is naive as it is trained with a non-truncated, not discretised distribution.
 As a result, sampling from the prior predictive distribution can be challenging if the score is near the bounds
 and the variance is sufficiently large.
-\item For more details see the \url{vignette}.
+\item For more details see the \href{https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html}{vignette}.
 }
 }
 \section{Model's parameters}{

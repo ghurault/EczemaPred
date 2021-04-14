@@ -60,7 +60,7 @@
 #' - The default prior for `mu_inf` spans the entire range of the score.
 #' - The default prior for `sigma_inf` translates to a range in the distribution of `y_inf` to be at most `max_score`.
 #' - The model is naive as it is trained with a non-truncated.
-#' - For more details see the [vignette]().
+#' - For more details see the [vignette](https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html).
 #'
 #' @name MixedAR1
 NULL

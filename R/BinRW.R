@@ -53,7 +53,7 @@
 #' @details
 #' - The default prior for `sigma` translates to an odd ratio increment of at most 5 (~ 2 * upper bound of prior).
 #' - The default priors for `mu_logit_y0` and `sigma_logit_y0` translates to an approximately uniform prior on `y0`.
-#' - For more details see the [vignette]().
+#' - For more details see the [vignette](https://ghurault.github.io/EczemaPred/articles/BinRW.html).
 #'
 #' @name BinRW
 NULL

@@ -74,7 +74,7 @@ translate to a prior on \code{alpha} that is approximately uniform.
 \item The default prior for \code{mu_inf} spans the entire range of the score.
 \item The default prior for \code{sigma_inf} translates to a range in the distribution of \code{y_inf} to be at most \code{max_score}.
 \item The model is naive as it is trained with a non-truncated.
-\item For more details see the \url{vignette}.
+\item For more details see the \href{https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html}{vignette}.
 }
 }
 \section{Model's parameters}{

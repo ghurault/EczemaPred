@@ -59,7 +59,7 @@
 #' - The default prior for `sigma` translates to an odd ratio increment of at most 5 (~ 2 * upper bound of prior).
 #' - The default priors for `mu_logit_p10` and `sigma_logit_p10` translate to an approximately uniform prior on `p10`.
 #' - The prior for the initial condition of `ss1` is hard coded and a function of `p10`.
-#' - For more details see the [vignette]().
+#' - For more details see the BinRW [vignette](https://ghurault.github.io/EczemaPred/articles/BinRW.html).
 #'
 #' @name BinMC
 NULL

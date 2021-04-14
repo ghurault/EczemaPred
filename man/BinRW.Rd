@@ -61,7 +61,7 @@ This is a state-space model defined by a Binomial measurement error and a latent
 \item \code{sample_prior_BinRW} samples the prior predictive distribution
 \item The default prior for \code{sigma} translates to an odd ratio increment of at most 5 (~ 2 * upper bound of prior).
 \item The default priors for \code{mu_logit_y0} and \code{sigma_logit_y0} translates to an approximately uniform prior on \code{y0}.
-\item For more details see the \url{vignette}.
+\item For more details see the \href{https://ghurault.github.io/EczemaPred/articles/BinRW.html}{vignette}.
 }
 }
 \section{Model's parameters}{

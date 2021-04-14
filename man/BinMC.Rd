@@ -63,7 +63,7 @@ This is a state-space model defined by a Binomial measurement error and a latent
 \item The default prior for \code{sigma} translates to an odd ratio increment of at most 5 (~ 2 * upper bound of prior).
 \item The default priors for \code{mu_logit_p10} and \code{sigma_logit_p10} translate to an approximately uniform prior on \code{p10}.
 \item The prior for the initial condition of \code{ss1} is hard coded and a function of \code{p10}.
-\item For more details see the \url{vignette}.
+\item For more details see the BinRW \href{https://ghurault.github.io/EczemaPred/articles/BinRW.html}{vignette}.
 }
 }
 \section{Model's parameters}{

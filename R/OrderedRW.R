@@ -62,7 +62,7 @@
 #' a state where `y = M` in two transitions.
 #' - The default priors for `mu_y0` and `sigma_y0` have reasonable ranges and translate to an approximately uniform prior
 #' over the range of the score for `y0`.
-#' - For more details see the [vignette]().
+#' - For more details see the BinRW [vignette](https://ghurault.github.io/EczemaPred/articles/BinRW.html).
 #'
 #' @name OrderedRW
 NULL

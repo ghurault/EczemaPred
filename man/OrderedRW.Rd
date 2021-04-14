@@ -74,7 +74,7 @@ This is a state-space model defined by a Ordered logistic measurement error dist
 a state where \code{y = M} in two transitions.
 \item The default priors for \code{mu_y0} and \code{sigma_y0} have reasonable ranges and translate to an approximately uniform prior
 over the range of the score for \code{y0}.
-\item For more details see the \url{vignette}.
+\item For more details see the BinRW \href{https://ghurault.github.io/EczemaPred/articles/BinRW.html}{vignette}.
 }
 }
 \section{Model's parameters}{

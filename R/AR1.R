@@ -45,7 +45,7 @@
 #' - The default prior for `y_inf` covers the full range of the score.
 #' - The default prior for `alpha` is uniform in 0-1.
 #' - The model is naive as it is trained with a non-truncated distribution
-#' - For more details see the [vignette]().
+#' - For more details see the [vignette](https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html).
 #'
 #' @name AR1
 NULL

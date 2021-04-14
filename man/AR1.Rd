@@ -65,7 +65,7 @@ The element \code{alpha} of the list should be a vector of length 2 containing x
 \item The default prior for \code{y_inf} covers the full range of the score.
 \item The default prior for \code{alpha} is uniform in 0-1.
 \item The model is naive as it is trained with a non-truncated distribution
-\item For more details see the \url{vignette}.
+\item For more details see the \href{https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html}{vignette}.
 }
 }
 \section{Model's parameters}{

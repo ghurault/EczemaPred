@@ -41,7 +41,7 @@
 #' - The default prior for `sigma` translates to a width of the predictive distribution to be at most `max_score`.
 #' - The default prior for `tau` assumes it could range from less a 1 to 100 (time units).
 #' - The model is naive as it is trained with a non-truncated
-#' - For more details see the [vignette]().
+#' - For more details see the [vignette](https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html).
 #'
 #' @name Smoothing
 NULL

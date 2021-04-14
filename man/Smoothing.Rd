@@ -68,7 +68,7 @@ x2 should be positive.
 \item The default prior for \code{sigma} translates to a width of the predictive distribution to be at most \code{max_score}.
 \item The default prior for \code{tau} assumes it could range from less a 1 to 100 (time units).
 \item The model is naive as it is trained with a non-truncated
-\item For more details see the \url{vignette}.
+\item For more details see the \href{https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html}{vignette}.
 }
 }
 \section{Model's parameters}{
