@@ -160,7 +160,7 @@ test_that("get_index works", {
   N_pt <- 10
   t_max <- rpois(N_pt, 20)
 
-  id2 <- get_index2(N_patient, t_max)
+  id2 <- get_index2(t_max)
 
   df <- do.call(bind_rows,
                 lapply(1:N_pt,

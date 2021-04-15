@@ -63,7 +63,7 @@ Time=t is in Iteration=i means that:
 }
 \examples{
 h <- 2
-df <- get_index2(N_patient = 10, t_max = rpois(10, 10))
+df <- get_index2(t_max = rpois(10, 10))
 df$Score <- rnorm(nrow(df))
 df$Iteration <- get_fc_iteration(df$Time, h)
 sp <- split_fc_dataset(df, 1)

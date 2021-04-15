@@ -7,16 +7,14 @@
 \usage{
 get_index(train, test = NULL)
 
-get_index2(N_patient, t_max)
+get_index2(t_max)
 }
 \arguments{
 \item{train}{Training dataframe}
 
 \item{test}{Testing dataframe}
 
-\item{N_patient}{Number of patients}
-
-\item{t_max}{Vector of size N_patient indicating the time-series length}
+\item{t_max}{Vector indicating the length of each patient time-series}
 }
 \value{
 Dataframe with columns Patient, Time, Index
@@ -29,7 +27,7 @@ For more details, see the \url{vignette}
 }
 \examples{
 library(dplyr)
-id <- get_index2(N_patient = 10, t_max = rpois(10, 20))
+id <- get_index2(t_max = rpois(10, 20))
 df <- id \%>\% select(-Index) \%>\% slice_sample(prop = 0.9) \%>\% arrange(Patient, Time)
 get_index(train = df)
 }

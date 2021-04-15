@@ -78,7 +78,7 @@ true_param <- rstan::extract(fit0, pars = c(pars$Population, pars$Patient)) %>%
 
 yrep <- rstan::extract(fit0, pars = "y_rep")[[1]]
 
-fd <- get_index2(N_patient, t_max) %>%
+fd <- get_index2(t_max) %>%
   mutate(Score = yrep[draw, ])
 ```
 

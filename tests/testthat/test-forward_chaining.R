@@ -23,7 +23,7 @@ test_that("get_fc_iteration catches errors in horizon", {
 # Test split_fc_dataset ---------------------------------------------------
 
 h <- 5
-df <- get_index2(N_patient = 10, t_max = rpois(10, 10)) %>%
+df <- get_index2(t_max = rpois(10, 10)) %>%
   mutate(Score = rnorm(nrow(.)),
          Iteration = get_fc_iteration(Time, h))
 

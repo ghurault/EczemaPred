@@ -219,8 +219,7 @@ prepare_priorpred_lgtd <- function(N_patient, t_max, max_score, discrete) {
 #'
 #' @param train Training dataframe
 #' @param test Testing dataframe
-#' @param N_patient Number of patients
-#' @param t_max Vector of size N_patient indicating the time-series length
+#' @param t_max Vector indicating the length of each patient time-series
 #'
 #' @return Dataframe with columns Patient, Time, Index
 #' @export
@@ -232,7 +231,7 @@ prepare_priorpred_lgtd <- function(N_patient, t_max, max_score, discrete) {
 #'
 #' @examples
 #' library(dplyr)
-#' id <- get_index2(N_patient = 10, t_max = rpois(10, 20))
+#' id <- get_index2(t_max = rpois(10, 20))
 #' df <- id %>% select(-Index) %>% slice_sample(prop = 0.9) %>% arrange(Patient, Time)
 #' get_index(train = df)
 NULL
@@ -271,8 +270,8 @@ get_index <- function(train, test = NULL) {
 
 #' @rdname get_index
 #' @export
-get_index2 <- function(N_patient, t_max) {
-  get_index(train = data.frame(Patient = 1:N_patient, Time = t_max), test = NULL)
+get_index2 <- function(t_max) {
+  get_index(train = data.frame(Patient = 1:length(t_max), Time = t_max), test = NULL)
 }
 
 # standata_to_df ----------------------------
