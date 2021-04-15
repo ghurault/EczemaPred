@@ -16,3 +16,14 @@ test_that("add_prior works", {
   expect_equal(x$prior_eps, val_eps)
 
 })
+
+# Test get_compiled_model -------------------------------------------------
+
+test_that("get_compiled_model works", {
+  expect_true(class(get_compiled_model("BinRW")) == "stanmodel")
+  expect_error(get_compiled_model("model_not_existing"))
+})
+
+# Test extract_simulation -------------------------------------------------
+
+# In test-AR1.R

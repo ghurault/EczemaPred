@@ -39,3 +39,17 @@ add_prior <- function(data_stan, prior, prefix = "prior_") {
 
   return(c(data_stan, prior))
 }
+
+# Compiled model ----------------------------------------------------------
+
+#' Get compiled model
+#'
+#' @param model Stan model name
+#'
+#' @return Compiled model (object to pass to `rstan::sampling`)
+#' @export
+get_compiled_model <- function(model) {
+  stopifnot(model %in% names(stanmodels))
+  return(stanmodels[[model]])
+}
+
