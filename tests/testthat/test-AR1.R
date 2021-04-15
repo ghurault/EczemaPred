@@ -38,16 +38,31 @@ test_that("sample_prior_AR1 catches errors in prior", {
   }
 })
 
+# Test extract_simulations ------------------------------------------------
+
+l <- extract_simulations(fit = fit0,
+                         id = get_index2(t_max),
+                         draw = 10,
+                         pars = param)
+
+test_that("extract_simulations works", {
+  expect_true(is.list(l))
+  expect_true(all(c("Data", "Parameters") %in% names(l)))
+  lapply(l, function(x) {expect_s3_class(x, "data.frame")})
+  expect_true(all(c("Patient", "Time", "Score") %in% colnames(l$Data)))
+  expect_true(all(c("Draw", "Index", "Value", "Parameter") %in% colnames(l$Parameters)))
+})
+
+test_that("extract_simulations catches errors in inputs", {
+  expect_error(extract_simulations(fit = rstan::extract(fit0, pars = "y_rep"), id = get_index2(t_max), draw = 10, pars = param))
+  expect_error(extract_simulations(fit = fit0, id = t_max, draw = 10, pars = param))
+  expect_error(extract_simulations(fit = fit0, id = get_index2(t_max), draw = -1, pars = param))
+  expect_error(extract_simulations(fit = fit0, id = get_index2(t_max), draw = 10, pars = y_rep))
+})
+
 # Test fit_AR1 ------------------------------------------------------
 
-l <- extract_fakedata(fit_prior = fit0,
-                      draw = 10,
-                      pars = param,
-                      N_patient = N_patient,
-                      t_max = t_max,
-                      horizon = 2)
-
-fit <- fit_AR1(train = l$Train, test = l$Test, max_score = max_score, chains = 1, refresh = 0)
+fit <- fit_AR1(train = l$Data, test = NULL, max_score = max_score, chains = 1, refresh = 0)
 
 test_that("fit_AR1 returns a stanfit object", {
   expect_true(is_stanfit(fit))
@@ -57,7 +72,7 @@ test_that("estimates from fit_AR1 are accurate", {
   skip_on_ci()
 
   par <- HuraultMisc::summary_statistics(fit, pars = param) %>%
-    left_join(l$TrueParameters, by = c("Variable" = "Parameter", "Index")) %>%
+    left_join(l$Parameters, by = c("Variable" = "Parameter", "Index")) %>%
     rename(True = Value) %>%
     mutate(Coverage90 = (True > `5%` & True < `95%`),
            NormError = abs(Mean - True) / sd)
@@ -67,6 +82,6 @@ test_that("estimates from fit_AR1 are accurate", {
 test_that("fit_AR1 catches errors in prior", {
   # cf. stopifnot_prior_AR1
   for (i in 1:length(wrong_priors)) {
-    expect_error(fit_AR1(train = l$Train, test = l$Test, max_score = max_score, prior = wrong_priors[[i]]))
+    expect_error(fit_AR1(train = l$Data, test = NULL, max_score = max_score, prior = wrong_priors[[i]]))
   }
 })

@@ -40,3 +40,4 @@ reference:
   - add_prior
   - list_parameters
   - extract_parameters
+  - extract_simulations

@@ -39,21 +39,19 @@ test_that("sample_prior_Smoothing catches errors in prior", {
 
 # Test fit_Smoothing ------------------------------------------------------
 
-l <- extract_fakedata(fit_prior = fit0,
-                      draw = 5,
-                      pars = param,
-                      N_patient = N_patient,
-                      t_max = t_max,
-                      horizon = 2)
+l <- extract_simulations(fit = fit0,
+                         id = get_index2(t_max),
+                         draw = 5,
+                         pars = param)
 
-fit <- fit_Smoothing(train = l$Train, test = l$Test, max_score = max_score, chains = 1, refresh = 0)
+fit <- fit_Smoothing(train = l$Data, test = NULL, max_score = max_score, chains = 1, refresh = 0)
 
 test_that("fit_Smoothing returns a stanfit object", {
   expect_true(is_stanfit(fit))
 })
 
 par <- HuraultMisc::summary_statistics(fit, pars = param) %>%
-  left_join(l$TrueParameters, by = c("Variable" = "Parameter", "Index")) %>%
+  left_join(l$Parameters, by = c("Variable" = "Parameter", "Index")) %>%
   rename(True = Value) %>%
   mutate(Coverage90 = (True > `5%` & True < `95%`),
          NormError = abs(Mean - True) / sd)
@@ -65,6 +63,6 @@ test_that("estimates from fit_Smoothing are accurate", {
 test_that("fit_Smoothing catches errors in prior", {
   # cf. stopifnot_prior_Smoothing
   for (i in 1:length(wrong_priors)) {
-    expect_error(fit_Smoothing(train = l$Train, test = l$Test, max_score = max_score, prior = wrong_priors[[i]]))
+    expect_error(fit_Smoothing(train = l$Data, test = NULL, max_score = max_score, prior = wrong_priors[[i]]))
   }
 })

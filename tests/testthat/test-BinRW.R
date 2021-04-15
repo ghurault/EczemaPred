@@ -43,11 +43,10 @@ test_that("sample_prior_BinRW catches errors in prior", {
 
 # Test fit_BinRW ----------------------------------------------------
 
-l <- extract_fakedata(fit_prior = fit0,
+l <- extract_fakedata(fit = fit0,
+                      id = get_index2(t_max),
                       draw = 5,
                       pars = param,
-                      N_patient = N_patient,
-                      t_max = t_max,
                       horizon = 2)
 
 fit <- fit_BinRW(train = l$Train, test = l$Test, max_score = max_score, chains = 1, refresh = 0)

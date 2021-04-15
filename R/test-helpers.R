@@ -2,46 +2,46 @@
 
 #' Extract fake data
 #'
-#' Not exported
+#' Similar to `extract_simulations`, except that the data is split into training and testing set (leave last observations)
+#' and that the output is different.
+#' The function is not exported and is a helper for tests.
 #'
-#' @param fit_prior Stanfit object corresponding to prior predictive distribution
+#' NB: Apart from testing `plot_ppc` in BinRW, we may not need this function.
+#'
+#' @param fit Stanfit object
+#' @param id Dataframe linking index in obj to (Patient, Time) pairs, cf. output from [get_index()]
 #' @param draw Draw ID
-#' @param pars Vector of parameter names to extract
-#' @param N_patient Number of patients generated in fit_prior
-#' @param t_max Vector of size N_patient indicating the time-series length generated in fit_prior
-#' @param horizon Prediction horizon (for test set)
-#'
-#' @import dplyr
-#' @noRd
+#' @param pars Vector of parameters to extract. Default to all parameters except `y_rep`.
+#' @param horizon Prediction horizon for test set
 #'
 #' @return List containing three dataframes:
 #' - TrueParameters (parameters used to generate the data)
 #' - Train (training set)
 #' - Test (testing set)
-extract_fakedata <- function(fit_prior, draw, pars, N_patient, t_max, horizon) {
+#'
+#' @noRd
+extract_fakedata <- function(fit, id, draw, pars = NULL, horizon = 0) {
 
-  true_param <- rstan::extract(fit_prior, pars = pars) %>%
-    HuraultMisc::extract_draws(draw)
+  tmp <- extract_simulations(fit = fit, id = id, draw = draw, pars = pars)
 
-  yrep <- rstan::extract(fit_prior, pars = "y_rep")[[1]]
-
-  fd <- get_index2(N_patient, t_max) %>%
-    mutate(Score = yrep[draw, ])
-
-  train <- fd %>%
+  train <- tmp$Data %>%
     group_by(.data$Patient) %>%
     filter(.data$Time <= max(.data$Time) - horizon) %>%
     ungroup() %>%
     drop_na()
 
-  test <- fd %>%
-    group_by(.data$Patient) %>%
-    filter(.data$Time > max(.data$Time) - horizon) %>%
-    mutate(Horizon = .data$Time - min(.data$Time) + 1) %>%
-    ungroup() %>%
-    drop_na()
+  if (horizon > 0) {
+    test <- tmp$Data %>%
+      group_by(.data$Patient) %>%
+      filter(.data$Time > max(.data$Time) - horizon) %>%
+      mutate(Horizon = .data$Time - min(.data$Time) + 1) %>%
+      ungroup() %>%
+      drop_na()
+  } else {
+    test <- NULL
+  }
 
-  return(list(TrueParameters = true_param,
+  return(list(TrueParameters = tmp$Parameters,
               Train = train,
               Test = test))
 }

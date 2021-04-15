@@ -43,14 +43,12 @@ test_that("sample_prior_BinMC catches errors in prior", {
 
 # Test fit_BinMC ------------------------------------------------------
 
-l <- extract_fakedata(fit_prior = fit0,
-                      draw = 5,
-                      pars = unlist(list_parameters("BinMC")),
-                      N_patient = N_patient,
-                      t_max = t_max,
-                      horizon = 2)
+l <- extract_simulations(fit = fit0,
+                         id = get_index2(t_max),
+                         draw = 5,
+                         pars = unlist(list_parameters("BinMC")))
 
-fit <- fit_BinMC(train = l$Train, test = l$Test, max_score = max_score, chains = 1, refresh = 0)
+fit <- fit_BinMC(train = l$Data, test = NULL, max_score = max_score, chains = 1, refresh = 0)
 
 test_that("fit_BinMC returns a stanfit object", {
   expect_true(is_stanfit(fit))
@@ -58,7 +56,7 @@ test_that("fit_BinMC returns a stanfit object", {
 
 par <- HuraultMisc::summary_statistics(fit,
                                        pars = unlist(list_parameters("BinMC")[c("Population", "Patient")])) %>%
-  left_join(l$TrueParameters, by = c("Variable" = "Parameter", "Index")) %>%
+  left_join(l$Parameters, by = c("Variable" = "Parameter", "Index")) %>%
   rename(True = Value) %>%
   mutate(Coverage90 = (True > `5%` & True < `95%`),
          NormError = abs(Mean - True) / sd)
@@ -73,13 +71,13 @@ test_that("sigma estimate from fit_BinMC is accurate", {
 test_that("fit_BinMC catches errors in prior", {
   # cf. stopifnot_prior_BinMC
   for (i in 1:length(wrong_priors)) {
-    expect_error(fit_BinMC(train = l$Train, test = l$Test, max_score = max_score, prior = wrong_priors[[i]]))
+    expect_error(fit_BinMC(train = l$Data, test = NULL, max_score = max_score, prior = wrong_priors[[i]]))
   }
 })
 
 # Test extract_parameters -------------------------------------------------
 
-id <- get_index(l$Train, l$Test)
+id <- get_index(l$Data)
 par <- extract_parameters(fit, pars = list_parameters("BinMC"), id = id)
 
 par <- list(
