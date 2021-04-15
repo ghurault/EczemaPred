@@ -132,7 +132,7 @@
 
     <pre class="usage"><span class='fu'>get_index</span><span class='op'>(</span><span class='va'>train</span>, test <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
-<span class='fu'>get_index2</span><span class='op'>(</span><span class='va'>N_patient</span>, <span class='va'>t_max</span><span class='op'>)</span></pre>
+<span class='fu'>get_index2</span><span class='op'>(</span><span class='va'>t_max</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -146,12 +146,8 @@
       <td><p>Testing dataframe</p></td>
     </tr>
     <tr>
-      <th>N_patient</th>
-      <td><p>Number of patients</p></td>
-    </tr>
-    <tr>
       <th>t_max</th>
-      <td><p>Vector of size N_patient indicating the time-series length</p></td>
+      <td><p>Vector indicating the length of each patient time-series</p></td>
     </tr>
     </table>
 
@@ -169,7 +165,7 @@
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='va'>id</span> <span class='op'>&lt;-</span> <span class='fu'>get_index2</span><span class='op'>(</span>N_patient <span class='op'>=</span> <span class='fl'>10</span>, t_max <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Poisson.html'>rpois</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>20</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='va'>id</span> <span class='op'>&lt;-</span> <span class='fu'>get_index2</span><span class='op'>(</span>t_max <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Poisson.html'>rpois</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>20</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>df</span> <span class='op'>&lt;-</span> <span class='va'>id</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>-</span><span class='va'>Index</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_sample</a></span><span class='op'>(</span>prop <span class='op'>=</span> <span class='fl'>0.9</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/arrange.html'>arrange</a></span><span class='op'>(</span><span class='va'>Patient</span>, <span class='va'>Time</span><span class='op'>)</span>
 <span class='fu'>get_index</span><span class='op'>(</span>train <span class='op'>=</span> <span class='va'>df</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;     Patient Time Index

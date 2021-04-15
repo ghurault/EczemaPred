@@ -152,7 +152,7 @@
 
 <span class="va">yrep</span> <span class="op">&lt;-</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html">extract</a></span><span class="op">(</span><span class="va">fit0</span>, pars <span class="op">=</span> <span class="st">"y_rep"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 
-<span class="va">fd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_index.html">get_index2</a></span><span class="op">(</span><span class="va">N_patient</span>, <span class="va">t_max</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<span class="va">fd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_index.html">get_index2</a></span><span class="op">(</span><span class="va">t_max</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Score <span class="op">=</span> <span class="va">yrep</span><span class="op">[</span><span class="va">draw</span>, <span class="op">]</span><span class="op">)</span></code></pre></div>
 <p>We artificially produce missing values to make the data more representative to what we observe in real life. Here, we generate missingness using a two-state Markov Chain.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
