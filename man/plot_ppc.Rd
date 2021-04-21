@@ -8,7 +8,14 @@
 \alias{plot_ppc_traj_fanchart}
 \title{Plot posterior predictive trajectory}
 \usage{
-plot_post_traj_pmf(obj, id, patient_id, max_score = NA, max_scale = NA)
+plot_post_traj_pmf(
+  obj,
+  id,
+  patient_id,
+  max_score = NA,
+  support = NULL,
+  max_scale = NA
+)
 
 plot_post_traj_fanchart(
   obj,
@@ -19,17 +26,9 @@ plot_post_traj_fanchart(
   CI_level = seq(0.1, 0.9, 0.1)
 )
 
-plot_ppc_traj_pmf(obj, train, test, patient_id, max_score = NA, max_scale = NA)
+plot_ppc_traj_pmf(obj, train, test, patient_id, max_score = NA, ...)
 
-plot_ppc_traj_fanchart(
-  obj,
-  train,
-  test,
-  patient_id,
-  max_score = NA,
-  interval = c("eti", "hdi"),
-  CI_level = seq(0.1, 0.9, 0.1)
-)
+plot_ppc_traj_fanchart(obj, train, test, patient_id, max_score = NA, ...)
 }
 \arguments{
 \item{obj}{Stanfit object or matrix of replications, with rows corresponding to samples and
@@ -39,8 +38,13 @@ columns corresponding to variables (there should be \code{nrow(id)} columns)}
 
 \item{patient_id}{Patient ID}
 
-\item{max_score}{Maximum value that the score can take.
-Can be NA, in that case the support of the pmf is estimated from the data (cf. \code{\link[HuraultMisc:extract_distribution]{HuraultMisc::extract_distribution()}}).}
+\item{max_score}{(Optional) Maximum value that the score can take.
+In \verb{plot_*_traj_pmf} this will set \code{support} if it is not supplied.
+In \verb{plot_*_traj_fanchart} this will set the y axis range.
+In \verb{plot_ppc_traj_*} this will check the content of \code{train} and \code{test}.}
+
+\item{support}{Values that the discrete distribution can take
+Can be NULL, in that case the support of the pmf is estimated from the data (cf. \code{\link[HuraultMisc:extract_distribution]{HuraultMisc::extract_distribution()}}).}
 
 \item{max_scale}{Maximum value that the legend display.
 If NA, this chosen automatically}
@@ -53,6 +57,8 @@ If NA, this chosen automatically}
 \item{train}{Training dataset used to obtain the fit}
 
 \item{test}{Testing dataset used to obtain the fit (can be NULL)}
+
+\item{...}{arguments to pass to \verb{plot_post_traj_*}}
 }
 \value{
 Ggplot
@@ -60,10 +66,8 @@ Ggplot
 \description{
 Plot as a probability mass function (suffix \verb{_pmf}) or
 as a fanchart (stacked confidence interval, suffix \verb{_fanchart}).
-}
-\details{
 \itemize{
-\item plot_post_traj_* plots the posterior predictive trajectory only
-\item plot_ppc_traj_* overlays the observed trajectory to the posterior predictive trajectory
+\item \verb{plot_post_traj_*} plots the posterior predictive trajectory only
+\item \verb{plot_ppc_traj_*} overlays the observed trajectory to the posterior predictive trajectory
 }
 }

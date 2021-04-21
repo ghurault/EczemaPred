@@ -99,12 +99,6 @@ for (f in c(plot_post_traj_pmf, plot_post_traj_fanchart)) {
     expect_error(f(fit, id = id, patient_id = -1, max_score = max_score))
   })
 
-  test_that("plot_post_traj_* catches errors with max_score", {
-    for (wms in wrong_max_score) {
-      expect_error(f(fit, id = id, patient_id = 1, max_score = wms))
-    }
-  })
-
 }
 
 test_that("plot_*_traj_pmf works when max_score is NA", {
@@ -138,13 +132,21 @@ for (g in c(plot_ppc_traj_pmf, plot_ppc_traj_fanchart)) {
     expect_error(g(fit, train = l$Train, test = NULL, patient_id = 1, max_score = max_score))
   })
 
-  test_that("plot_post_traj_* catches errors with max_score", {
-    for (wms in wrong_max_score) {
-      expect_error(g(fit, train = l$Train, test = l$Test, patient_id = 1, max_score = wms))
-    }
-  })
-
 }
+
+test_that("plot_*_traj_pmf warns when errors in max_score and support is not supplied", {
+  for (wms in wrong_max_score) {
+    expect_warning(plot_post_traj_pmf(fit, id = id, patient_id = 1, max_score = wms))
+    expect_warning(plot_ppc_traj_pmf(fit, train = l$Train, test = l$Test, patient_id = 1, max_score = wms))
+  }
+})
+
+test_that("plot_*_traj_fanchart catches errors in max_score", {
+  for (wms in wrong_max_score) {
+    expect_error(plot_post_traj_fanchart(fit, id = id, patient_id = 1, max_score = wms))
+    expect_error(plot_ppc_traj_fanchart(fit, train = l$Train, test = l$Test, patient_id = 1, max_score = wms))
+  }
+})
 
 test_that("plot_*_traj_pmf catches errors with max_scale", {
 
@@ -161,9 +163,9 @@ test_that("plot_*_traj_pmf catches errors with max_scale", {
 
 })
 
-test_that("plot_*_traj_pmf catches errors when max_score is not a wholenumber", {
-    expect_error(plot_post_traj_pmf(fit, id = id, patient_id = 1, max_score = max_score + 0.1))
-    expect_error(plot_ppc_traj_pmf(fit, id = id, patient_id = 1, max_score = max_score))
+test_that("plot_*_traj_pmf warns when max_score is not a wholenumber and support is not supplied", {
+  expect_warning(plot_post_traj_pmf(fit, id = id, patient_id = 1, max_score = max_score + 0.1))
+  expect_warning(plot_ppc_traj_pmf(fit, train = l$Train, test = l$Test, patient_id = 1, max_score = max_score + 0.1))
 })
 
 test_that("plot_*_traj_fanchart returns a ggplot object for both eti and hdi intervals", {

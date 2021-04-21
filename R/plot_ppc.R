@@ -7,9 +7,8 @@
 #'
 #' Plot as a probability mass function (suffix `_pmf`) or
 #' as a fanchart (stacked confidence interval, suffix `_fanchart`).
-#'
-#' - plot_post_traj_* plots the posterior predictive trajectory only
-#' - plot_ppc_traj_* overlays the observed trajectory to the posterior predictive trajectory
+#' - `plot_post_traj_*` plots the posterior predictive trajectory only
+#' - `plot_ppc_traj_*` overlays the observed trajectory to the posterior predictive trajectory
 #'
 #' @param obj Stanfit object or matrix of replications, with rows corresponding to samples and
 #' columns corresponding to variables (there should be `nrow(id)` columns)
@@ -17,47 +16,45 @@
 #' @param train Training dataset used to obtain the fit
 #' @param test Testing dataset used to obtain the fit (can be NULL)
 #' @param patient_id Patient ID
-#' @param max_score Maximum value that the score can take.
-#' Can be NA, in that case the support of the pmf is estimated from the data (cf. [HuraultMisc::extract_distribution()]).
+#' @param max_score (Optional) Maximum value that the score can take.
+#' In `plot_*_traj_pmf` this will set `support` if it is not supplied.
+#' In `plot_*_traj_fanchart` this will set the y axis range.
+#' In `plot_ppc_traj_*` this will check the content of `train` and `test`.
+#' @param support Values that the discrete distribution can take
+#' Can be NULL, in that case the support of the pmf is estimated from the data (cf. [HuraultMisc::extract_distribution()]).
 #' @param max_scale Maximum value that the legend display.
 #' If NA, this chosen automatically
 #' @param interval Type of confidence of interval to display, one of "eti" for equal-tailed intervals and
 #' "hdi" for highest density interval.
 #' @param CI_level Vector of confidence level to plot for the fanchart
+#' @param ... arguments to pass to `plot_post_traj_*`
 #'
 #' @return Ggplot
 #'
 #' @name plot_ppc
 NULL
 
-# Master function plot_post_traj ----------------------------------------------
 
-#' Master functions to plot posterior predictive trajectory as a probability mass function or a fanchart
+# Helper functions --------------------------------------------------------
+
+#' Helper function to extract patient replications distribution
 #'
 #' Not exported
 #'
-#' @rdname plot_ppc
+#' @param obj Stanfit object or matrix of replications, with rows corresponding to samples and
+#' columns corresponding to variables (there should be `nrow(id)` columns)
+#' @param id Dataframe linking index in obj to (Patient, Time) pairs, cf. output from [get_index()]
+#' @param patient_id Patient ID
+#' @param ... Arguments to pass to [HuraultMisc::extract_distribution()]
+#'
+#' @return Dataframe (output from [HuraultMisc::extract_distribution()])
+#'
 #' @noRd
-plot_post_traj <- function(obj,
-                           id,
-                           patient_id,
-                           type = c("pmf", "fanchart"),
-                           max_score = NA,
-                           max_scale = NA,
-                           interval = c("eti", "hdi"),
-                           CI_level = seq(0.1, 0.9, 0.1)) {
-
-  type <- match.arg(type)
+extract_yrep <- function(obj, id, patient_id, ...) {
 
   stopifnot(is.data.frame(id),
             all(c("Patient", "Time", "Index") %in% colnames(id)),
             patient_id %in% unique(id[["Patient"]]))
-
-  stopifnot(is_scalar(max_score))
-  if (!is.na(max_score)) {
-    stopifnot(is.numeric(max_score),
-              max_score > 0)
-  }
 
   # Extract replications
   id1 <- filter(id, .data$Patient == patient_id)
@@ -72,42 +69,13 @@ plot_post_traj <- function(obj,
     yrep <- obj[, id1$Index]
   }
 
-  if (type == "pmf") {
+  # Extract distribution
+  out <- full_join(HuraultMisc::extract_distribution(yrep, ...),
+            mutate(id1, Index = 1:nrow(id1)),
+            by = "Index") %>%
+    select(-.data$Index, -.data$Variable)
 
-    if (!is.na(max_score)) {
-      stopifnot(is_wholenumber(max_score))
-      support <- 0:max_score
-    } else {
-      support <- NULL
-    }
-
-    ssd <- full_join(HuraultMisc::extract_distribution(yrep, "y_rep", type = "discrete", support = support),
-                     mutate(id1, Index = 1:nrow(id1)),
-                     by = "Index") %>%
-      select(-.data$Index, -.data$Variable)
-
-    p <- plot_pmf(ssd, max_scale)
-
-  }
-
-  if (type == "fanchart") {
-
-    interval <- match.arg(interval)
-    stopifnot(is.numeric(CI_level),
-              length(CI_level) > 1,
-              all(CI_level > 0 & CI_level < 1))
-
-    ssi <- full_join(HuraultMisc::extract_distribution(yrep, "y_rep", type = interval, CI_level = CI_level),
-                     mutate(id1, Index = 1:nrow(id1)),
-                     by = "Index") %>%
-      select(-.data$Index, -.data$Variable)
-
-    p <- plot_fanchart(ssi) +
-      coord_cartesian(ylim = c(0, max_score), expand = FALSE)
-
-  }
-
-  return(p)
+  return(out)
 
 }
 
@@ -183,42 +151,18 @@ plot_fanchart <- function(ssi,
 
 }
 
-# Master function plot_ppc_traj -------------------------------------------
-
+#' Helper function to prepare dataframe for ppc
+#'
+#' Not exported
+#'
 #' @rdname plot_ppc
-#' @import dplyr
 #' @noRd
-plot_ppc_traj <- function(obj,
-                          train,
-                          test,
-                          patient_id,
-                          type = c("pmf", "fanchart"),
-                          max_score = NA,
-                          max_scale = NA,
-                          interval = c("eti", "hdi"),
-                          CI_level = seq(0.1, 0.9, 0.1)) {
+process_df_ppc <- function(train, test, max_score = NA, patient_id, discrete) {
 
-  # Posterior trajectory (and check inputs)
-  id <- get_index(train = train, test = test)
-  p <- plot_post_traj(obj = obj,
-                      id = id,
-                      patient_id = patient_id,
-                      type = type,
-                      max_score = max_score,
-                      max_scale = max_scale,
-                      interval = interval,
-                      CI_level = CI_level)
-
-  # Process dataframe
-  if (!is.na(max_score)) {
-    ms <- max_score
-  } else {
-    ms <- 1e3 # just to check train and test
-  }
-  stopifnot_lgtd_train(train, ms, discrete = (type == "pmf"))
+  stopifnot_lgtd_train(train, max_score = max_score, discrete = discrete)
   train <- mutate(train, Label = "Training")
   if (!is.null(test)) {
-    stopifnot_lgtd_test(test, train, ms, discrete = (type == "pmf"))
+    stopifnot_lgtd_test(test, train, max_score = max_score, discrete = discrete)
     test <- mutate(test, Label = "Testing")
     df <- bind_rows(train, test)
   } else {
@@ -227,12 +171,7 @@ plot_ppc_traj <- function(obj,
   df <- df[, c("Patient", "Time", "Score", "Label")]
   stopifnot(patient_id %in% unique(df[["Patient"]]))
 
-  # Overlay trajectory
-  p <- add_trajectory(p,
-                      filter(df, .data$Patient == patient_id))
-
-  return(p)
-
+  return(df)
 }
 
 #' Add trajectory to existing ggplot
@@ -276,12 +215,36 @@ add_trajectory <- function(p = ggplot(), df) {
 
 }
 
-# Exported functions ------------------------------------------------------
+# plot_post_traj_* ----------------------------------------------
 
 #' @rdname plot_ppc
 #' @export
-plot_post_traj_pmf <- function(obj, id, patient_id, max_score = NA, max_scale = NA) {
-  plot_post_traj(obj = obj, id = id, patient_id = patient_id, type = "pmf", max_score = max_score, max_scale = max_scale)
+plot_post_traj_pmf <- function(obj,
+                               id,
+                               patient_id,
+                               max_score = NA,
+                               support = NULL,
+                               max_scale = NA) {
+
+  if (is.null(support)) {
+    is_maxscore_valid <- all(is_scalar(max_score) && !is.na(max_score),
+                             is.numeric(max_score) && is_scalar_wholenumber(max_score) && max_score > 0)
+    if (is_maxscore_valid) {
+      support <- 0:max_score
+    } else {
+      warning("support is not provided but max_score is not valid")
+    }
+  }
+
+  ssd <- extract_yrep(obj = obj,
+                      id = id,
+                      patient_id = patient_id,
+                      type = "discrete",
+                      support = support)
+
+  p <- plot_pmf(ssd, max_scale)
+
+  return(p)
 }
 
 #' @rdname plot_ppc
@@ -292,25 +255,51 @@ plot_post_traj_fanchart <- function(obj,
                                     max_score = NA,
                                     interval = c("eti", "hdi"),
                                     CI_level = seq(0.1, 0.9, 0.1)) {
-  plot_post_traj(obj = obj,
-                 id = id,
-                 patient_id = patient_id,
-                 type = "fanchart",
-                 max_score = max_score,
-                 interval = interval,
-                 CI_level = CI_level)
+
+  stopifnot(is_scalar(max_score))
+  if (!is.na(max_score)) {
+    stopifnot(is.numeric(max_score),
+              max_score > 0)
+  }
+  interval <- match.arg(interval)
+  stopifnot(is.numeric(CI_level),
+            length(CI_level) > 1,
+            all(CI_level > 0 & CI_level < 1))
+
+  ssi <- extract_yrep(obj = obj,
+                      id = id,
+                      patient_id = patient_id,
+                      type = interval,
+                      CI_level = CI_level)
+
+  p <- plot_fanchart(ssi) +
+    coord_cartesian(ylim = c(0, max_score), expand = FALSE)
+
+  return(p)
+
 }
+
+# plot_ppc_traj_* -------------------------------------------
 
 #' @rdname plot_ppc
 #' @export
-plot_ppc_traj_pmf <- function(obj, train, test, patient_id, max_score = NA, max_scale = NA) {
-  plot_ppc_traj(obj = obj,
-                train = train,
-                test = test,
-                patient_id = patient_id,
-                type = "pmf",
-                max_score = max_score,
-                max_scale = max_scale)
+plot_ppc_traj_pmf <- function(obj,
+                              train,
+                              test,
+                              patient_id,
+                              max_score = NA,
+                              ...) {
+
+  p <- plot_post_traj_pmf(obj = obj,
+                          id = get_index(train = train, test = test),
+                          patient_id = patient_id,
+                          max_score = max_score,
+                          ...)
+  df <- process_df_ppc(train = train, test = test, patient_id = patient_id, max_score = max_score, discrete = TRUE)
+  p <- add_trajectory(p,
+                      filter(df, .data$Patient == patient_id))
+
+  return(p)
 }
 
 #' @rdname plot_ppc
@@ -320,14 +309,16 @@ plot_ppc_traj_fanchart <- function(obj,
                                    test,
                                    patient_id,
                                    max_score = NA,
-                                   interval = c("eti", "hdi"),
-                                   CI_level = seq(0.1, 0.9, 0.1)) {
-  plot_ppc_traj(obj = obj,
-                train = train,
-                test = test,
-                patient_id = patient_id,
-                type = "fanchart",
-                max_score = max_score,
-                interval = interval,
-                CI_level = CI_level)
+                                   ...) {
+
+  p <- plot_post_traj_fanchart(obj = obj,
+                               id = get_index(train = train, test = test),
+                               patient_id = patient_id,
+                               max_score = max_score,
+                               ...)
+  df <- process_df_ppc(train = train, test = test, patient_id = patient_id, max_score = max_score, discrete = FALSE)
+  p <- add_trajectory(p,
+                      filter(df, .data$Patient == patient_id))
+
+  return(p)
 }

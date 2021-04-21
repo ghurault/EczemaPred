@@ -43,29 +43,32 @@ stopifnot_lgtd_id <- function(df) {
 #' Stop if x is not a valid score input
 #'
 #' @param x Object to test
-#' @param max_score Maximum value that the score can take
+#' @param max_score Maximum value that the score can take.
+#' If NA, the support of the score is not checked.
 #' @param discrete Whether the score should take discrete values
 #'
 #' @return NULL if all statements are TRUE, otherwise an error message
 #'
 #' @seealso [base::stopifnot()]
 #' @noRd
-stopifnot_valid_score <- function(x, max_score, discrete) {
+stopifnot_valid_score <- function(x, max_score = NA, discrete) {
 
   stopifnot(is.vector(x, mode = "numeric"),
             all(!is.na(x)))
 
-  if (discrete) {
-    stopifnot(all(x %in% c(0:max_score)))
-  } else {
-    stopifnot(all(sapply(x, function(x) {dplyr::between(x, 0, max_score)})))
+  if (!is.na(max_score)) {
+    if (discrete) {
+      stopifnot(all(x %in% c(0:max_score)))
+    } else {
+      stopifnot(all(sapply(x, function(x) {dplyr::between(x, 0, max_score)})))
+    }
   }
 
 }
 
 #' @rdname stopifnot_lgtd
 #' @noRd
-stopifnot_lgtd_dataframe <- function(df, max_score, discrete) {
+stopifnot_lgtd_dataframe <- function(df, max_score = NA, discrete) {
   stopifnot_lgtd_id(df)
   stopifnot(all("Score" %in% colnames(df)))
   stopifnot_valid_score(df[["Score"]], max_score = max_score, discrete = discrete)
