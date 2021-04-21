@@ -159,6 +159,12 @@ plot_fanchart <- function(ssi,
 #' @noRd
 process_df_ppc <- function(train, test, max_score = NA, patient_id, discrete) {
 
+  stopifnot(is_scalar(max_score))
+  if (!is.na(max_score)) {
+    stopifnot(is.numeric(max_score),
+              max_score > 0)
+  }
+
   stopifnot_lgtd_train(train, max_score = max_score, discrete = discrete)
   train <- mutate(train, Label = "Training")
   if (!is.null(test)) {

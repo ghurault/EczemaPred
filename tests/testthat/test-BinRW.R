@@ -134,10 +134,11 @@ for (g in c(plot_ppc_traj_pmf, plot_ppc_traj_fanchart)) {
 
 }
 
-test_that("plot_*_traj_pmf warns when errors in max_score and support is not supplied", {
+test_that("plot_*_traj_pmf warns catches errors and warnings in max_score", {
   for (wms in wrong_max_score) {
     expect_warning(plot_post_traj_pmf(fit, id = id, patient_id = 1, max_score = wms))
-    expect_warning(plot_ppc_traj_pmf(fit, train = l$Train, test = l$Test, patient_id = 1, max_score = wms))
+    expect_error(plot_ppc_traj_pmf(fit, train = l$Train, test = l$Test, patient_id = 1, max_score = wms))
+    # max_score is passed to process_df_ppc which is not checked
   }
 })
 
