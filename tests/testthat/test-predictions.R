@@ -125,7 +125,7 @@ test_that("add_historical_pred catches incorrect inputs", {
 #   add_predictions(test, fit, discrete = TRUE, include_samples = FALSE, n_samples = NULL)
 
 test_that("add_predictions returns a correct dataframe (continuous)", {
-  perf <- add_predictions(test = l$Testing, fit = fit, discrete = FALSE, include_samples = FALSE)
+  perf <- add_predictions(df = l$Testing, fit = fit, discrete = FALSE, include_samples = FALSE)
   test_when_continuous(perf, l$Testing)
 })
 
@@ -133,17 +133,19 @@ test_that("add_predictions returns a correct dataframe (continuous)", {
 
 test_that("add_predictions returns samples when prompted", {
   for (ns in list(50, NULL)) {
-    perf <- add_predictions(test = l$Testing, fit = fit, discrete = FALSE, include_samples = TRUE, n_samples = ns)
+    perf <- add_predictions(df = l$Testing, fit = fit, discrete = FALSE, include_samples = TRUE, n_samples = ns)
     expect_true(all(c("Samples") %in% colnames(perf)))
     expect_true(is.list(perf[["Samples"]]))
   }
 })
 
 test_that("add_predictions catches incorrect inputs", {
-  expect_error(add_predictions(test = as.list(l$Testing), fit = fit, discrete = FALSE, include_samples = FALSE))
-  expect_error(add_predictions(test = l$Testing, fit = rstan::extract(fit, pars = "y_pred")[[1]], discrete = FALSE, include_samples = FALSE))
-  expect_error(add_predictions(test = l$Testing, fit = fit, discrete = TRUE, include_samples = FALSE))
-  expect_error(add_predictions(test = l$Testing, fit = fit, discrete = FALSE, include_samples = TRUE, n_samples = "all"))
+  expect_error(add_predictions(df = as.list(l$Testing), fit = fit, discrete = FALSE, include_samples = FALSE))
+  expect_error(add_predictions(df = l$Testing, fit = rstan::extract(fit, pars = "y_pred")[[1]], discrete = FALSE, include_samples = FALSE))
+  expect_error(add_predictions(df = l$Testing, fit = fit, discrete = TRUE, include_samples = FALSE))
+  expect_error(add_predictions(df = l$Testing, fit = fit, discrete = FALSE, include_samples = TRUE, n_samples = "all"))
+})
+
 # Test samples_to_list ----------------------------------------------------
 
 test_that("samples_to_list works", {

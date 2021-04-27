@@ -130,7 +130,8 @@ res <- lapply(mdl_names,
                                    MaxTreeDepth = get_num_max_treedepth(fit),
                                    Model = mdl)
                 
-                perf <- add_predictions(test, fit, discrete = FALSE, include_samples = FALSE) %>%
+                perf <- test %>%
+                  add_predictions(fit, discrete = FALSE, include_samples = FALSE) %>%
                   mutate(Model = mdl)
                 
                 return(list(Fit = fit,

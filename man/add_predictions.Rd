@@ -2,19 +2,22 @@
 % Please edit documentation in R/validation.R
 \name{add_predictions}
 \alias{add_predictions}
+\alias{add_metrics}
 \title{Append lpd, (C)RPS and predictive samples to testing dataframe}
 \usage{
 add_predictions(
-  test,
+  df,
   fit,
   discrete = TRUE,
   include_samples = FALSE,
   n_samples = NULL
 )
+
+add_metrics(df, fit, discrete = TRUE)
 }
 \arguments{
-\item{test}{Testing dataframe.
-The only requirements is that it contains a column "Score" when discrete=FALSE.}
+\item{df}{Dataframe.
+For \code{add_metrics}, when \code{discrete = FALSE}, it must contain a column "Score".}
 
 \item{fit}{Stanfit object}
 
@@ -26,7 +29,7 @@ For a discrete forecast, the RPS will be computed and the CRPS for a continuous 
 \item{n_samples}{If include_samples=TRUE, how many samples to return. Default (=NULL) to all samples.}
 }
 \value{
-Dataframe test appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"
+Dataframe df appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"
 }
 \description{
 Append lpd, (C)RPS and predictive samples to testing dataframe

@@ -2,6 +2,7 @@
 
 export("%>%")
 export(add_historical_pred)
+export(add_metrics)
 export(add_predictions)
 export(add_prior)
 export(add_uniform_pred)

@@ -329,50 +329,57 @@ add_historical_pred <- function(test,
 
 #' Append lpd, (C)RPS and predictive samples to testing dataframe
 #'
-#' @param test Testing dataframe.
-#' The only requirements is that it contains a column "Score" when discrete=FALSE.
+#' @param df Dataframe.
+#' For `add_metrics`, when `discrete = FALSE`, it must contain a column "Score".
 #' @param fit Stanfit object
 #' @param discrete Whether to estimate a discrete or continuous forecast.
 #' For a discrete forecast, the RPS will be computed and the CRPS for a continuous forecast.
 #' @param include_samples Whether to return samples from the historical forecast in the output
 #' @param n_samples If include_samples=TRUE, how many samples to return. Default (=NULL) to all samples.
 #'
-#' @return Dataframe test appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"
+#' @return Dataframe df appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"
 #' @export
-add_predictions <- function(test, fit, discrete = TRUE, include_samples = FALSE, n_samples = NULL) {
+#' @name add_predictions
+NULL
 
-  stopifnot(is.data.frame(test),
-            is_stanfit(fit),
-            is_scalar(discrete),
-            is.logical(discrete),
-            is_scalar(include_samples),
+#' @export
+#' @rdname add_predictions
+add_predictions <- function(df, fit, discrete = TRUE, include_samples = FALSE, n_samples = NULL) {
+
+  stopifnot(is_scalar(include_samples),
             is.logical(include_samples))
 
-  if (include_samples || !discrete) {
-    stopifnot("y_pred" %in% fit@model_pars)
-    pred <- rstan::extract(fit, pars = "y_pred")[[1]]
+  df <- add_metrics(df = df, fit = fit, discrete = discrete)
+
+  if (include_samples) {
+    df <- mutate(df, Samples = samples_to_list(fit, par_name = "y_pred", n_samples = n_samples))
   }
 
+  return(df)
+
+}
+
+#' @export
+#' @rdname add_predictions
+add_metrics <- function(df, fit, discrete = TRUE) {
+
+  stopifnot(is.data.frame(df),
+            is_stanfit(fit),
+            is_scalar(discrete),
+            is.logical(discrete))
+
   if (discrete) {
-    out <- test %>%
+    out <- df %>%
       mutate(lpd = extract_lpd(fit),
              RPS = extract_RPS(fit))
   } else {
-    stopifnot("Score" %in% colnames(test),
-              is.vector(test[["Score"]], mode = "numeric"))
-    out <- test %>%
+    stopifnot("Score" %in% colnames(df),
+              is.vector(df[["Score"]], mode = "numeric"),
+              "y_pred" %in% fit@model_pars)
+    pred <- rstan::extract(fit, pars = "y_pred")[[1]]
+    out <- df %>%
       mutate(lpd = extract_lpd(fit),
-             CRPS = scoringRules::crps_sample(test[["Score"]], t(pred)))
-  }
-
-  if (include_samples) {
-    if (!is.null(n_samples)) {
-      stopifnot(is_scalar_wholenumber(n_samples),
-                n_samples > 0)
-      pred <- pred[sample(1:nrow(pred), size = n_samples, replace = TRUE), ]
-    }
-    smp <- lapply(1:ncol(pred), function(i) {pred[, i]})
-    out <- mutate(out, Samples = smp)
+             CRPS = scoringRules::crps_sample(df[["Score"]], t(pred)))
   }
 
   return(out)

@@ -66,7 +66,7 @@ test_that("RPS estimates from fit are accurate", {
 # Test add_predictions (discrete) -------------------------------------
 
 test_that("add_predictions returns a correct dataframe (discrete)", {
-  perf <- add_predictions(test = test2, fit = fit, discrete = TRUE, include_samples = FALSE)
+  perf <- add_predictions(df = test2, fit = fit, discrete = TRUE, include_samples = FALSE)
   test_when_discrete <- function(perf, test) {
     expect_s3_class(perf, "data.frame")
     expect_true(all(c("lpd", "RPS") %in% colnames(perf)))
