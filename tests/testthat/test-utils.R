@@ -27,3 +27,7 @@ test_that("get_compiled_model works", {
 # Test extract_simulation -------------------------------------------------
 
 # In test-AR1.R
+
+# Test samples_to_list ----------------------------------------------------
+
+# In test-predictions.R

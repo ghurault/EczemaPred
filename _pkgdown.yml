@@ -41,3 +41,4 @@ reference:
   - list_parameters
   - extract_parameters
   - extract_simulations
+  - samples_to_list

@@ -144,4 +144,14 @@ test_that("add_predictions catches incorrect inputs", {
   expect_error(add_predictions(test = l$Testing, fit = rstan::extract(fit, pars = "y_pred")[[1]], discrete = FALSE, include_samples = FALSE))
   expect_error(add_predictions(test = l$Testing, fit = fit, discrete = TRUE, include_samples = FALSE))
   expect_error(add_predictions(test = l$Testing, fit = fit, discrete = FALSE, include_samples = TRUE, n_samples = "all"))
+# Test samples_to_list ----------------------------------------------------
+
+test_that("samples_to_list works", {
+  tmp <- list(
+    samples_to_list(fit),
+    samples_to_list(rstan::extract(fit, pars = "y_pred")[[1]])
+  )
+  for (i in 1:length(tmp)) {
+    expect_true(is.list(tmp[[i]]))
+  }
 })
