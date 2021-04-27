@@ -6,7 +6,7 @@
 [![pkgdown](https://github.com/ghurault/EczemaPred/workflows/pkgdown/badge.svg)](https://github.com/ghurault/EczemaPred/actions)
 <!-- badges: end -->
 
-EczemaPred is a R package implementing models to serve as building blocks for predicting the evolution severity, and provides a set of generic functions to manipulate these models.
+EczemaPred is a R package implementing models to serve as building blocks for predicting the evolution of eczema severity, and provides a set of generic functions to manipulate these models.
 The models are implemented in the probabilistic programming language [Stan](https://mc-stan.org/).
 
 ## Installation

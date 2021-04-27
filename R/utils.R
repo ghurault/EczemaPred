@@ -58,7 +58,7 @@ get_compiled_model <- function(model) {
 #' Extract simulations
 #'
 #' @param fit Stanfit object
-#' @param id Dataframe linking index in obj to (Patient, Time) pairs, cf. output from [get_index()]
+#' @param id Dataframe linking index in Stan model to (Patient, Time) pairs, cf. output from [get_index()]
 #' @param draw Draw ID
 #' @param pars Vector of parameters to extract. Default to all parameters except `y_rep`.
 #'

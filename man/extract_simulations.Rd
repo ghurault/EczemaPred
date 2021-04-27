@@ -9,7 +9,7 @@ extract_simulations(fit, id, draw, pars = NULL)
 \arguments{
 \item{fit}{Stanfit object}
 
-\item{id}{Dataframe linking index in obj to (Patient, Time) pairs, cf. output from \code{\link[=get_index]{get_index()}}}
+\item{id}{Dataframe linking index in Stan model to (Patient, Time) pairs, cf. output from \code{\link[=get_index]{get_index()}}}
 
 \item{draw}{Draw ID}
 

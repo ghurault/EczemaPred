@@ -6,7 +6,7 @@
 #' The lpd is defined for continuous and discrete outcomes.
 #' The RPS is defined for discrete outcomes only and is computed by
 #' extracting the cumulative error distribution (cumulative forecast - cumulative distribution),
-#' for which we take the expected value, square it and apply and sum()/(R-1).
+#' for which we take the expected value, square it and apply and `sum() / (R-1)`.
 #'
 #' @param fit Stanfit object
 #'
