@@ -188,7 +188,8 @@
                                    MaxTreeDepth <span class="op">=</span> <span class="fu"><a href="https://mc-stan.org/rstan/reference/check_hmc_diagnostics.html">get_num_max_treedepth</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>,
                                    Model <span class="op">=</span> <span class="va">mdl</span><span class="op">)</span>
                 
-                <span class="va">perf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_predictions.html">add_predictions</a></span><span class="op">(</span><span class="va">test</span>, <span class="va">fit</span>, discrete <span class="op">=</span> <span class="cn">FALSE</span>, include_samples <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                <span class="va">perf</span> <span class="op">&lt;-</span> <span class="va">test</span> <span class="op">%&gt;%</span>
+                  <span class="fu"><a href="../reference/add_predictions.html">add_predictions</a></span><span class="op">(</span><span class="va">fit</span>, discrete <span class="op">=</span> <span class="cn">FALSE</span>, include_samples <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span>
                   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Model <span class="op">=</span> <span class="va">mdl</span><span class="op">)</span>
                 
                 <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Fit <span class="op">=</span> <span class="va">fit</span>,

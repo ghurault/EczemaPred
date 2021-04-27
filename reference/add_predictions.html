@@ -131,20 +131,22 @@
     </div>
 
     <pre class="usage"><span class='fu'>add_predictions</span><span class='op'>(</span>
-  <span class='va'>test</span>,
+  <span class='va'>df</span>,
   <span class='va'>fit</span>,
   discrete <span class='op'>=</span> <span class='cn'>TRUE</span>,
   include_samples <span class='op'>=</span> <span class='cn'>FALSE</span>,
   n_samples <span class='op'>=</span> <span class='cn'>NULL</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span>
+
+<span class='fu'>add_metrics</span><span class='op'>(</span><span class='va'>df</span>, <span class='va'>fit</span>, discrete <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>test</th>
-      <td><p>Testing dataframe.
-The only requirements is that it contains a column "Score" when discrete=FALSE.</p></td>
+      <th>df</th>
+      <td><p>Dataframe.
+For <code>add_metrics</code>, when <code>discrete = FALSE</code>, it must contain a column "Score".</p></td>
     </tr>
     <tr>
       <th>fit</th>
@@ -167,7 +169,7 @@ For a discrete forecast, the RPS will be computed and the CRPS for a continuous 
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Dataframe test appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"</p>
+    <p>Dataframe df appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
