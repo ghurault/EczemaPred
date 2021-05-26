@@ -2,40 +2,42 @@
 
 # Helpers -----------------------------------------------------------------
 
-#' Call default_prior_* for different models
-#'
-#' @param model Model name
-#' @param max_score Maximum value that the score can take (only required for model = "OrderedRW")
-#'
-#' @return List (see default_prior_*)
-#' @export
-#'
-#' @examples
-#' default_prior(model = "BinRW")
-default_prior <- function(model = c("BinRW", "BinMC", "OrderedRW", "RW", "Smoothing", "AR1", "MixedAR1"),
-                          max_score = NULL) {
+if (FALSE) {
+  #' Call default_prior_* for different models
+  #'
+  #' @param model Model name
+  #' @param max_score Maximum value that the score can take (only required for model = "OrderedRW")
+  #'
+  #' @return List (see default_prior_*)
+  #' @export
+  #'
+  #' @examples
+  #' default_prior(model = "BinRW")
+  default_prior <- function(model = c("BinRW", "BinMC", "OrderedRW", "RW", "Smoothing", "AR1", "MixedAR1"),
+                            max_score = NULL) {
 
-  model <- match.arg(model)
+    model <- match.arg(model)
 
-  if (model == "BinRW") {
-    out <- default_prior_BinRW()
-  } else if (model == "BinMC") {
-    out <- default_prior_BinMC()
-  } else if (model == "OrderedRW") {
-    stopifnot(is_scalar_wholenumber(max_score))
-    out <- default_prior_OrderedRW(max_score)
-  } else if (model == "RW") {
-    out <- default_prior_RW()
-  } else if (model == "Smoothing") {
-    out <- default_prior_Smoothing()
-  } else if (model == "AR1") {
-    out <- default_prior_AR1()
-  } else if (model == "MixedAR1") {
-    out <- default_prior_MixedAR1()
+    if (model == "BinRW") {
+      out <- default_prior_BinRW()
+    } else if (model == "BinMC") {
+      out <- default_prior_BinMC()
+    } else if (model == "OrderedRW") {
+      stopifnot(is_scalar_wholenumber(max_score))
+      out <- default_prior_OrderedRW(max_score)
+    } else if (model == "RW") {
+      out <- default_prior_RW()
+    } else if (model == "Smoothing") {
+      out <- default_prior_Smoothing()
+    } else if (model == "AR1") {
+      out <- default_prior_AR1()
+    } else if (model == "MixedAR1") {
+      out <- default_prior_MixedAR1()
+    }
+
+    return(out)
+
   }
-
-  return(out)
-
 }
 
 #' Call stopifnot_prior_* for different models

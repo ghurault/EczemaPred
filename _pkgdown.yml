@@ -1,4 +1,13 @@
 reference:
+- title: "Available models"
+- contents:
+  - BinRW
+- title: "Manipulating models"
+- contents:
+  - EczemaModel
+  - EczemaFit
+  - sample_prior
+  - default_prior
 - title: "Longitudinal data models"
 - contents:
   - prepare_data_lgtd
@@ -8,7 +17,6 @@ reference:
 - contents:
   - fit_discrete
   - sample_prior_discrete
-  - ends_with("_BinRW")
   - ends_with("_BinMC")
   - ends_with("_OrderedRW")
   - plot_latent_OrderedRW
