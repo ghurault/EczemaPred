@@ -29,3 +29,10 @@ Fit an EczemaModel
 \item \code{EczemaModel}: Method for EczemaModel object
 }}
 
+\examples{
+\dontrun{
+model <- EczemaModel("BinRW", max_score = 100)
+train <- data.frame(Patient = 1, Time = 1:10, Score = rbinom(10, 100, .5))
+EczemaFit(model, train)
+}
+}

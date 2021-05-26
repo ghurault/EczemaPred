@@ -12,7 +12,7 @@
 \item{digits}{Number of significant digits to print}
 }
 \value{
-Invisible
+None
 }
 \description{
 Print model

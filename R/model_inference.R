@@ -5,6 +5,13 @@
 #' @export
 #'
 #' @describeIn EczemaFit Method for EczemaModel object
+#'
+#' @examples
+#' \dontrun{
+#' model <- EczemaModel("BinRW", max_score = 100)
+#' train <- data.frame(Patient = 1, Time = 1:10, Score = rbinom(10, 100, .5))
+#' EczemaFit(model, train)
+#' }
 EczemaFit.EczemaModel <- function(model, train, test = NULL, ...) {
 
   data_stan <- prepare_data_lgtd(train = train,
@@ -32,6 +39,12 @@ EczemaFit.EczemaModel <- function(model, train, test = NULL, ...) {
 #' @export
 #'
 #' @describeIn sample_prior Method for EczemaModel object
+#'
+#' @examples
+#' \dontrun{
+#' model <- EczemaModel("BinRW", max_score = 100)
+#' sample_prior(model)
+#' }
 sample_prior.EczemaModel <- function(model, N_patient = 1, t_max = c(2), ...) {
 
   data_stan <- prepare_priorpred_lgtd(N_patient = N_patient,

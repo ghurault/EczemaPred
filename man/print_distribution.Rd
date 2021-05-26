@@ -14,7 +14,7 @@ print_distribution(parameter_name, distribution_name, arguments, digits = 2)
 \item{parameters}{Parameter values}
 }
 \value{
-Invisible
+None
 }
 \description{
 Print distribution

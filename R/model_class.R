@@ -14,7 +14,7 @@
 #' @export
 #'
 #' @examples
-#' mdl <- EczemaModel("BinRW", max_score = 10)
+#' EczemaModel("BinRW", max_score = 10)
 EczemaModel <- function(model_name = c("BinRW"),
                         max_score,
                         discrete = (model_name %in% c("BinRW")),
@@ -117,7 +117,7 @@ sample_prior <- function(model, ...) {
 #' @param model Object of class EczemaModel
 #' @param digits Number of significant digits to print
 #'
-#' @return Invisible
+#' @return None
 #' @export
 print.EczemaModel <- function(model, digits = 2) {
 

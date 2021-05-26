@@ -30,5 +30,5 @@ An object (list) of class \code{model_name} and EczemaModel
 EczemaModel constructor
 }
 \examples{
-mdl <- EczemaModel("BinRW", max_score = 10)
+EczemaModel("BinRW", max_score = 10)
 }

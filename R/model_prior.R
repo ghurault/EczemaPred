@@ -6,7 +6,7 @@
 #' @param parameters Parameter values
 #' @param digits Number of significant digits to print
 #'
-#' @return Invisible
+#' @return None
 print_distribution <- function(parameter_name, distribution_name, arguments, digits = 2) {
 
   stopifnot(is_scalar(parameter_name),

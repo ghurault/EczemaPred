@@ -29,3 +29,9 @@ Prior predictive distribution
 \item \code{EczemaModel}: Method for EczemaModel object
 }}
 
+\examples{
+\dontrun{
+model <- EczemaModel("BinRW", max_score = 100)
+sample_prior(model)
+}
+}

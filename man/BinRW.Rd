@@ -5,11 +5,9 @@
 \title{Binomial random walk model}
 \description{
 This is a state-space model defined by a Binomial measurement error and a latent random walk.
-}
-\details{
 For more details see the \href{https://ghurault.github.io/EczemaPred/articles/BinRW.html}{vignette}.
 }
-\section{Prior}{
+\section{Priors}{
 
 The priors are passed as a named list with elements \code{sigma}, \code{mu_logit_y0} and \code{sigma_logit_y0}
 specifying priors for the corresponding parameters.
@@ -24,15 +22,16 @@ NB: For \code{sigma} and \code{sigma_logit_y0}, usually x1=0 to define a half-no
 since the parameters are constrained to be positive.
 }
 
-\section{Default prior}{
+\section{Default priors}{
 
 \itemize{
+\item The default priors do not depend on \code{max_score}, and are printed in the examples section.
 \item The default prior for \code{sigma} translates to an odd ratio increment of at most 5 (~ 2 * upper bound of prior).
 \item The default priors for \code{mu_logit_y0} and \code{sigma_logit_y0} translates to an approximately uniform prior on \code{y0}.
 }
 }
 
-\section{Model's parameters}{
+\section{Parameters}{
 
 
 Population parameters:
@@ -56,3 +55,6 @@ Observation-dependent (patient- and time-dependent) parameters:
 See \code{list_parameters(model = "BinRW")}.
 }
 
+\examples{
+EczemaModel("BinRW", max_score = 100)
+}
