@@ -49,4 +49,5 @@ src/*.cpp
 
 # Custom
 src-i386/*
+docs/*
 
