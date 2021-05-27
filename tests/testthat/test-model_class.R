@@ -1,7 +1,11 @@
-for (model_name in c("BinRW", "OrderedRW", "BinMC")) {
+# General tests -----------------------------------------------------------
+
+for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW")) {
   for (max_score in c(10, 100)) {
 
-    model <- EczemaModel(model_name, max_score = max_score)
+    model <- EczemaModel(model_name,
+                         max_score = max_score,
+                         discrete = !(model_name %in% c("RW") && max_score > 50))
 
     test_that(paste0("We can construct a ", model_name, " object"), {
       expect_true(all(c(model_name, "EczemaModel") %in% class(model)))
@@ -36,4 +40,3 @@ for (model_name in c("BinRW", "OrderedRW", "BinMC")) {
 }
 
 # Test MC separately
-

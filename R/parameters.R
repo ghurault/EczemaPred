@@ -178,6 +178,17 @@ list_parameters.BinMC <- function(model, main = TRUE) {
 
 }
 
+#' @rdname list_parameters
+#' @export
+#' @examples
+#' list_parameters(EczemaModel("RW", max_score = 100))
+list_parameters.RW <- function(model) {
+  list(Population = "sigma",
+       PatientTime = "y_rep",
+       Test = c("y_pred", "lpd", "cum_err"),
+       Misc = "y_mis")
+}
+
 # Extract parameters ------------------------------------------------------
 
 #' Extract parameters posterior summary statistics

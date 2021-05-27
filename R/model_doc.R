@@ -172,3 +172,41 @@ NULL
 #' @examples
 #' EczemaModel("BinMC", max_score = 100)
 NULL
+
+# RW ----------------------------------------------------------------------
+
+#' Random walk model
+#'
+#' @param max_score Maximum value that the score can take
+#' @param prior Named list of the model's priors. If `NULL`, uses the default prior for the model (see [default_prior()]).
+#'
+#' @details
+#' - Details of the model are available in the [paper](#).
+#' - The model is naive as it is trained with a non-truncated, not discretised distribution.
+#' As a result, sampling from the prior predictive distribution can be challenging if the score is near the bounds
+#' and the variance is sufficiently large.
+#' - For more details see the [vignette](https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html).
+#'
+#' @section Parameters:
+#'
+#' - `sigma`: Standard deviation of the random walk
+#' - `y_mis`: Missing values
+#'
+#' See `list_parameters(model = "RW")`.
+#'
+#' @section Priors:
+#' The priors are passed as a named list with element `sigma`
+#' specifying priors for the corresponding parameter, where
+#' `sigma / max_score ~ normal(x1, x2)`
+#' and the element `sigma` of the list is a vector of length two containing x1 and x2.
+#' NB: usually x1=0 to define a half-normal distribution (sigma is constraint to be positive) and
+#' x2 should be positive.
+#'
+#' @section Default priors:
+#' The default prior for `sigma` translates to a width of the predictive distribution to be at most `max_score`.
+#'
+#' @name RW
+#'
+#' @examples
+#' EczemaModel("RW", max_score = 100, discrete = FALSE)
+NULL

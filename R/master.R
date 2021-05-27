@@ -105,33 +105,6 @@ fit_all <- function(train,
 
 }
 
-#' Fit discrete models
-#'
-#' Except Markov Chain model
-#'
-#' @param train Training dataframe (details of the format in [prepare_data_lgtd()])
-#' @param test Testing dataframe (details of the format in [prepare_data_lgtd()])
-#' @param max_score Maximum value that the score can take
-#' @param model Model name
-#' @param prior A named list of corresponding to parameters' prior.
-#' @param ... Arguments to be pass to [rstan::sampling()]
-#'
-#' @return Stanfit object
-#'
-#' @seealso [fit_BinRW()], [fit_BinMC()], [fit_OrderedRW()], [fit_RW()]
-#'
-#' @export
-fit_discrete <- function(train,
-                         test = NULL,
-                         max_score,
-                         model = c("BinRW", "BinMC", "OrderedRW", "RW"),
-                         prior = default_prior(model, max_score),
-                         ...) {
-
-  fit_all(train = train, test = test, max_score = max_score, discrete = TRUE, model = model, prior = prior, ...)
-
-}
-
 #' Fit continuous models
 #'
 #' @param train Training dataframe (details of the format in [prepare_data_lgtd()])
@@ -190,33 +163,6 @@ sample_prior_all <- function(N_patient = 1,
   fit <- rstan::sampling(stanmodels[[model]], data = data_stan, ...)
 
   return(fit)
-
-}
-
-#' Sample prior for discrete models
-#'
-#' Except Markov Chain model
-#'
-#' @param N_patient Number of patients
-#' @param t_max Vector of size N_patient indicating the time-series length
-#' @param max_score Maximum value that the score can take
-#' @param model Model name
-#' @param prior A named list of corresponding to parameters' prior.
-#' @param ... Arguments to be pass to [rstan::sampling()]
-#'
-#' @return Stanfit object
-#'
-#' @seealso [sample_prior_BinRW()], [sample_prior_BinMC()], [sample_prior_OrderedRW()], [sample_prior_RW()]
-#'
-#' @export
-sample_prior_discrete <- function(N_patient = 1,
-                                  t_max = c(2),
-                                  max_score,
-                                  model = c("BinRW", "BinMC", "OrderedRW", "RW"),
-                                  prior = default_prior(model, max_score),
-                                  ...) {
-
-  sample_prior_all(N_patient = N_patient, t_max = t_max, max_score = max_score, discrete = TRUE, model = model, prior = prior, ...)
 
 }
 

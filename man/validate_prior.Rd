@@ -5,6 +5,7 @@
 \alias{validate_prior.BinRW}
 \alias{validate_prior.OrderedRW}
 \alias{validate_prior.BinMC}
+\alias{validate_prior.RW}
 \title{Check the prior of an EczemaModel is correct}
 \usage{
 validate_prior(model)
@@ -14,6 +15,8 @@ validate_prior(model)
 \method{validate_prior}{OrderedRW}(model)
 
 \method{validate_prior}{BinMC}(model)
+
+\method{validate_prior}{RW}(model)
 }
 \arguments{
 \item{model}{Object}
@@ -27,9 +30,5 @@ NULL if all statements are TRUE, otherwise an error message
 Used internally when constructing an EczemaModel.
 }
 \seealso{
-\code{\link[base:stopifnot]{base::stopifnot()}}
-
-\code{\link[base:stopifnot]{base::stopifnot()}}
-
 \code{\link[base:stopifnot]{base::stopifnot()}}
 }

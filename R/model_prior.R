@@ -45,7 +45,6 @@ default_prior.character <- function(model, max_score = 1, ...) {
 # BinRW -------------------------------------------------------------------
 
 #' @rdname validate_prior
-#' @seealso [base::stopifnot()]
 #' @export
 validate_prior.BinRW <- function(model) {
   prior <- model$prior
@@ -82,7 +81,6 @@ print_prior.BinRW <- function(model, digits = 2) {
 # OrderedRW ---------------------------------------------------------------
 
 #' @rdname validate_prior
-#' @seealso [base::stopifnot()]
 #' @export
 validate_prior.OrderedRW <- function(model) {
   prior <- model$prior
@@ -124,7 +122,6 @@ print_prior.OrderedRW <- function(model, digits = 2) {
 # BinMC -------------------------------------------------------------------
 
 #' @rdname validate_prior
-#' @seealso [base::stopifnot()]
 #' @export
 validate_prior.BinMC <- function(model) {
   prior <- model$prior
@@ -158,4 +155,34 @@ print_prior.BinMC <- function(model, digits = 2) {
   print_distribution("mu_logit_p10", "normal", model$prior$mu_logit_p10, digits = digits)
   print_distribution("sigma_logit_p10", "normal+", model$prior$sigma_logit_p10, digits = digits)
   print_distribution("logit_tss1_0", "normal", model$prior$logit_tss1_0, digits = digits)
+}
+
+# RW ----------------------------------------------------------------------
+
+#' @rdname validate_prior
+#' @export
+validate_prior.RW <- function(model) {
+  prior <- model$prior
+  stopifnot(
+    is.list(prior),
+    length(prior) == 1,
+    "sigma" %in% names(prior),
+    all(is.numeric(prior$sigma)),
+    length(prior$sigma) == 2,
+    prior$sigma[2] > 0
+  )
+}
+
+#' @rdname default_prior
+#' @export
+#' @examples
+#' default_prior(EczemaModel("RW", max_score = 100))
+default_prior.RW <- function(model) {
+  list(sigma = c(0, 0.1))
+}
+
+#' @rdname print_prior
+#' @export
+print_prior.RW <- function(model, digits = 2) {
+  print_distribution("sigma / max_score", "normal+", model$prior$sigma, digits = digits)
 }

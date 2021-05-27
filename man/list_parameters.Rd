@@ -6,6 +6,7 @@
 \alias{list_parameters.BinRW}
 \alias{list_parameters.OrderedRW}
 \alias{list_parameters.BinMC}
+\alias{list_parameters.RW}
 \title{List available parameters}
 \usage{
 list_parameters(model, ...)
@@ -17,6 +18,8 @@ list_parameters(model, ...)
 \method{list_parameters}{OrderedRW}(model, main = TRUE)
 
 \method{list_parameters}{BinMC}(model, main = TRUE)
+
+\method{list_parameters}{RW}(model)
 }
 \arguments{
 \item{model}{Object}
@@ -52,4 +55,5 @@ list_parameters("BinRW")
 list_parameters(EczemaModel("BinRW", max_score = 100))
 list_parameters(EczemaModel("OrderedRW", max_score = 100))
 list_parameters(EczemaModel("BinMC", max_score = 100))
+list_parameters(EczemaModel("RW", max_score = 100))
 }

@@ -5,7 +5,7 @@
 \title{EczemaModel constructor}
 \usage{
 EczemaModel(
-  model_name = c("BinRW", "OrderedRW", "BinMC"),
+  model_name = c("BinRW", "OrderedRW", "BinMC", "RW"),
   max_score = NULL,
   K = NULL,
   discrete = TRUE,

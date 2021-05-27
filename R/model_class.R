@@ -16,7 +16,7 @@
 #'
 #' @examples
 #' EczemaModel("BinRW", max_score = 10)
-EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC"),
+EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC", "RW"),
                         max_score = NULL,
                         K = NULL,
                         discrete = TRUE,
@@ -39,10 +39,9 @@ EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC"),
     if (is.null(max_score)) {
       stop("max_score must be supplied for ", model_name)
     } else {
-      stopifnot(is_scalar(max_score),
-                is.numeric(max_score),
-                max_score > 0,
-                is_wholenumber(max_score) || !discrete)
+      # NB: max_score must be a wholenumber even if discrete=FALSE
+      stopifnot(is_scalar_wholenumber(max_score),
+                max_score > 0)
       model_spec$max_score <- max_score
     }
   }
@@ -93,6 +92,8 @@ default_prior <- function(model, ...) {
 #' @param ... Arguments to pass to other methods
 #'
 #' @return NULL if all statements are TRUE, otherwise an error message
+#'
+#' @seealso [base::stopifnot()]
 #'
 #' @export
 validate_prior <- function(model) {
