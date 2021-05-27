@@ -51,3 +51,64 @@
 #' @examples
 #' EczemaModel("BinRW", max_score = 100)
 NULL
+
+# OrderedRW ---------------------------------------------------------------
+
+#' Ordered Logistic random walk model
+#'
+#' This is a state-space model defined by a Ordered logistic measurement error distribution and a latent random walk.
+#' For more details see the BinRW [vignette](https://ghurault.github.io/EczemaPred/articles/BinRW.html).
+#'
+#' @param max_score Maximum value that the score can take
+#' @param prior Named list of the model's priors. If `NULL`, uses the default prior for the model (see [default_prior()]).
+#'
+#' @details Details of the model are available in the [paper](#).
+#'
+#' @section Parameters:
+#'
+#' Population parameters:
+#'
+#' - `sigma`: Standard deviation of the random walk
+#' - `mu_y0`: Population mean of `y0` (initial condition).
+#' - `sigma_y0`: Population standard deviation of `y0` (initial condition).
+#' - `delta`: Difference between cutpoints (vector of length `max_score - 1`)
+#' - `ct`: Cutpoints (vector of length `max_score`)
+#' - `p0`: Probability distribution of the average patient at t0 (vector of length `max_score`)
+#'
+#' Patient-dependent parameters:
+#'
+#' - `y0`: `y_lat` at t0.
+#'
+#' Observation-dependent (patient- and time-dependent) parameters:
+#'
+#' - `y_lat`: Latent score
+#'
+#' See `list_parameters(model = "OrderedRW")`.
+#'
+#' @section Priors:
+#' The priors are passed as a named list with elements `delta`, `sigma`, `mu_y0` and `sigma_y0`.
+#'
+#' The element `delta` should be a matrix with 2 rows and `max_score - 1` columns,
+#' such as the i-th column is a vector with values x1 and x2, where x2 > 0 and
+#' `delta[i] ~ normal(x1, x2)`.
+#' The other parameters are normalised by the difference between the highest and lowest cutpoints (approx. the range of the score),
+#' and their priors are defined by a vector of length 2, containing values for x1 and x2, x2 > 0, such as:
+#'
+#' - `sigma ~ normal(x1, x2)`
+#' - `mu_y0 ~ normal(x1, x2)`
+#' - `sigma_y0 ~ normal(x1, x2)`
+#'
+#' NB: `delta`, `sigma` and `sigma_y0` are constrained to be positive so x1 are usually set to 0 to define a half-normal distribution.
+#'
+#' @section Default priors:
+#' - The default prior for `delta` is set so that `delta` is less than the width of the logistic distribution.
+#' - The default prior for `sigma` assumes it would be to go to a state where `y = 0` is the most likely outcome to
+#' a state where `y = M` in two transitions.
+#' - The default priors for `mu_y0` and `sigma_y0` have reasonable ranges and translate to an approximately uniform prior
+#' over the range of the score for `y0`.
+#'
+#' @name OrderedRW
+#'
+#' @examples
+#' EczemaModel("OrderedRW", max_score = 10)
+NULL

@@ -2,6 +2,7 @@ reference:
 - title: "Available models"
 - contents:
   - BinRW
+  - OrderedRW
 - title: "Fitting models"
 - contents:
   - EczemaModel

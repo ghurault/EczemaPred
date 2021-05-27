@@ -4,8 +4,9 @@
 #'
 #' Used internally in [print_prior()].
 #'
+#' @param parameter_name Name of the parameter
 #' @param distribution_name Name of the distribution
-#' @param parameters Parameter values
+#' @param arguments Arguments of the distribution
 #' @param digits Number of significant digits to print
 #'
 #' @return None
@@ -72,7 +73,48 @@ default_prior.BinRW <- function(model) {
 #' @rdname print_prior
 #' @export
 print_prior.BinRW <- function(model, digits = 2) {
-  print_distribution("sigma", "normal+", model$prior$sigma)
-  print_distribution("mu_logit_y0", "normal", model$prior$mu_logit_y0)
-  print_distribution("sigma_logit_y0", "normal", model$prior$sigma_logit_y0)
+  print_distribution("sigma", "normal+", model$prior$sigma, digits = digits)
+  print_distribution("mu_logit_y0", "normal", model$prior$mu_logit_y0, digits = digits)
+  print_distribution("sigma_logit_y0", "normal", model$prior$sigma_logit_y0, digits = digits)
+}
+
+# OrderedRW ---------------------------------------------------------------
+
+#' @rdname validate_prior
+#' @export
+validate_prior.OrderedRW <- function(model) {
+  prior <- model$prior
+  stopifnot(is.list(prior),
+            length(prior) == 4,
+            all(c("delta", "sigma", "mu_y0", "sigma_y0") %in% names(prior)),
+            all(sapply(prior, is.numeric)),
+            dim(prior$delta_sd) == c(2, model$max_score - 1),
+            all(prior$delta[2, ] > 0),
+            all(sapply(prior[c("sigma", "mu_y0", "sigma_y0")], function(x) {length(x) == 2})),
+            all(sapply(prior[c("sigma", "mu_y0", "sigma_y0")], function(x) {x[2] > 0})))
+}
+
+#' @rdname validate_prior
+#' @export
+#' @examples
+#' default_prior(EczemaModel("OrderedRW", max_score = 10))
+default_prior.OrderedRW <- function(model) {
+  list(
+    delta = matrix(rep(c(0, pi / sqrt(3) * 2), model$max_score - 1),
+                   nrow = 2, byrow = FALSE),
+    sigma = c(0, 0.1),
+    mu_y0 = c(0.5, 0.25),
+    sigma_y0 = c(0, 0.125)
+  )
+}
+
+#' @rdname validate_prior
+#' @export
+print_prior.OrderedRW <- function(model, digits = 2) {
+  for (i in 1:(model$max_score - 1)) {
+    print_distribution(paste0("delta[", i, "]"), "normal+", model$prior$delta[, i])
+  }
+  print_distribution("sigma", "normal+", model$prior$sigma, digits = digits)
+  print_distribution("mu_y0", "normal", model$prior$mu_y0, digits = digits)
+  print_distribution("sigma_y0", "normal", model$prior$sigma_y0, digits = digits)
 }

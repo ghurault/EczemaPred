@@ -102,7 +102,7 @@ if (FALSE) {
 
 }
 
-#' @rdname default_prior
+#' @rdname list_parameters
 #' @export
 #' @examples
 #' list_parameters("BinRW")
@@ -112,7 +112,7 @@ list_parameters.character <- function(model, ...) {
     list_parameters(...)
 }
 
-#' @rdname default_prior
+#' @rdname list_parameters
 #' @importFrom HuraultMisc is_scalar
 #' @export
 #' @examples

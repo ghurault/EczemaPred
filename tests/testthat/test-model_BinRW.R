@@ -30,15 +30,15 @@ test_that("BinRW constructor catches errors in prior", {
   }
 })
 
-# Test sample_prior_BinRW ----------------------------------------------------
+# Test sample_prior ----------------------------------------------------
 
 fit0 <- sample_prior(model, N_patient = N_patient, t_max = t_max, chains = 1, refresh = 0)
 
-test_that("sample_prior_BinRW returns a stanfit object", {
+test_that("sample_prior returns a stanfit object", {
   expect_true(is_stanfit(fit0))
 })
 
-# Test fit_BinRW ----------------------------------------------------
+# Test fit ----------------------------------------------------
 
 l <- extract_fakedata(fit = fit0,
                       id = get_index2(t_max),
@@ -50,7 +50,7 @@ fit <- EczemaFit(model, train = l$Train, test = l$Test, chains = 1, refresh = 0)
 
 id <- get_index(train = l$Train, test = l$Test)
 
-test_that("fit_BinRW returns a stanfit object", {
+test_that("EczemaFit returns a stanfit object", {
   expect_true(is_stanfit(fit))
 })
 
@@ -60,7 +60,7 @@ par <- HuraultMisc::summary_statistics(fit, pars = param) %>%
   mutate(Coverage90 = (True > `5%` & True < `95%`),
          NormError = abs(Mean - True) / sd)
 
-test_that("sigma estimate from fit_BinRW is accurate", {
+test_that("sigma estimate from EczemaFit is accurate", {
   par %>%
     filter(Variable == "sigma") %>%
     pull(NormError) %>%

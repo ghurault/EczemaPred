@@ -24,11 +24,6 @@ Stanfit object
 \description{
 Fit an EczemaModel
 }
-\section{Methods (by class)}{
-\itemize{
-\item \code{EczemaModel}: Method for EczemaModel object
-}}
-
 \examples{
 \dontrun{
 model <- EczemaModel("BinRW", max_score = 100)

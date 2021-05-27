@@ -16,7 +16,7 @@
 #'
 #' @examples
 #' EczemaModel("BinRW", max_score = 10)
-EczemaModel <- function(model_name = c("BinRW"),
+EczemaModel <- function(model_name = c("BinRW", "OrderedRW"),
                         max_score = NULL,
                         K = NULL,
                         discrete = TRUE,
@@ -27,7 +27,7 @@ EczemaModel <- function(model_name = c("BinRW"),
   model_spec <- list(name = model_name,
                      stanmodel = model_name)
 
-  if (model_name %in% c("BinRW")) {
+  if (model_name %in% c("BinRW", "OrderedRW", "BinMC")) {
     discrete <- TRUE
   } else {
     stopifnot(is_scalar(discrete),
@@ -35,7 +35,7 @@ EczemaModel <- function(model_name = c("BinRW"),
   }
   model_spec$discrete <- discrete
 
-  if (model_name %in% c("BinRW")) {
+  if (model_name %in% c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing", "AR1", "MixedAR1")) {
     if (is.null(max_score)) {
       stop("max_score must be supplied for ", model_name)
     } else {

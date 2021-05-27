@@ -51,7 +51,7 @@ The prior should be a matrix where each line correspond to the parameters of the
 }
 }
 \details{
-For more details see the \url{Markov Chain vignette}.
+For more details see the \href{https://ghurault.github.io/EczemaPred/articles/MC.html}{Markov Chain vignette}.
 }
 \section{Dataframe format}{
 

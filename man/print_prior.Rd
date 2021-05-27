@@ -15,8 +15,8 @@ print_prior(model, ...)
 \item{...}{Arguments to pass to other methods}
 }
 \value{
-Invisible
+None
 }
 \description{
-Print prior distribution
+Used internally in the \code{print.EczemaModel} method.
 }

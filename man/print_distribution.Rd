@@ -7,15 +7,20 @@
 print_distribution(parameter_name, distribution_name, arguments, digits = 2)
 }
 \arguments{
+\item{parameter_name}{Name of the parameter}
+
 \item{distribution_name}{Name of the distribution}
 
-\item{digits}{Number of significant digits to print}
+\item{arguments}{Arguments of the distribution}
 
-\item{parameters}{Parameter values}
+\item{digits}{Number of significant digits to print}
 }
 \value{
 None
 }
 \description{
-Print distribution
+Used internally in \code{\link[=print_prior]{print_prior()}}.
+}
+\examples{
+print_distribution("x", "normal", c(0, 1))
 }

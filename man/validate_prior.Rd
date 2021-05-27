@@ -3,11 +3,20 @@
 \name{validate_prior}
 \alias{validate_prior}
 \alias{validate_prior.BinRW}
+\alias{validate_prior.OrderedRW}
+\alias{default_prior.OrderedRW}
+\alias{print_prior.OrderedRW}
 \title{Check the prior of an EczemaModel is correct}
 \usage{
 validate_prior(model)
 
 \method{validate_prior}{BinRW}(model)
+
+\method{validate_prior}{OrderedRW}(model)
+
+\method{default_prior}{OrderedRW}(model)
+
+\method{print_prior}{OrderedRW}(model, digits = 2)
 }
 \arguments{
 \item{model}{Object}
@@ -18,5 +27,8 @@ validate_prior(model)
 NULL if all statements are TRUE, otherwise an error message
 }
 \description{
-Check the prior of an EczemaModel is correct
+Used internally when constructing an EczemaModel.
+}
+\examples{
+default_prior(EczemaModel("OrderedRW", max_score = 10))
 }
