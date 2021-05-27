@@ -16,12 +16,13 @@ df <- data.frame(Patient = 1,
 l <- split_fc_dataset(df, 9)
 l2 <- lapply(l, function(x) {mutate(x, Score = round(Score))}) # discretised
 
-fit <- fit_RW(train = l$Training,
-              test = l$Testing,
-              max_score = max_score,
-              discrete = FALSE,
-              chains = 1,
-              refresh = 0)
+model <- EczemaModel("RW", max_score = max_score, discrete = FALSE)
+
+fit <- EczemaFit(model,
+                 train = l$Training,
+                 test = l$Testing,
+                 chains = 1,
+                 refresh = 0)
 
 # Helpers -----------------------------------------------------------------
 

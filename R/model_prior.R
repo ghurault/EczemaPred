@@ -34,19 +34,25 @@ print_distribution <- function(parameter_name, distribution_name, arguments, dig
 # Methods for class character ---------------------------------------------
 
 #' @rdname default_prior
+#'
+#' @param max_score Maximum value that the score can take
+#' @param K Number of categories
+#' @param ... Arguments to pass to [default_prior()] as an EczemaPred object
+#'
 #' @export
 #' @examples
 #' default_prior("BinRW")
-default_prior.character <- function(model, max_score = 1, ...) {
-  EczemaModel(model, max_score = max_score) %>%
-    default_prior()
+default_prior.character <- function(model, max_score = 1, K = 2, ...) {
+  message("default prior for max_score=", max_score, " (or, when applicable K=", K, ")")
+  EczemaModel(model, max_score = max_score, K = K) %>%
+    default_prior(...)
 }
 
 # BinRW -------------------------------------------------------------------
 
 #' @rdname validate_prior
 #' @export
-validate_prior.BinRW <- function(model) {
+validate_prior.BinRW <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
@@ -62,7 +68,7 @@ validate_prior.BinRW <- function(model) {
 #' @export
 #' @examples
 #' default_prior(EczemaModel("BinRW", max_score = 10))
-default_prior.BinRW <- function(model) {
+default_prior.BinRW <- function(model, ...) {
   list(
     sigma = c(0, 0.25 * log(5)),
     mu_logit_y0 = c(0, 1),
@@ -72,7 +78,7 @@ default_prior.BinRW <- function(model) {
 
 #' @rdname print_prior
 #' @export
-print_prior.BinRW <- function(model, digits = 2) {
+print_prior.BinRW <- function(model, digits = 2, ...) {
   print_distribution("sigma", "normal+", model$prior$sigma, digits = digits)
   print_distribution("mu_logit_y0", "normal", model$prior$mu_logit_y0, digits = digits)
   print_distribution("sigma_logit_y0", "normal", model$prior$sigma_logit_y0, digits = digits)
@@ -82,7 +88,7 @@ print_prior.BinRW <- function(model, digits = 2) {
 
 #' @rdname validate_prior
 #' @export
-validate_prior.OrderedRW <- function(model) {
+validate_prior.OrderedRW <- function(model, ...) {
   prior <- model$prior
   stopifnot(is.list(prior),
             length(prior) == 4,
@@ -98,7 +104,7 @@ validate_prior.OrderedRW <- function(model) {
 #' @export
 #' @examples
 #' default_prior(EczemaModel("OrderedRW", max_score = 10))
-default_prior.OrderedRW <- function(model) {
+default_prior.OrderedRW <- function(model, ...) {
   list(
     delta = matrix(rep(c(0, pi / sqrt(3) * 2), model$max_score - 1),
                    nrow = 2, byrow = FALSE),
@@ -110,7 +116,7 @@ default_prior.OrderedRW <- function(model) {
 
 #' @rdname print_prior
 #' @export
-print_prior.OrderedRW <- function(model, digits = 2) {
+print_prior.OrderedRW <- function(model, digits = 2, ...) {
   for (i in 1:(model$max_score - 1)) {
     print_distribution(paste0("delta[", i, "]"), "normal+", model$prior$delta[, i])
   }
@@ -123,7 +129,7 @@ print_prior.OrderedRW <- function(model, digits = 2) {
 
 #' @rdname validate_prior
 #' @export
-validate_prior.BinMC <- function(model) {
+validate_prior.BinMC <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
@@ -139,7 +145,7 @@ validate_prior.BinMC <- function(model) {
 #' @export
 #' @examples
 #' default_prior(EczemaModel("BinMC", max_score = 100))
-default_prior.BinMC <- function(model) {
+default_prior.BinMC <- function(model, ...) {
   list(
     sigma = c(0, 0.25 * log(5)),
     mu_logit_p10 = c(0, 1),
@@ -150,7 +156,7 @@ default_prior.BinMC <- function(model) {
 
 #' @rdname print_prior
 #' @export
-print_prior.BinMC <- function(model, digits = 2) {
+print_prior.BinMC <- function(model, digits = 2, ...) {
   print_distribution("sigma", "normal+", model$prior$sigma, digits = digits)
   print_distribution("mu_logit_p10", "normal", model$prior$mu_logit_p10, digits = digits)
   print_distribution("sigma_logit_p10", "normal+", model$prior$sigma_logit_p10, digits = digits)
@@ -161,7 +167,7 @@ print_prior.BinMC <- function(model, digits = 2) {
 
 #' @rdname validate_prior
 #' @export
-validate_prior.RW <- function(model) {
+validate_prior.RW <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
@@ -177,13 +183,13 @@ validate_prior.RW <- function(model) {
 #' @export
 #' @examples
 #' default_prior(EczemaModel("RW", max_score = 100))
-default_prior.RW <- function(model) {
+default_prior.RW <- function(model, ...) {
   list(sigma = c(0, 0.1))
 }
 
 #' @rdname print_prior
 #' @export
-print_prior.RW <- function(model, digits = 2) {
+print_prior.RW <- function(model, digits = 2, ...) {
   print_distribution("sigma / max_score", "normal+", model$prior$sigma, digits = digits)
 }
 
@@ -191,7 +197,7 @@ print_prior.RW <- function(model, digits = 2) {
 
 #' @rdname validate_prior
 #' @export
-validate_prior.Smoothing <- function(model) {
+validate_prior.Smoothing <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
@@ -208,7 +214,7 @@ validate_prior.Smoothing <- function(model) {
 #' @export
 #' @examples
 #' default_prior(EczemaModel("Smoothing", max_score = 100))
-default_prior.Smoothing <- function(model) {
+default_prior.Smoothing <- function(model, ...) {
   list(
     sigma = c(0, 0.1),
     tau = c(0.5 * log(10), 0.75 * log(10))
@@ -217,7 +223,7 @@ default_prior.Smoothing <- function(model) {
 
 #' @rdname print_prior
 #' @export
-print_prior.Smoothing <- function(model, digits = 2) {
+print_prior.Smoothing <- function(model, digits = 2, ...) {
   print_distribution("sigma / max_score", "normal+", model$prior$sigma, digits = digits)
   print_distribution("tau", "lognormal", model$prior$tau, digits = digits)
 }
@@ -226,7 +232,7 @@ print_prior.Smoothing <- function(model, digits = 2) {
 
 #' @rdname validate_prior
 #' @export
-validate_prior.AR1 <- function(model) {
+validate_prior.AR1 <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
@@ -244,7 +250,7 @@ validate_prior.AR1 <- function(model) {
 #' @export
 #' @examples
 #' default_prior(EczemaModel("AR1", max_score = 100))
-default_prior.AR1 <- function(model) {
+default_prior.AR1 <- function(model, ...) {
   list(
     sigma = c(0, 0.1),
     alpha = c(1, 1),
@@ -254,7 +260,7 @@ default_prior.AR1 <- function(model) {
 
 #' @rdname print_prior
 #' @export
-print_prior.AR1 <- function(model, digits = 2) {
+print_prior.AR1 <- function(model, digits = 2, ...) {
   print_distribution("sigma / max_score", "normal+", model$prior$sigma, digits = digits)
   print_distribution("alpha", "beta", model$prior$alpha, digits = digits)
   print_distribution("y_inf / max_score", "normal", model$prior$y_inf, digits = digits)
@@ -264,7 +270,7 @@ print_prior.AR1 <- function(model, digits = 2) {
 
 #' @rdname validate_prior
 #' @export
-validate_prior.MixedAR1 <- function(model) {
+validate_prior.MixedAR1 <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
@@ -281,7 +287,7 @@ validate_prior.MixedAR1 <- function(model) {
 #' @export
 #' @examples
 #' default_prior(EczemaModel("MixedAR1", max_score = 100))
-default_prior.MixedAR1 <- function(model) {
+default_prior.MixedAR1 <- function(model, ...) {
   list(
     sigma = c(0, 0.1),
     mu_logit_alpha = c(0, 1),
@@ -293,7 +299,7 @@ default_prior.MixedAR1 <- function(model) {
 
 #' @rdname print_prior
 #' @export
-print_prior.MixedAR1 <- function(model, digits = 2) {
+print_prior.MixedAR1 <- function(model, digits = 2, ...) {
   print_distribution("sigma / max_score", "normal+", model$prior$sigma, digits = digits)
   print_distribution("mu_logit_alpha", "normal", model$prior$mu_logit_alpha, digits = digits)
   print_distribution("sigma_logit_alpha", "normal+", model$prior$sigma_logit_alpha, digits = digits)
@@ -305,7 +311,7 @@ print_prior.MixedAR1 <- function(model, digits = 2) {
 
 #' @rdname validate_prior
 #' @export
-validate_prior.MC <- function(model) {
+validate_prior.MC <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
@@ -320,13 +326,13 @@ validate_prior.MC <- function(model) {
 #' @export
 #' @examples
 #' default_prior(EczemaModel("MC", K = 10))
-default_prior.MC <- function(model) {
+default_prior.MC <- function(model, ...) {
   list(p = matrix(1, nrow = model$K, ncol = model$K))
 }
 
 #' @rdname print_prior
 #' @export
-print_prior.MC <- function(model, digits = 2) {
+print_prior.MC <- function(model, digits = 2, ...) {
   for (i in 1:model$K) {
     print_distribution(paste0("p[", i, ", ]"), "dirichlet", model$prior$p[i, ])
   }

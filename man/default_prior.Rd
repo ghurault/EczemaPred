@@ -15,28 +15,30 @@
 \usage{
 default_prior(model, ...)
 
-\method{default_prior}{character}(model, max_score = 1, ...)
+\method{default_prior}{character}(model, max_score = 1, K = 2, ...)
 
-\method{default_prior}{BinRW}(model)
+\method{default_prior}{BinRW}(model, ...)
 
-\method{default_prior}{OrderedRW}(model)
+\method{default_prior}{OrderedRW}(model, ...)
 
-\method{default_prior}{BinMC}(model)
+\method{default_prior}{BinMC}(model, ...)
 
-\method{default_prior}{RW}(model)
+\method{default_prior}{RW}(model, ...)
 
-\method{default_prior}{Smoothing}(model)
+\method{default_prior}{Smoothing}(model, ...)
 
-\method{default_prior}{AR1}(model)
+\method{default_prior}{AR1}(model, ...)
 
-\method{default_prior}{MixedAR1}(model)
+\method{default_prior}{MixedAR1}(model, ...)
 
-\method{default_prior}{MC}(model)
+\method{default_prior}{MC}(model, ...)
 }
 \arguments{
 \item{model}{Object}
 
-\item{...}{Arguments to pass to other methods}
+\item{...}{Arguments to pass to \code{\link[=default_prior.EczemaModel]{default_prior.EczemaModel()}}}
+
+\item{max_score}{Maximum value that the score can take}
 }
 \value{
 Named list of parameters' priors.

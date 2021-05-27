@@ -14,26 +14,28 @@
 \usage{
 print_prior(model, ...)
 
-\method{print_prior}{BinRW}(model, digits = 2)
+\method{print_prior}{BinRW}(model, digits = 2, ...)
 
-\method{print_prior}{OrderedRW}(model, digits = 2)
+\method{print_prior}{OrderedRW}(model, digits = 2, ...)
 
-\method{print_prior}{BinMC}(model, digits = 2)
+\method{print_prior}{BinMC}(model, digits = 2, ...)
 
-\method{print_prior}{RW}(model, digits = 2)
+\method{print_prior}{RW}(model, digits = 2, ...)
 
-\method{print_prior}{Smoothing}(model, digits = 2)
+\method{print_prior}{Smoothing}(model, digits = 2, ...)
 
-\method{print_prior}{AR1}(model, digits = 2)
+\method{print_prior}{AR1}(model, digits = 2, ...)
 
-\method{print_prior}{MixedAR1}(model, digits = 2)
+\method{print_prior}{MixedAR1}(model, digits = 2, ...)
 
-\method{print_prior}{MC}(model, digits = 2)
+\method{print_prior}{MC}(model, digits = 2, ...)
 }
 \arguments{
 \item{model}{Object}
 
 \item{...}{Arguments to pass to other methods}
+
+\item{digits}{Number of significant digits to print}
 }
 \value{
 None

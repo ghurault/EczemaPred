@@ -12,23 +12,23 @@
 \alias{validate_prior.MC}
 \title{Check the prior of an EczemaModel is correct}
 \usage{
-validate_prior(model)
+validate_prior(model, ...)
 
-\method{validate_prior}{BinRW}(model)
+\method{validate_prior}{BinRW}(model, ...)
 
-\method{validate_prior}{OrderedRW}(model)
+\method{validate_prior}{OrderedRW}(model, ...)
 
-\method{validate_prior}{BinMC}(model)
+\method{validate_prior}{BinMC}(model, ...)
 
-\method{validate_prior}{RW}(model)
+\method{validate_prior}{RW}(model, ...)
 
-\method{validate_prior}{Smoothing}(model)
+\method{validate_prior}{Smoothing}(model, ...)
 
-\method{validate_prior}{AR1}(model)
+\method{validate_prior}{AR1}(model, ...)
 
-\method{validate_prior}{MixedAR1}(model)
+\method{validate_prior}{MixedAR1}(model, ...)
 
-\method{validate_prior}{MC}(model)
+\method{validate_prior}{MC}(model, ...)
 }
 \arguments{
 \item{model}{Object}

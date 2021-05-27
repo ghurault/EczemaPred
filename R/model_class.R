@@ -97,7 +97,7 @@ default_prior <- function(model, ...) {
 #' @seealso [base::stopifnot()]
 #'
 #' @export
-validate_prior <- function(model) {
+validate_prior <- function(model, ...) {
   UseMethod("validate_prior")
 }
 
@@ -106,6 +106,7 @@ validate_prior <- function(model) {
 #' Used internally in the `print.EczemaModel` method.
 #'
 #' @param model Object
+#' @param digits Number of significant digits to print
 #' @param ... Arguments to pass to other methods
 #'
 #' @return None
@@ -118,6 +119,7 @@ print_prior <- function(model, ...) {
 #' List available parameters
 #'
 #' @param model Object
+#' @param main Whether to output the main parameters only.
 #' @param ... Arguments to pass to other methods
 #'
 #' @return Named list of parameters names, grouped into broad categories:
@@ -182,7 +184,7 @@ sample_prior <- function(model, ...) {
 #'
 #' @return None
 #' @export
-print.EczemaModel <- function(model, digits = 2) {
+print.EczemaModel <- function(model, digits = 2, ...) {
 
   cat(model$name, " model", sep = "")
   if ("discrete" %in% names(model)) {

@@ -11,11 +11,12 @@ list_parameters.character <- function(model, ...) {
 }
 
 #' @rdname list_parameters
+#'
 #' @importFrom HuraultMisc is_scalar
 #' @export
 #' @examples
 #' list_parameters(EczemaModel("BinRW", max_score = 100))
-list_parameters.BinRW <- function(model, main = TRUE) {
+list_parameters.BinRW <- function(model, main = TRUE, ...) {
 
   stopifnot(is_scalar(main),
             is.logical(main))
@@ -37,7 +38,7 @@ list_parameters.BinRW <- function(model, main = TRUE) {
 #' @export
 #' @examples
 #' list_parameters(EczemaModel("OrderedRW", max_score = 100))
-list_parameters.OrderedRW <- function(model, main = TRUE) {
+list_parameters.OrderedRW <- function(model, main = TRUE, ...) {
 
   stopifnot(is_scalar(main),
             is.logical(main))
@@ -59,7 +60,7 @@ list_parameters.OrderedRW <- function(model, main = TRUE) {
 #' @export
 #' @examples
 #' list_parameters(EczemaModel("BinMC", max_score = 100))
-list_parameters.BinMC <- function(model, main = TRUE) {
+list_parameters.BinMC <- function(model, main = TRUE, ...) {
 
   stopifnot(is_scalar(main),
             is.logical(main))
@@ -80,7 +81,7 @@ list_parameters.BinMC <- function(model, main = TRUE) {
 #' @export
 #' @examples
 #' list_parameters(EczemaModel("RW", max_score = 100))
-list_parameters.RW <- function(model) {
+list_parameters.RW <- function(model, ...) {
   list(Population = "sigma",
        PatientTime = "y_rep",
        Test = c("y_pred", "lpd", "cum_err"),
@@ -91,7 +92,7 @@ list_parameters.RW <- function(model) {
 #' @export
 #' @examples
 #' list_parameters(EczemaModel("Smoothing", max_score = 100))
-list_parameters.Smoothing <- function(model) {
+list_parameters.Smoothing <- function(model, ...) {
   list(Population = c("sigma", "tau", "alpha"),
        PatientTime = c("L", "y_rep"),
        Test = c("y_pred", "lpd"),
@@ -102,7 +103,7 @@ list_parameters.Smoothing <- function(model) {
 #' @export
 #' @examples
 #' list_parameters(EczemaModel("AR1", max_score = 100))
-list_parameters.AR1 <- function(model) {
+list_parameters.AR1 <- function(model, ...) {
   list(Population = c("sigma", "alpha", "b", "y_inf"),
        PatientTime = "y_rep",
        Test = c("y_pred", "lpd"),
@@ -113,7 +114,7 @@ list_parameters.AR1 <- function(model) {
 #' @export
 #' @examples
 #' list_parameters(EczemaModel("MixedAR1", max_score = 100))
-list_parameters.MixedAR1 <- function(model) {
+list_parameters.MixedAR1 <- function(model, ...) {
   list(Population = c("sigma", "mu_logit_alpha", "sigma_logit_alpha", "mu_inf", "sigma_inf"),
        Patient = c("alpha", "y_inf", "b"),
        PatientTime = c("y_rep"),
@@ -125,7 +126,7 @@ list_parameters.MixedAR1 <- function(model) {
 #' @export
 #' @examples
 #' list_parameters(EczemaModel("MC", K = 5))
-list_parameters.MC <- function(model) {
+list_parameters.MC <- function(model, ...) {
   list(Population = "p",
        Observation  = "y_rep",
        Test = c("y_pred", "lpd", "cum_err"))

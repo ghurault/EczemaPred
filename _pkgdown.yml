@@ -7,6 +7,7 @@ reference:
   - BinMC
 - subtitle: "Reference models"
 - contents:
+  - MC
   - RW
   - Smoothing
   - AR1
@@ -24,6 +25,7 @@ reference:
   - print_prior
   - print_distribution
   - prepare_data_lgtd
+  - add_prior
   - get_index
 - title: "Plotting models"
 - contents:
@@ -45,7 +47,6 @@ reference:
 - contents:
   - get_compiled_model
   - generate_missing
-  - add_prior
   - extract_parameters
   - extract_simulations
   - samples_to_list

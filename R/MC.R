@@ -22,7 +22,11 @@ stopifnot_MC_dataframe <- function(df, K) {
 
 }
 
-#' @rdname MC
+#' Prepare data to pass to the Stan sampler for MC model
+#'
+#' @param train Training dataframe
+#' @param test Testing dataframe
+#' @param K Number of categories
 #'
 #' @details
 #' - `train` and `test` should have columns `y0` (for the current state), `y1` (for the next state) and

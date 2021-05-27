@@ -87,7 +87,7 @@ sample_prior.EczemaModel <- function(model, N_patient = 1, t_max = c(2), ...) {
 
 }
 
-#' @param df Dataframe (details of the format in ...)
+#' @param data Dataframe (details of the format in ...)
 #' Only the columns `y0` and `dt` are relevant to simulate data from.
 #' @param ... Arguments to pass to [rstan::sampling()]
 #'
