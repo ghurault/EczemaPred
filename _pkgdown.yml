@@ -2,24 +2,32 @@ reference:
 - title: "Available models"
 - contents:
   - BinRW
-- title: "Manipulating models"
+- title: "Fitting models"
 - contents:
   - EczemaModel
   - EczemaFit
   - sample_prior
-  - default_prior
-- title: "Longitudinal data models"
+- title: "Manipulating models"
 - contents:
+  - list_parameters
+  - default_prior
+  - validate_prior
+  - print_prior
+  - print_distribution
   - prepare_data_lgtd
   - get_index
+- title: "Plotting models"
+- contents:
   - plot_ppc
+  - plot_latent_OrderedRW
+  - plot_transition_MC
+- title: "Longitudinal data models"
 - subtitle: "Discrete models"
 - contents:
   - fit_discrete
   - sample_prior_discrete
   - ends_with("_BinMC")
   - ends_with("_OrderedRW")
-  - plot_latent_OrderedRW
   - ends_with("_RW")
 - subtitle: "Continuous models"
 - contents:
@@ -44,9 +52,7 @@ reference:
 - contents:
   - get_compiled_model
   - generate_missing
-  - default_prior
   - add_prior
-  - list_parameters
   - extract_parameters
   - extract_simulations
   - samples_to_list

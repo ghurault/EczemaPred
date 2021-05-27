@@ -168,6 +168,15 @@ prepare_data_lgtd <- function(train, test = NULL, max_score, discrete) {
 
 }
 
+if (FALSE) {
+  prepare_standata.EczemaModel <- function(model, train, test = NULL) {
+    prepare_data_lgtd(train = train,
+                      test = test,
+                      max_score = model$max_score,
+                      discrete = model$discrete)
+  }
+}
+
 #' Prepare data list to pass to the Stan sampler for prior predictive checks
 #'
 #' Not exported

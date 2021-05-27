@@ -6,22 +6,23 @@
 \usage{
 EczemaModel(
   model_name = c("BinRW"),
-  max_score,
-  discrete = (model_name \%in\% c("BinRW")),
-  K = ifelse(discrete, max_score + 1, NA),
+  max_score = NULL,
+  K = NULL,
+  discrete = TRUE,
   prior = NULL
 )
 }
 \arguments{
 \item{model_name}{Name of the model to create}
 
-\item{max_score}{Maximum value that the score can take}
+\item{max_score}{Maximum value that the score can take. Required for all models except "MC".}
 
-\item{discrete}{Whether the model is discrete or not}
+\item{K}{Number of categories. Only required for "MC" model.}
 
-\item{K}{Number of categories (only used when \code{model_name == "MC"})}
+\item{discrete}{Whether the model is discrete or not.
+Only required for "RW", "Smoothing", "AR1" and "MixedAR1" models.}
 
-\item{prior}{Prior for the model. If \code{NULL}, uses the default prior for the model (see \code{\link[=default_prior]{default_prior()}})}
+\item{prior}{Named list of the model's priors. If \code{NULL}, uses the default prior for the model (see \code{\link[=default_prior]{default_prior()}}).}
 }
 \value{
 An object (list) of class \code{model_name} and EczemaModel

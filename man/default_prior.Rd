@@ -2,15 +2,26 @@
 % Please edit documentation in R/model_class.R, R/model_prior.R
 \name{default_prior}
 \alias{default_prior}
+\alias{default_prior.character}
+\alias{list_parameters.character}
+\alias{list_parameters.BinRW}
 \alias{default_prior.BinRW}
 \title{Default prior}
 \usage{
-default_prior(model)
+default_prior(model, ...)
+
+\method{default_prior}{character}(model, max_score = 1, ...)
+
+\method{list_parameters}{character}(model, ...)
+
+\method{list_parameters}{BinRW}(model, main = TRUE)
 
 \method{default_prior}{BinRW}(model)
 }
 \arguments{
-\item{model}{Object of class EczemaModel}
+\item{model}{Object}
+
+\item{...}{Arguments to pass to other methods}
 }
 \value{
 Named list of parameters' priors.
@@ -20,5 +31,8 @@ For more details, see the generic of the model class.
 Default prior
 }
 \examples{
+default_prior("BinRW")
+list_parameters("BinRW")
+list_parameters(EczemaModel("BinRW", max_score = 100))
 default_prior(EczemaModel("BinRW", max_score = 10))
 }

@@ -2,11 +2,18 @@
 
 #' Print distribution
 #'
+#' Used internally in [print_prior()].
+#'
 #' @param distribution_name Name of the distribution
 #' @param parameters Parameter values
 #' @param digits Number of significant digits to print
 #'
 #' @return None
+#'
+#' @export
+#'
+#' @examples
+#' print_distribution("x", "normal", c(0, 1))
 print_distribution <- function(parameter_name, distribution_name, arguments, digits = 2) {
 
   stopifnot(is_scalar(parameter_name),
@@ -21,6 +28,17 @@ print_distribution <- function(parameter_name, distribution_name, arguments, dig
 
   cat("- ", parameter_name, " ~ ", distribution_name, "(", tmp,  ")\n", sep = "")
 
+}
+
+# Methods for class character ---------------------------------------------
+
+#' @rdname default_prior
+#' @export
+#' @examples
+#' default_prior("BinRW")
+default_prior.character <- function(model, max_score = 1, ...) {
+  EczemaModel(model, max_score = max_score) %>%
+    default_prior()
 }
 
 # BinRW -------------------------------------------------------------------

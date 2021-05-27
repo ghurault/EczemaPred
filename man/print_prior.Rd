@@ -10,7 +10,7 @@ print_prior(model, ...)
 \method{print_prior}{BinRW}(model, digits = 2)
 }
 \arguments{
-\item{model}{Object of class EczemaModel}
+\item{model}{Object}
 
 \item{...}{Arguments to pass to other methods}
 }

@@ -4,7 +4,7 @@
 #'
 #' @export
 #'
-#' @describeIn EczemaFit Method for EczemaModel object
+#' @rdname EczemaFit
 #'
 #' @examples
 #' \dontrun{
@@ -38,7 +38,7 @@ EczemaFit.EczemaModel <- function(model, train, test = NULL, ...) {
 #'
 #' @export
 #'
-#' @describeIn sample_prior Method for EczemaModel object
+#' @rdname sample_prior
 #'
 #' @examples
 #' \dontrun{

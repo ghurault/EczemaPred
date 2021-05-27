@@ -61,12 +61,10 @@ stopifnot_MC_dataframe <- function(df, K) {
 #' See `list_parameters(model = "MC")`.
 #'
 #' @details
-#' For more details see the [Markov Chain vignette]().
+#' For more details see the [Markov Chain vignette](https://ghurault.github.io/EczemaPred/articles/MC.html).
 #'
 #' @name MC
 NULL
-
-## Update vignette url
 
 # Functions ---------------------------------------------------------------
 

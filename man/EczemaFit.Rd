@@ -10,7 +10,7 @@ EczemaFit(model, train, test, ...)
 \method{EczemaFit}{EczemaModel}(model, train, test = NULL, ...)
 }
 \arguments{
-\item{model}{Object of class EczemaModel}
+\item{model}{Object}
 
 \item{train}{Training dataframe}
 
@@ -19,7 +19,7 @@ EczemaFit(model, train, test, ...)
 \item{...}{Arguments to pass to \code{\link[rstan:stanmodel-method-sampling]{rstan::sampling()}}}
 }
 \value{
-Object of class stanfit
+Stanfit object
 }
 \description{
 Fit an EczemaModel

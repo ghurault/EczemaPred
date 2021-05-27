@@ -2,6 +2,9 @@
 
 S3method(EczemaFit,EczemaModel)
 S3method(default_prior,BinRW)
+S3method(default_prior,character)
+S3method(list_parameters,BinRW)
+S3method(list_parameters,character)
 S3method(print,EczemaModel)
 S3method(print_prior,BinRW)
 S3method(sample_prior,EczemaModel)

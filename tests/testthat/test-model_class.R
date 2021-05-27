@@ -17,4 +17,23 @@ for (model_name in c("BinRW")) {
     })
 
   }
+
+  test_that(paste0("Missing max_score argument when constructing ", model_name, "throws an error"), {
+    expect_error(EczemaModel(model_name))
+  })
+
+  test_that(paste0("Incorrect max_score when constructing ", model_name, "throws an error"), {
+    # Change when including continuous models
+    wrong_maxscore <- list(0,
+                           c(10, 10),
+                           10.1)
+    for (wms in wrong_maxscore) {
+      expect_error(EczemaModel(model_name, max_score = wms))
+    }
+
+  })
+
 }
+
+# Test MC separately
+

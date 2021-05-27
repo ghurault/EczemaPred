@@ -3,34 +3,18 @@
 \name{BinRW}
 \alias{BinRW}
 \title{Binomial random walk model}
+\arguments{
+\item{max_score}{Maximum value that the score can take}
+
+\item{prior}{Named list of the model's priors. If \code{NULL}, uses the default prior for the model (see \code{\link[=default_prior]{default_prior()}}).}
+}
 \description{
 This is a state-space model defined by a Binomial measurement error and a latent random walk.
 For more details see the \href{https://ghurault.github.io/EczemaPred/articles/BinRW.html}{vignette}.
 }
-\section{Priors}{
-
-The priors are passed as a named list with elements \code{sigma}, \code{mu_logit_y0} and \code{sigma_logit_y0}
-specifying priors for the corresponding parameters.
-Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 > 0, such as:
-\itemize{
-\item \code{sigma ~ normal(x1, x2)}.
-\item \code{mu_logit_y0 ~ normal(x1, x2)}
-\item \code{sigma_logit_y0 ~ normal(x1, x2)}
+\details{
+Details of the model are available in the \href{#}{paper}.
 }
-
-NB: For \code{sigma} and \code{sigma_logit_y0}, usually x1=0 to define a half-normal distribution
-since the parameters are constrained to be positive.
-}
-
-\section{Default priors}{
-
-\itemize{
-\item The default priors do not depend on \code{max_score}, and are printed in the examples section.
-\item The default prior for \code{sigma} translates to an odd ratio increment of at most 5 (~ 2 * upper bound of prior).
-\item The default priors for \code{mu_logit_y0} and \code{sigma_logit_y0} translates to an approximately uniform prior on \code{y0}.
-}
-}
-
 \section{Parameters}{
 
 
@@ -53,6 +37,30 @@ Observation-dependent (patient- and time-dependent) parameters:
 }
 
 See \code{list_parameters(model = "BinRW")}.
+}
+
+\section{Priors}{
+
+The priors are passed as a named list with elements \code{sigma}, \code{mu_logit_y0} and \code{sigma_logit_y0}
+specifying priors for the corresponding parameters.
+Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 > 0, such as:
+\itemize{
+\item \code{sigma ~ normal(x1, x2)}.
+\item \code{mu_logit_y0 ~ normal(x1, x2)}
+\item \code{sigma_logit_y0 ~ normal(x1, x2)}
+}
+
+NB: For \code{sigma} and \code{sigma_logit_y0}, usually x1=0 to define a half-normal distribution
+since the parameters are constrained to be positive.
+}
+
+\section{Default priors}{
+
+\itemize{
+\item The default priors do not depend on \code{max_score}, and are printed in the examples section.
+\item The default prior for \code{sigma} translates to an odd ratio increment of at most 5 (~ 2 * upper bound of prior).
+\item The default priors for \code{mu_logit_y0} and \code{sigma_logit_y0} translates to an approximately uniform prior on \code{y0}.
+}
 }
 
 \examples{

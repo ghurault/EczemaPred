@@ -10,7 +10,7 @@ sample_prior(model, ...)
 \method{sample_prior}{EczemaModel}(model, N_patient = 1, t_max = c(2), ...)
 }
 \arguments{
-\item{model}{Object of class EczemaModel}
+\item{model}{Object}
 
 \item{...}{Arguments to pass to \code{\link[rstan:stanmodel-method-sampling]{rstan::sampling()}}}
 

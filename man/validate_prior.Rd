@@ -10,7 +10,9 @@ validate_prior(model)
 \method{validate_prior}{BinRW}(model)
 }
 \arguments{
-\item{model}{Object of class EczemaModel}
+\item{model}{Object}
+
+\item{...}{Arguments to pass to other methods}
 }
 \value{
 NULL if all statements are TRUE, otherwise an error message
