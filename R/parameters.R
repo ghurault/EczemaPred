@@ -134,6 +134,50 @@ list_parameters.BinRW <- function(model, main = TRUE) {
 
 }
 
+#' @rdname list_parameters
+#' @importFrom HuraultMisc is_scalar
+#' @export
+#' @examples
+#' list_parameters(EczemaModel("OrderedRW", max_score = 100))
+list_parameters.OrderedRW <- function(model, main = TRUE) {
+
+  stopifnot(is_scalar(main),
+            is.logical(main))
+
+  out <- list(Population = c("sigma", "mu_y0", "sigma_y0", "p0", "ct", "delta"),
+              Patient = "y0",
+              PatientTime = c("y_lat", "y_rep"),
+              Test = c("y_pred", "lpd", "cum_err"))
+  if (main) {
+    out$Population <- setdiff(out$Population, "p0")
+  }
+
+  return(out)
+
+}
+
+#' @rdname list_parameters
+#' @importFrom HuraultMisc is_scalar
+#' @export
+#' @examples
+#' list_parameters(EczemaModel("BinMC", max_score = 100))
+list_parameters.BinMC <- function(model, main = TRUE) {
+
+  stopifnot(is_scalar(main),
+            is.logical(main))
+
+  out <- list(Population = c("mu_logit_p10", "sigma_logit_p10", "sigma"),
+              Patient = c("p10", "logit_p10", "logit_tss1_0"),
+              PatientTime = c("p01", "lambda", "ss1", "y_lat", "y_rep"),
+              Test = c("y_pred", "lpd", "cum_err"))
+  if (main) {
+    out$Patient <- setdiff(out$Patient, c("logit_p10", "logit_tss1_0"))
+  }
+
+  return(out)
+
+}
+
 # Extract parameters ------------------------------------------------------
 
 #' Extract parameters posterior summary statistics

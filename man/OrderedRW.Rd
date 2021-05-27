@@ -43,17 +43,18 @@ See \code{list_parameters(model = "OrderedRW")}.
 
 \section{Priors}{
 
-The priors are passed as a named list with elements \code{delta}, \code{sigma}, \code{mu_y0} and \code{sigma_y0}.
+The priors are passed as a named list with elements \code{delta}, \code{sigma}, \code{mu_y0} and \code{sigma_y0}
+specifying priors for the corresponding parameters.
 
 The element \code{delta} should be a matrix with 2 rows and \code{max_score - 1} columns,
 such as the i-th column is a vector with values x1 and x2, where x2 > 0 and
-\code{delta[i] ~ normal(x1, x2)}.
+\verb{delta[i] ~ normal+(x1, x2)}.
 The other parameters are normalised by the difference between the highest and lowest cutpoints (approx. the range of the score),
 and their priors are defined by a vector of length 2, containing values for x1 and x2, x2 > 0, such as:
 \itemize{
-\item \code{sigma ~ normal(x1, x2)}
+\item \verb{sigma ~ normal+(x1, x2)}
 \item \code{mu_y0 ~ normal(x1, x2)}
-\item \code{sigma_y0 ~ normal(x1, x2)}
+\item \verb{sigma_y0 ~ normal+(x1, x2)}
 }
 
 NB: \code{delta}, \code{sigma} and \code{sigma_y0} are constrained to be positive so x1 are usually set to 0 to define a half-normal distribution.
@@ -70,3 +71,6 @@ over the range of the score for \code{y0}.
 }
 }
 
+\examples{
+EczemaModel("OrderedRW", max_score = 10)
+}

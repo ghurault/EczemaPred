@@ -12,9 +12,9 @@ EczemaFit(model, train, test, ...)
 \arguments{
 \item{model}{Object}
 
-\item{train}{Training dataframe}
+\item{train}{Training dataframe (details of the format in \code{\link[=prepare_data_lgtd]{prepare_data_lgtd()}})}
 
-\item{test}{Testing dataframe}
+\item{test}{Testing dataframe (details of the format in \code{\link[=prepare_data_lgtd]{prepare_data_lgtd()}})}
 
 \item{...}{Arguments to pass to \code{\link[rstan:stanmodel-method-sampling]{rstan::sampling()}}}
 }

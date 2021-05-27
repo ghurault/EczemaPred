@@ -45,9 +45,9 @@ The priors are passed as a named list with elements \code{sigma}, \code{mu_logit
 specifying priors for the corresponding parameters.
 Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 > 0, such as:
 \itemize{
-\item \code{sigma ~ normal(x1, x2)}.
+\item \verb{sigma ~ normal+(x1, x2)}.
 \item \code{mu_logit_y0 ~ normal(x1, x2)}
-\item \code{sigma_logit_y0 ~ normal(x1, x2)}
+\item \verb{sigma_logit_y0 ~ normal+(x1, x2)}
 }
 
 NB: For \code{sigma} and \code{sigma_logit_y0}, usually x1=0 to define a half-normal distribution

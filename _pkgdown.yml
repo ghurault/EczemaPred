@@ -1,8 +1,16 @@
 reference:
 - title: "Available models"
+- subtitle: "Main models"
 - contents:
   - BinRW
   - OrderedRW
+  - BinMC
+- subtitle: "Reference models"
+- contents:
+  - RW
+  - Smoothing
+  - AR1
+  - MixedAR1
 - title: "Fitting models"
 - contents:
   - EczemaModel
@@ -27,8 +35,6 @@ reference:
 - contents:
   - fit_discrete
   - sample_prior_discrete
-  - ends_with("_BinMC")
-  - ends_with("_OrderedRW")
   - ends_with("_RW")
 - subtitle: "Continuous models"
 - contents:

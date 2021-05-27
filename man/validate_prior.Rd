@@ -4,8 +4,7 @@
 \alias{validate_prior}
 \alias{validate_prior.BinRW}
 \alias{validate_prior.OrderedRW}
-\alias{default_prior.OrderedRW}
-\alias{print_prior.OrderedRW}
+\alias{validate_prior.BinMC}
 \title{Check the prior of an EczemaModel is correct}
 \usage{
 validate_prior(model)
@@ -14,9 +13,7 @@ validate_prior(model)
 
 \method{validate_prior}{OrderedRW}(model)
 
-\method{default_prior}{OrderedRW}(model)
-
-\method{print_prior}{OrderedRW}(model, digits = 2)
+\method{validate_prior}{BinMC}(model)
 }
 \arguments{
 \item{model}{Object}
@@ -29,6 +26,10 @@ NULL if all statements are TRUE, otherwise an error message
 \description{
 Used internally when constructing an EczemaModel.
 }
-\examples{
-default_prior(EczemaModel("OrderedRW", max_score = 10))
+\seealso{
+\code{\link[base:stopifnot]{base::stopifnot()}}
+
+\code{\link[base:stopifnot]{base::stopifnot()}}
+
+\code{\link[base:stopifnot]{base::stopifnot()}}
 }

@@ -16,7 +16,7 @@
 #'
 #' @examples
 #' EczemaModel("BinRW", max_score = 10)
-EczemaModel <- function(model_name = c("BinRW", "OrderedRW"),
+EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC"),
                         max_score = NULL,
                         K = NULL,
                         discrete = TRUE,
@@ -150,8 +150,8 @@ if (FALSE) {
 #' Fit an EczemaModel
 #'
 #' @param model Object
-#' @param train Training dataframe
-#' @param test Testing dataframe
+#' @param train Training dataframe (details of the format in [prepare_data_lgtd()])
+#' @param test Testing dataframe (details of the format in [prepare_data_lgtd()])
 #' @param ... Arguments to pass to other methods
 #'
 #' @return Stanfit object

@@ -4,6 +4,8 @@
 \alias{list_parameters}
 \alias{list_parameters.character}
 \alias{list_parameters.BinRW}
+\alias{list_parameters.OrderedRW}
+\alias{list_parameters.BinMC}
 \title{List available parameters}
 \usage{
 list_parameters(model, ...)
@@ -11,6 +13,10 @@ list_parameters(model, ...)
 \method{list_parameters}{character}(model, ...)
 
 \method{list_parameters}{BinRW}(model, main = TRUE)
+
+\method{list_parameters}{OrderedRW}(model, main = TRUE)
+
+\method{list_parameters}{BinMC}(model, main = TRUE)
 }
 \arguments{
 \item{model}{Object}
@@ -44,4 +50,6 @@ Other parameters are available across models:
 \examples{
 list_parameters("BinRW")
 list_parameters(EczemaModel("BinRW", max_score = 100))
+list_parameters(EczemaModel("OrderedRW", max_score = 100))
+list_parameters(EczemaModel("BinMC", max_score = 100))
 }

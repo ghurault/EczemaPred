@@ -4,6 +4,8 @@
 \alias{default_prior}
 \alias{default_prior.character}
 \alias{default_prior.BinRW}
+\alias{default_prior.OrderedRW}
+\alias{default_prior.BinMC}
 \title{Default prior}
 \usage{
 default_prior(model, ...)
@@ -11,6 +13,10 @@ default_prior(model, ...)
 \method{default_prior}{character}(model, max_score = 1, ...)
 
 \method{default_prior}{BinRW}(model)
+
+\method{default_prior}{OrderedRW}(model)
+
+\method{default_prior}{BinMC}(model)
 }
 \arguments{
 \item{model}{Object}
@@ -27,4 +33,6 @@ Default prior
 \examples{
 default_prior("BinRW")
 default_prior(EczemaModel("BinRW", max_score = 10))
+default_prior(EczemaModel("OrderedRW", max_score = 10))
+default_prior(EczemaModel("BinMC", max_score = 100))
 }

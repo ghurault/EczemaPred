@@ -1,4 +1,4 @@
-for (model_name in c("BinRW", "OrderedRW")) {
+for (model_name in c("BinRW", "OrderedRW", "BinMC")) {
   for (max_score in c(10, 100)) {
 
     model <- EczemaModel(model_name, max_score = max_score)

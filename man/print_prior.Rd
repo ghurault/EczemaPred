@@ -3,11 +3,17 @@
 \name{print_prior}
 \alias{print_prior}
 \alias{print_prior.BinRW}
+\alias{print_prior.OrderedRW}
+\alias{print_prior.BinMC}
 \title{Print prior distribution}
 \usage{
 print_prior(model, ...)
 
 \method{print_prior}{BinRW}(model, digits = 2)
+
+\method{print_prior}{OrderedRW}(model, digits = 2)
+
+\method{print_prior}{BinMC}(model, digits = 2)
 }
 \arguments{
 \item{model}{Object}
