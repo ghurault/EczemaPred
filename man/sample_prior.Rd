@@ -3,11 +3,18 @@
 \name{sample_prior}
 \alias{sample_prior}
 \alias{sample_prior.EczemaModel}
+\alias{sample_prior.MC}
 \title{Prior predictive distribution}
 \usage{
 sample_prior(model, ...)
 
 \method{sample_prior}{EczemaModel}(model, N_patient = 1, t_max = c(2), ...)
+
+\method{sample_prior}{MC}(
+  model,
+  data = data.frame(y0 = integer(), y1 = integer(), dt = integer()),
+  ...
+)
 }
 \arguments{
 \item{model}{Object}
@@ -17,6 +24,9 @@ sample_prior(model, ...)
 \item{N_patient}{Number of patients to simulate}
 
 \item{t_max}{Vector of size \code{N_patient} indicating the time-series length of each patient}
+
+\item{df}{Dataframe (details of the format in ...)
+Only the columns \code{y0} and \code{dt} are relevant to simulate data from.}
 }
 \value{
 Object of class stanfit
@@ -27,6 +37,10 @@ Prior predictive distribution
 \examples{
 \dontrun{
 model <- EczemaModel("BinRW", max_score = 100)
+sample_prior(model)
+}
+\dontrun{
+model <- EczemaModel("MC", K = 5)
 sample_prior(model)
 }
 }

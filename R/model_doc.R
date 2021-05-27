@@ -365,3 +365,34 @@ NULL
 #' @examples
 #' EczemaModel("MixedAR1", max_score = 100)
 NULL
+
+# MC ----------------------------------------------------------------------
+
+#' Markov Chain model
+#'
+#' For more details see the [Markov Chain vignette](https://ghurault.github.io/EczemaPred/articles/MC.html).
+#'
+#' @param K Number of states of the Markov Chain
+#' @param prior Named list of the model's priors. If `NULL`, uses the default prior for the model (see [default_prior()]).
+#'
+#' @details Details of the model are available in the [paper](#).
+#'
+#' @section Parameters:
+#'
+#' - `p`: matrix of size K * K where `p[i, j]` represents the transition probabilities from state i to state j.
+#'
+#' See `list_parameters(model = "MC")`.
+#'
+#' @section Priors:
+#' The priors are passed as a named list with element `p`.
+#' The transition probabilities from state i `p[i, ]` are assumed to follow a Dirichlet distribution.
+#' The prior should be a matrix where each line correspond to the parameters of the Dirichlet distribution for `p[i, ]`.
+#'
+#' @section Default priors:
+#' The default prior for all `p[i, ]` is a symmetric uniform Dirichlet distribution (all concentration parameters are equal to 1).
+#'
+#' @name MC
+#'
+#' @examples
+#' EczemaModel("MC", K = 5)
+NULL

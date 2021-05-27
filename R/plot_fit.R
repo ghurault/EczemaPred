@@ -55,3 +55,32 @@ plot_latent_OrderedRW <- function(fit, id, patient_id) {
 
   return(p)
 }
+
+# Plot MC transition matrix -----------------------------------------------
+
+#' Markov Chain expected transition matrix
+#'
+#' @param fit Stanfit object corresponding to the Markov Chain model
+#'
+#' @return Ggplot
+#' @export
+#' @import dplyr tidyr ggplot2
+plot_transition_MC <- function(fit) {
+
+  p <- rstan::extract(fit, pars = "p")[[1]]
+  p_mean <- apply(p, c(2, 3), mean)
+
+  palette <- c("#FFFFFF", "#EFF3FF", "#C6DBEF", "#9ECAE1", "#6BAED6", "#3182BD", "#08519C") # cf. RColorBrewer::brewer.pal(n = 6, "Blues")
+
+  as.data.frame(p_mean) %>%
+    mutate(Initial = 1:nrow(p_mean)) %>%
+    pivot_longer(-.data$Initial, names_to = "Final", values_to = "Probability") %>%
+    mutate(Final = as.numeric(gsub("V", "", .data$Final))) %>%
+    ggplot(aes_string(x = "Final", y = "Initial", fill = "Probability")) +
+    geom_tile() +
+    scale_fill_gradientn(colours = palette, limits = c(0, NA)) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    theme_classic(base_size = 15)
+
+}

@@ -6,7 +6,7 @@ options(warn = -1)
 is_vector_or_array <- function(x) {is.vector(x) | is.array(x)}
 
 check_format <- function(ds) {
-  input_names <- c("K", "N", "y0", "y1", "dt", "run", "prior_p", "N_test", "y0_test", "y1_test", "dt_test")
+  input_names <- c("K", "N", "y0", "y1", "dt", "run", "N_test", "y0_test", "y1_test", "dt_test")
 
   expect_true(is.list(ds))
   expect_true(all(input_names %in% names(ds)))
@@ -50,14 +50,22 @@ make_wrong_prior <- function(K) {
 
 }
 
-# Test default prior --------------------------------------------------------------
+# Test priors ---------------------------------------------------
 
-test_that("default_prior_MC works", {
-  expect_error(default_prior_MC(-1))
-  expect_error(default_prior_MC(1:5))
+test_that("MC constructor catches errors in prior", {
   for (K in 2:5) {
-    expect_null(stopifnot_prior_MC(default_prior_MC(K), K))
+    wrong_priors <- make_wrong_prior(K)
+    for (i in 1:length(wrong_priors)) {
+      expect_error(EczemaModel("BinRW", K = K, prior = wrong_priors[[i]]))
+    }
   }
+})
+
+test_that("MC constructor accepts other prior", {
+  K <- 5
+  prior <- list(p = matrix(2, nrow = K, ncol = K))
+  model <- EczemaModel("MC", K = K, prior = prior)
+  expect_equal(model$prior, prior)
 })
 
 # Test prepare_data_MC ---------------------------------------------------------------------
@@ -65,7 +73,6 @@ test_that("default_prior_MC works", {
 K <- 5
 train <- data.frame(y0 = 1:K, y1 = 1:K, dt = 1)
 test <- data.frame(y0 = K, y1 = 1, dt = 2)
-prior <- list(p = matrix(2, nrow = K, ncol = K))
 
 test_that("prepare_data_MC returns the correct output", {
 
@@ -81,9 +88,8 @@ test_that("prepare_data_MC returns the correct output", {
   expect_equal(ds1$run, 1)
   expect_equal(ds1$N_test, 0)
 
-  ds2 <- prepare_data_MC(train, test, K = K, prior = prior)
+  ds2 <- prepare_data_MC(train, test, K = K)
   check_format(ds2)
-  expect_equal(ds2$prior_p, prior$p)
   expect_equal(ds2$N_test, nrow(test))
   expect_equal(as.numeric(ds2$y0_test), test[["y0"]])
   expect_equal(as.numeric(ds2$y1_test), test[["y1"]])
@@ -112,18 +118,11 @@ test_that("prepate_data_MC catches errors in K", {
   expect_error(prepare_data_MC(train, test = NULL, K = 1:5))
 })
 
-test_that("prepare_data_MC catches errors in prior", {
-  # cf. stopifnot_prior_MC
-  l <- make_wrong_prior(K)
-  for (i in 1:length(l)) {
-    expect_error(prepare_data_MC(train, test = NULL, K = K, prior = l[[i]]))
-  }
-})
-
-# Test sample_prior_MC ----------------------------------------------------
+# Test sample_prior ----------------------------------------------------
 
 K1 <- 3
-fit_prior <- sample_prior_MC(K = K1, chains = 1, refresh = 0)
+model <- EczemaModel("MC", K = K1)
+fit_prior <- sample_prior(model, chains = 1, refresh = 0)
 
 test_that("sample_prior_MC returns a stanfit object", {
   expect_true(is_stanfit(fit_prior))
@@ -153,13 +152,14 @@ df2 <- data.frame(t0 = 1:N,
 train2 <- df2 %>% filter(Label == "Training")
 test2 <- df2 %>% filter(Label == "Testing")
 
-fit <- fit_MC(train = train2, test = test2, K = K2, chains = 1, refresh = 0)
+model <- EczemaModel("MC", K = K2)
+fit <- EczemaFit(model, train = train2, test = test2, chains = 1, refresh = 0)
 
-test_that("fit_MC returns a stanfit object", {
+test_that("EczemaFit returns a stanfit object", {
   expect_true(is_stanfit(fit))
 })
 
-test_that("estimates from fit_MC are accurate", {
+test_that("estimates from EczemaFit are accurate", {
   p_smp <- rstan::extract(fit, pars = c("p[1,2]", "p[2,1]"))
   p_mean <- sapply(p_smp, mean)
   p_se <- sapply(p_smp, function(x) {sd(x) / sqrt(x)})

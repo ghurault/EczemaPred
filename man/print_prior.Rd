@@ -9,6 +9,7 @@
 \alias{print_prior.Smoothing}
 \alias{print_prior.AR1}
 \alias{print_prior.MixedAR1}
+\alias{print_prior.MC}
 \title{Print prior distribution}
 \usage{
 print_prior(model, ...)
@@ -26,6 +27,8 @@ print_prior(model, ...)
 \method{print_prior}{AR1}(model, digits = 2)
 
 \method{print_prior}{MixedAR1}(model, digits = 2)
+
+\method{print_prior}{MC}(model, digits = 2)
 }
 \arguments{
 \item{model}{Object}

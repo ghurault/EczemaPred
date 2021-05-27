@@ -300,3 +300,34 @@ print_prior.MixedAR1 <- function(model, digits = 2) {
   print_distribution("mu_inf / max_score", "normal", model$prior$mu_inf, digits = digits)
   print_distribution("sigma_inf / max_score", "normal+", model$prior$mu_inf, digits = digits)
 }
+
+# MC ----------------------------------------------------------------------
+
+#' @rdname validate_prior
+#' @export
+validate_prior.MC <- function(model) {
+  prior <- model$prior
+  stopifnot(
+    is.list(prior),
+    "p" %in% names(prior),
+    is.matrix(prior$p),
+    dim(prior$p) == c(model$K, model$K),
+    all(prior$p > 0)
+  )
+}
+
+#' @rdname default_prior
+#' @export
+#' @examples
+#' default_prior(EczemaModel("MC", K = 10))
+default_prior.MC <- function(model) {
+  list(p = matrix(1, nrow = model$K, ncol = model$K))
+}
+
+#' @rdname print_prior
+#' @export
+print_prior.MC <- function(model, digits = 2) {
+  for (i in 1:model$K) {
+    print_distribution(paste0("p[", i, ", ]"), "dirichlet", model$prior$p[i, ])
+  }
+}

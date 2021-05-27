@@ -1,107 +1,5 @@
 # List parameters ---------------------------------------------------------
 
-if (FALSE) {
-
-  #' List available parameters
-  #'
-  #' @param model Model name
-  #' @param main Whether to output the main parameters only.
-  #' Parameters that are simple transformation of another parameter are dropped.
-  #' For instance, in BinRW, `logit_lat` would be dropped but `y_lat` would remain.
-  #'
-  #' @return Named list of parameters names, grouped into broad categories:
-  #' - Population: population parameters (i.e. patient- and time-independent)
-  #' - Patient: patient-dependent parameters
-  #' - PatientTime: patient- and time-dependent parameters (e.g. latent scores)
-  #' - Test: parameters related to the test set
-  #' - Misc: other parameters
-  #'
-  #' @export
-  #' @importFrom HuraultMisc is_scalar
-  #'
-  #' @details
-  #' See [MC], [BinRW], [BinMC], [OrderedRW], [RW], [Smoothing], [AR1] and [MixedAR1] for details about the model-specific parameters.
-  #' Other parameters are available across models:
-  #'
-  #' - `y_rep` correspond to posterior replications. To get the corresponding index, use [get_index()].
-  #' - `y_pred` is a subset of y_rep corresponding to test samples (size `N_test` equal to the number of observations in the test set).
-  #' - `lpd` is the log predictive density of test samples (of size `N_test`).
-  #' - `cum_err` is the cumulative error distribution, only available for discrete outcomes
-  #' (matrix with dimensions `N_test * (max_score  + 1)`).
-  #'
-  #' @examples
-  #' list_parameters("BinRW")
-  list_parameters <- function(model = c("MC", "BinRW", "BinMC", "OrderedRW", "RW", "Smoothing", "AR1", "MixedAR1"),
-                              main = TRUE) {
-
-    model <- match.arg(model)
-    stopifnot(is_scalar(main),
-              is.logical(main))
-
-    if (model == "MC") {
-      out <- list(Population = "p",
-                  Observation  = "y_rep",
-                  Test = c("y_pred", "lpd", "cum_err"))
-    }
-    if (model == "BinRW") {
-      out <- list(Population = c("sigma", "mu_logit_y0", "sigma_logit_y0"),
-                  Patient = "logit_y0",
-                  PatientTime =  c("y_lat", "logit_lat", "y_rep"),
-                  Test = c("y_pred", "lpd", "cum_err"))
-      if (main) {
-        out$PatientTime <- setdiff(out$PatientTime, "logit_lat")
-      }
-    }
-    if (model == "BinMC") {
-      out <- list(Population = c("mu_logit_p10", "sigma_logit_p10", "sigma"),
-                  Patient = c("p10", "logit_p10", "logit_tss1_0"),
-                  PatientTime = c("p01", "lambda", "ss1", "y_lat", "y_rep"),
-                  Test = c("y_pred", "lpd", "cum_err"))
-      if (main) {
-        out$Patient <- setdiff(out$Patient, c("logit_p10", "logit_tss1_0"))
-      }
-    }
-    if (model == "OrderedRW") {
-      out <- list(Population = c("sigma", "mu_y0", "sigma_y0", "p0", "ct", "delta"),
-                  Patient = "y0",
-                  PatientTime = c("y_lat", "y_rep"),
-                  Test = c("y_pred", "lpd", "cum_err"))
-      if (main) {
-        out$Population <- setdiff(out$Population, "p0")
-      }
-    }
-    if (model == "RW") {
-      out <- list(Population = "sigma",
-                  PatientTime = "y_rep",
-                  Test = c("y_pred", "lpd", "cum_err"),
-                  Misc = "y_mis")
-    }
-    if (model == "Smoothing") {
-      out <- list(Population = c("sigma", "tau", "alpha"),
-                  PatientTime = c("L", "y_rep"),
-                  Test = c("y_pred", "lpd"),
-                  Misc = "y_mis")
-    }
-    if (model == "AR1") {
-      out <- list(Population = c("sigma", "alpha", "b", "y_inf"),
-                  PatientTime = "y_rep",
-                  Test = c("y_pred", "lpd"),
-                  Misc = "y_mis")
-    }
-    if (model == "MixedAR1") {
-      out <- list(Population = c("sigma", "mu_logit_alpha", "sigma_logit_alpha", "mu_inf", "sigma_inf"),
-                  Patient = c("alpha", "y_inf", "b"),
-                  PatientTime = c("y_rep"),
-                  Test = c("y_pred", "lpd"),
-                  Misc = "y_mis")
-    }
-
-    return(out)
-
-  }
-
-}
-
 #' @rdname list_parameters
 #' @export
 #' @examples
@@ -221,6 +119,16 @@ list_parameters.MixedAR1 <- function(model) {
        PatientTime = c("y_rep"),
        Test = c("y_pred", "lpd"),
        Misc = "y_mis")
+}
+
+#' @rdname list_parameters
+#' @export
+#' @examples
+#' list_parameters(EczemaModel("MC", K = 5))
+list_parameters.MC <- function(model) {
+  list(Population = "p",
+       Observation  = "y_rep",
+       Test = c("y_pred", "lpd", "cum_err"))
 }
 
 # Extract parameters ------------------------------------------------------

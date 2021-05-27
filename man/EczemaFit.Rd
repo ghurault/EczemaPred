@@ -3,11 +3,14 @@
 \name{EczemaFit}
 \alias{EczemaFit}
 \alias{EczemaFit.EczemaModel}
+\alias{EczemaFit.MC}
 \title{Fit an EczemaModel}
 \usage{
 EczemaFit(model, train, test, ...)
 
 \method{EczemaFit}{EczemaModel}(model, train, test = NULL, ...)
+
+\method{EczemaFit}{MC}(model, train, test = NULL, ...)
 }
 \arguments{
 \item{model}{Object}
@@ -28,6 +31,12 @@ Fit an EczemaModel
 \dontrun{
 model <- EczemaModel("BinRW", max_score = 100)
 train <- data.frame(Patient = 1, Time = 1:10, Score = rbinom(10, 100, .5))
+EczemaFit(model, train)
+}
+\dontrun{
+model <- EczemaModel("MC", K = 5)
+N <- 1e2
+train <- data.frame(y0 = rbinom(N, 5, .5), y1 = rbinom(N, 5, .5), dt = rpois(N, 1) + 1)
 EczemaFit(model, train)
 }
 }
