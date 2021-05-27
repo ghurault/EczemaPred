@@ -15,7 +15,7 @@
 #'
 #' @examples
 #' EczemaModel("BinRW", max_score = 10)
-EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing", "AR1"),
+EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing", "AR1", "MixedAR1"),
                         max_score = NULL,
                         K = NULL,
                         discrete = TRUE,

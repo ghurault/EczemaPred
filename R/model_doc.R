@@ -259,6 +259,9 @@ NULL
 
 #' Autoregressive model (order 1)
 #'
+#' @param max_score Maximum value that the score can take
+#' @param prior Named list of the model's priors. If `NULL`, uses the default prior for the model (see [default_prior()]).
+#'
 #' @details
 #' - Details of the model are available in the [paper](#).
 #' - The model is naive as it is trained with a non-truncated distribution
@@ -300,4 +303,65 @@ NULL
 #'
 #' @examples
 #' EczemaModel("AR1", max_score = 100)
+NULL
+
+# MixedAR1 ----------------------------------------------------------------
+
+#' Mixed effect autoregressive model (order 1)
+#'
+#' @param max_score Maximum value that the score can take
+#' @param prior Named list of the model's priors. If `NULL`, uses the default prior for the model (see [default_prior()]).
+#'
+#' @details
+#' - Details of the model are available in the [paper](#).
+#' - The model is naive as it is trained with a non-truncated.
+#' - For more details see the [vignette](https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html).
+#'
+#' @section Parameters:
+#'
+#' Population parameters:
+#'
+#' - `sigma`: Standard deviation of the autoregression
+#' - `mu_logit_alpha`: Population mean of the logit of `alpha`
+#' - `sigma_logit_alpha`: Population standard deviation of the logit of `alpha`
+#' - `mu_inf`: Population mean of `y_inf`
+#' - `sigma_inf`: Population standard deviation of `y_inf`
+#'
+#' Patient-dependent parameters:
+#'
+#' - `alpha`: Autocorrelation parameter
+#' - `y_inf`: Autoregression mean
+#' - `b`: Intercept
+#'
+#' Other parameters:
+#'
+#' - `y_mis`: Missing values
+#'
+#' See `list_parameters(model = "MixedAR1")`.
+#'
+#' @section Priors:
+#' The priors are passed as a named list with elements `sigma`, `mu_logit_alpha`, `sigma_logit_alpha`, `mu_inf`, `sigma_inf`
+#' specifying priors for the corresponding parameters.
+#' Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 > 0, such as:
+#'
+#' - `sigma / max_score ~ normal+(x1, x2)`.
+#' - `mu_logit_alpha ~ normal(x1, x2)`.
+#' - `sigma_logit_alpha ~ normal+(x1, x2)`.
+#' - `mu_inf / max_score ~ normal(x1, x2)`.
+#' - `sigma_inf / max_score ~ normal+(x1, x2)`.
+#'
+#' NB: For `sigma`, `sigma_logit_alpha` and `sigma_inf`, usually x1=0 to define a half-normal distribution
+#' since the parameter is constrained to be positive.
+#'
+#' @section Default priors:
+#' - The default prior for `sigma` translates to a width of the predictive distribution to be at most `max_score`.
+#' - The default priors for `mu_logit_alpha` and `sigma_logit_alpha` have "reasonable" ranges and
+#' translate to a prior on `alpha` that is approximately uniform.
+#' - The default prior for `mu_inf` spans the entire range of the score.
+#' - The default prior for `sigma_inf` translates to a range in the distribution of `y_inf` to be at most `max_score`.
+#'
+#' @name MixedAR1
+#'
+#' @examples
+#' EczemaModel("MixedAR1", max_score = 100)
 NULL

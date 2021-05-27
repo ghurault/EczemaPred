@@ -1,6 +1,6 @@
 # General tests -----------------------------------------------------------
 
-for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing", "AR1")) {
+for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing", "AR1", "MixedAR1")) {
   for (max_score in c(10, 100)) {
 
     model <- EczemaModel(model_name,
@@ -32,7 +32,6 @@ for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing", "AR1")) {
   })
 
   test_that(paste0("Incorrect max_score when constructing ", model_name, "throws an error"), {
-    # Change when including continuous models
     wrong_maxscore <- list(0,
                            c(10, 10),
                            10.1)

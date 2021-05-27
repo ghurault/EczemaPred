@@ -211,6 +211,18 @@ list_parameters.AR1 <- function(model) {
        Misc = "y_mis")
 }
 
+#' @rdname list_parameters
+#' @export
+#' @examples
+#' list_parameters(EczemaModel("MixedAR1", max_score = 100))
+list_parameters.MixedAR1 <- function(model) {
+  list(Population = c("sigma", "mu_logit_alpha", "sigma_logit_alpha", "mu_inf", "sigma_inf"),
+       Patient = c("alpha", "y_inf", "b"),
+       PatientTime = c("y_rep"),
+       Test = c("y_pred", "lpd"),
+       Misc = "y_mis")
+}
+
 # Extract parameters ------------------------------------------------------
 
 #' Extract parameters posterior summary statistics

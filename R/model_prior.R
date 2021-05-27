@@ -260,3 +260,43 @@ print_prior.AR1 <- function(model, digits = 2) {
   print_distribution("y_inf / max_score", "normal", model$prior$y_inf, digits = digits)
 }
 
+# MixedAR1 ----------------------------------------------------------------
+
+#' @rdname validate_prior
+#' @export
+validate_prior.MixedAR1 <- function(model) {
+  prior <- model$prior
+  stopifnot(
+    is.list(prior),
+    length(prior) == 5,
+    all(c("sigma", "mu_logit_alpha", "sigma_logit_alpha",
+          "mu_inf", "sigma_inf") %in% names(prior)),
+    all(sapply(prior, is.numeric)),
+    all(sapply(prior, function(x) {length(x) == 2})),
+    all(sapply(prior, function(x) {x[2] > 0}))
+  )
+}
+
+#' @rdname default_prior
+#' @export
+#' @examples
+#' default_prior(EczemaModel("MixedAR1", max_score = 100))
+default_prior.MixedAR1 <- function(model) {
+  list(
+    sigma = c(0, 0.1),
+    mu_logit_alpha = c(0, 1),
+    sigma_logit_alpha = c(0, 1.5),
+    mu_inf = c(0.5, 0.25),
+    sigma_inf = c(0, 0.125)
+  )
+}
+
+#' @rdname print_prior
+#' @export
+print_prior.MixedAR1 <- function(model, digits = 2) {
+  print_distribution("sigma / max_score", "normal+", model$prior$sigma, digits = digits)
+  print_distribution("mu_logit_alpha", "normal", model$prior$mu_logit_alpha, digits = digits)
+  print_distribution("sigma_logit_alpha", "normal+", model$prior$sigma_logit_alpha, digits = digits)
+  print_distribution("mu_inf / max_score", "normal", model$prior$mu_inf, digits = digits)
+  print_distribution("sigma_inf / max_score", "normal+", model$prior$mu_inf, digits = digits)
+}

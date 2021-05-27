@@ -9,6 +9,7 @@
 \alias{default_prior.RW}
 \alias{default_prior.Smoothing}
 \alias{default_prior.AR1}
+\alias{default_prior.MixedAR1}
 \title{Default prior}
 \usage{
 default_prior(model, ...)
@@ -26,6 +27,8 @@ default_prior(model, ...)
 \method{default_prior}{Smoothing}(model)
 
 \method{default_prior}{AR1}(model)
+
+\method{default_prior}{MixedAR1}(model)
 }
 \arguments{
 \item{model}{Object}
@@ -47,4 +50,5 @@ default_prior(EczemaModel("BinMC", max_score = 100))
 default_prior(EczemaModel("RW", max_score = 100))
 default_prior(EczemaModel("Smoothing", max_score = 100))
 default_prior(EczemaModel("AR1", max_score = 100))
+default_prior(EczemaModel("MixedAR1", max_score = 100))
 }
