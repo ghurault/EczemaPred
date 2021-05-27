@@ -5,7 +5,7 @@
 \title{EczemaModel constructor}
 \usage{
 EczemaModel(
-  model_name = c("BinRW", "OrderedRW", "BinMC", "RW"),
+  model_name = c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing"),
   max_score = NULL,
   K = NULL,
   discrete = TRUE,
@@ -19,8 +19,7 @@ EczemaModel(
 
 \item{K}{Number of categories. Only required for "MC" model.}
 
-\item{discrete}{Whether the model is discrete or not.
-Only required for "RW", "Smoothing", "AR1" and "MixedAR1" models.}
+\item{discrete}{Whether the model is discrete or not. Only required for "RW".}
 
 \item{prior}{Named list of the model's priors. If \code{NULL}, uses the default prior for the model (see \code{\link[=default_prior]{default_prior()}}).}
 }

@@ -1,6 +1,6 @@
 # General tests -----------------------------------------------------------
 
-for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW")) {
+for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing")) {
   for (max_score in c(10, 100)) {
 
     model <- EczemaModel(model_name,

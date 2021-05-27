@@ -189,6 +189,17 @@ list_parameters.RW <- function(model) {
        Misc = "y_mis")
 }
 
+#' @rdname list_parameters
+#' @export
+#' @examples
+#' list_parameters(EczemaModel("Smoothing", max_score = 100))
+list_parameters.Smoothing <- function(model) {
+  list(Population = c("sigma", "tau", "alpha"),
+       PatientTime = c("L", "y_rep"),
+       Test = c("y_pred", "lpd"),
+       Misc = "y_mis")
+}
+
 # Extract parameters ------------------------------------------------------
 
 #' Extract parameters posterior summary statistics

@@ -6,6 +6,7 @@
 \alias{print_prior.OrderedRW}
 \alias{print_prior.BinMC}
 \alias{print_prior.RW}
+\alias{print_prior.Smoothing}
 \title{Print prior distribution}
 \usage{
 print_prior(model, ...)
@@ -17,6 +18,8 @@ print_prior(model, ...)
 \method{print_prior}{BinMC}(model, digits = 2)
 
 \method{print_prior}{RW}(model, digits = 2)
+
+\method{print_prior}{Smoothing}(model, digits = 2)
 }
 \arguments{
 \item{model}{Object}

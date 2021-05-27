@@ -7,8 +7,7 @@
 #' @param model_name Name of the model to create
 #' @param max_score Maximum value that the score can take. Required for all models except "MC".
 #' @param K Number of categories. Only required for "MC" model.
-#' @param discrete Whether the model is discrete or not.
-#' Only required for "RW", "Smoothing", "AR1" and "MixedAR1" models.
+#' @param discrete Whether the model is discrete or not. Only required for "RW".
 #' @param prior Named list of the model's priors. If `NULL`, uses the default prior for the model (see [default_prior()]).
 #'
 #' @return An object (list) of class `model_name` and EczemaModel
@@ -16,7 +15,7 @@
 #'
 #' @examples
 #' EczemaModel("BinRW", max_score = 10)
-EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC", "RW"),
+EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing"),
                         max_score = NULL,
                         K = NULL,
                         discrete = TRUE,
@@ -29,7 +28,9 @@ EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC", "RW"),
 
   if (model_name %in% c("BinRW", "OrderedRW", "BinMC")) {
     discrete <- TRUE
-  } else {
+  } else if (model_name %in% c("Smoothing", "AR1", "MixedAR1")) {
+    discrete <- FALSE
+  } else if (model_name %in% c("RW")) {
     stopifnot(is_scalar(discrete),
               is.logical(discrete))
   }

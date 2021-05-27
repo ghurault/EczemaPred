@@ -186,3 +186,38 @@ default_prior.RW <- function(model) {
 print_prior.RW <- function(model, digits = 2) {
   print_distribution("sigma / max_score", "normal+", model$prior$sigma, digits = digits)
 }
+
+# Smoothing ---------------------------------------------------------------
+
+#' @rdname validate_prior
+#' @export
+validate_prior.Smoothing <- function(model) {
+  prior <- model$prior
+  stopifnot(
+    is.list(prior),
+    length(prior) == 2,
+    all(c("sigma", "tau") %in% names(prior)),
+    all(sapply(prior, is.numeric)),
+    all(sapply(prior, function(x) {length(x) == 2})),
+    prior$sigma[2] > 0,
+    prior$tau[2] > 0
+  )
+}
+
+#' @rdname default_prior
+#' @export
+#' @examples
+#' default_prior(EczemaModel("Smoothing", max_score = 100))
+default_prior.Smoothing <- function(model) {
+  list(
+    sigma = c(0, 0.1),
+    tau = c(0.5 * log(10), 0.75 * log(10))
+  )
+}
+
+#' @rdname print_prior
+#' @export
+print_prior.Smoothing <- function(model, digits = 2) {
+  print_distribution("sigma / max_score", "normal+", model$prior$sigma, digits = digits)
+  print_distribution("tau", "lognormal", model$prior$tau, digits = digits)
+}

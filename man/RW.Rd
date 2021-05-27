@@ -6,6 +6,9 @@
 \arguments{
 \item{max_score}{Maximum value that the score can take}
 
+\item{discrete}{Whether to use a discrete normal distribution.
+This will be used to check whether the data is discrete or not, and for rounding predictions (cf. testing).}
+
 \item{prior}{Named list of the model's priors. If \code{NULL}, uses the default prior for the model (see \code{\link[=default_prior]{default_prior()}}).}
 }
 \description{
@@ -34,7 +37,7 @@ See \code{list_parameters(model = "RW")}.
 
 The priors are passed as a named list with element \code{sigma}
 specifying priors for the corresponding parameter, where
-\code{sigma / max_score ~ normal(x1, x2)}
+\verb{sigma / max_score ~ normal+(x1, x2)}
 and the element \code{sigma} of the list is a vector of length two containing x1 and x2.
 NB: usually x1=0 to define a half-normal distribution (sigma is constraint to be positive) and
 x2 should be positive.
