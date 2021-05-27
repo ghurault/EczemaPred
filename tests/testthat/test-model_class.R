@@ -1,6 +1,6 @@
 # General tests -----------------------------------------------------------
 
-for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing")) {
+for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing", "AR1")) {
   for (max_score in c(10, 100)) {
 
     model <- EczemaModel(model_name,
@@ -9,6 +9,11 @@ for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing")) {
 
     test_that(paste0("We can construct a ", model_name, " object"), {
       expect_true(all(c(model_name, "EczemaModel") %in% class(model)))
+    })
+
+    test_that("Content of the EczemaModel is correct", {
+      expect_equal(model$name, model_name)
+      expect_equal(model$max_score, max_score)
     })
 
     test_that(paste0("The default prior of ", model_name, " is a correct prior"), {

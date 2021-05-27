@@ -8,6 +8,7 @@
 \alias{list_parameters.BinMC}
 \alias{list_parameters.RW}
 \alias{list_parameters.Smoothing}
+\alias{list_parameters.AR1}
 \title{List available parameters}
 \usage{
 list_parameters(model, ...)
@@ -23,6 +24,8 @@ list_parameters(model, ...)
 \method{list_parameters}{RW}(model)
 
 \method{list_parameters}{Smoothing}(model)
+
+\method{list_parameters}{AR1}(model)
 }
 \arguments{
 \item{model}{Object}
@@ -60,4 +63,5 @@ list_parameters(EczemaModel("OrderedRW", max_score = 100))
 list_parameters(EczemaModel("BinMC", max_score = 100))
 list_parameters(EczemaModel("RW", max_score = 100))
 list_parameters(EczemaModel("Smoothing", max_score = 100))
+list_parameters(EczemaModel("AR1", max_score = 100))
 }

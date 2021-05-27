@@ -6,7 +6,7 @@
 \arguments{
 \item{max_score}{Maximum value that the score can take}
 
-\item{prior}{Named list of the model's priors. If \code{NULL}, uses the default prior for the model (see \code{\link[=default_prior]{default_prior()}}).#'}
+\item{prior}{Named list of the model's priors. If \code{NULL}, uses the default prior for the model (see \code{\link[=default_prior]{default_prior()}}).}
 }
 \description{
 Exponential smoothing model

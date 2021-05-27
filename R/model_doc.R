@@ -218,7 +218,7 @@ NULL
 #' Exponential smoothing model
 #'
 #' @param max_score Maximum value that the score can take
-#' @param prior Named list of the model's priors. If `NULL`, uses the default prior for the model (see [default_prior()]).#'
+#' @param prior Named list of the model's priors. If `NULL`, uses the default prior for the model (see [default_prior()]).
 #'
 #' @details
 #' - Details of the model are available in the [paper](#).
@@ -253,4 +253,51 @@ NULL
 #'
 #' @examples
 #' EczemaModel("Smoothing", max_score = 100)
+NULL
+
+# AR1 ---------------------------------------------------------------------
+
+#' Autoregressive model (order 1)
+#'
+#' @details
+#' - Details of the model are available in the [paper](#).
+#' - The model is naive as it is trained with a non-truncated distribution
+#' - For more details see the [vignette](https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html).
+#'
+#' @section Parameters:
+#'
+#' - `sigma`: Standard deviation of the autoregression
+#' - `alpha`: Autocorrelation parameter
+#' - `b`: Intercept
+#' - `y_inf`: Autoregression mean
+#' - `y_mis`: Missing values
+#'
+#' See `list_parameters(model = "AR1")`.
+#'
+#' @section Priors:
+#' The priors are passed as a named list with elements `sigma`, `y_inf` and `alpha`
+#' specifying priors for the corresponding parameters.
+#' Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 > 0, such as:
+#'
+#' - `sigma / max_score ~ normal+(x1, x2)`.
+#' - `y_inf / max_score ~ normal(x1, x2)`.
+#' - `alpha ~ beta(x1, x2)`.
+#'
+#' NB: For `sigma`, usually x1=0 to define a half-normal distribution
+#' since the parameter is constrained to be positive.
+#' NB: For `alpha`, both `x1` and `x2` must be positive.
+#'
+#' @section Default priors:
+#' - The default prior for `sigma` translates to a width of the predictive distribution to be at most `max_score`.
+#' - The default prior for `y_inf` covers the full range of the score.
+#' - The default prior for `alpha` is uniform in 0-1.
+#'
+#' @details
+#' - The model is naive as it is trained with a non-truncated distribution
+#' - For more details see the [vignette](https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html).
+#'
+#' @name AR1
+#'
+#' @examples
+#' EczemaModel("AR1", max_score = 100)
 NULL

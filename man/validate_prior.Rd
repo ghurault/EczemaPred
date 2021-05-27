@@ -7,6 +7,7 @@
 \alias{validate_prior.BinMC}
 \alias{validate_prior.RW}
 \alias{validate_prior.Smoothing}
+\alias{validate_prior.AR1}
 \title{Check the prior of an EczemaModel is correct}
 \usage{
 validate_prior(model)
@@ -20,6 +21,8 @@ validate_prior(model)
 \method{validate_prior}{RW}(model)
 
 \method{validate_prior}{Smoothing}(model)
+
+\method{validate_prior}{AR1}(model)
 }
 \arguments{
 \item{model}{Object}

@@ -35,7 +35,6 @@ reference:
 - contents:
   - fit_continuous
   - sample_prior_continuous
-  - ends_with("_AR1")
   - ends_with("_MixedAR1")
 - title: "Other models"
 - contents:
