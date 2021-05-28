@@ -35,7 +35,7 @@ make_wrong_df <- function(df, max_score) {
 
 }
 
-# Test prepare_data_lgtd --------------------------------------------------
+# Test prepare_data_lgtd and prepare_stan.EczemaModel --------------------------------------------------
 
 max_score <- 100
 discrete <- TRUE
@@ -62,6 +62,13 @@ test_that("prepare_data_lgtd returns the correct output", {
   expect_equal(as.numeric(ds2$t_test), test[["Time"]])
   expect_equal(as.numeric(ds2$y_test), test[["Score"]])
 
+})
+
+test_that("prepare_stan.EczemaModel returns the correct output", {
+  model <- EczemaModel("BinRW", max_score = max_score)
+  ds <- prepare_standata(model, train = train, test = test)
+  check_format(ds)
+  expect_equal(sum(grepl("prior_", names(ds))), length(model$prior))
 })
 
 test_that("prepare_data_lgtd train and test inputs are correct", {
@@ -100,86 +107,6 @@ test_that("prepare_data_lgtd catches errors with max_score", {
   expect_error(prepare_data_lgtd(train, test = NULL, c(0, max_score), discrete))
 })
 
-# Test prepare_priorpred_lgtd ---------------------------------------------
+# Test prepare_standata.MC ------------------------------------------------
 
-N_patient <- 10
-t_max <- rpois(N_patient, 50)
-max_score <- 100
-discrete <- FALSE
-
-test_that("prepare_priorpred_lgtd returns the correct output", {
-
-  ds1 <- prepare_priorpred_lgtd(N_patient, t_max, max_score, discrete)
-  check_format(ds1)
-  expect_equal(ds1$N_pt, N_patient)
-  expect_true(is_scalar_wholenumber(ds1$N_obs))
-  expect_equal(length(ds1$k_obs), ds1$N_obs)
-  expect_equal(length(ds1$t_obs), ds1$N_obs)
-  expect_equal(length(ds1$y_obs), ds1$N_obs)
-  expect_true(is_scalar_wholenumber(ds1$N_test))
-  expect_equal(length(ds1$k_test), ds1$N_test)
-  expect_equal(length(ds1$t_test), ds1$N_test)
-  expect_equal(length(ds1$y_test), ds1$N_test)
-
-  df_prior <- standata_to_df(ds1)
-  t_max1 <- get_index(train = filter(df_prior, Label == "Training"),
-              test = filter(df_prior, Label == "Testing")) %>%
-    group_by(Patient) %>%
-    summarise(t_max = max(Time)) %>%
-    pull(t_max)
-  expect_equal(t_max, t_max1)
-
-})
-
-test_that("prepare_priorpred_lgtd catches errors in N_patient", {
-  expect_error(prepare_priorpred_lgtd(1:10, t_max, max_score, discrete))
-  expect_error(prepare_priorpred_lgtd(0, t_max, max_score, discrete))
-  expect_error(prepare_priorpred_lgtd(N_patient - 1, t_max, max_score, discrete))
-})
-
-test_that("prepare_priorpred_lgtd catches errors in t_max", {
-  expect_error(prepare_priorpred_lgtd(N_patient, t_max + 0.1, max_score, discrete))
-  expect_error(prepare_priorpred_lgtd(N_patient, replace(t_max, t_max == min(t_max), -1), max_score, discrete))
-})
-
-test_that("prepare_priorpred_lgtd catches errors in max_score", {
-  expect_error(prepare_priorpred_lgtd(N_patient, t_max, 0:max_score, discrete))
-  expect_error(prepare_priorpred_lgtd(N_patient, t_max, max_score + .1, discrete))
-  expect_error(prepare_priorpred_lgtd(N_patient, t_max, -max_score, discrete))
-})
-
-test_that("prepare_priorpred_lgtd catches errors in discrete", {
-  expect_error(prepare_priorpred_lgtd(N_patient, t_max, max_score, c(discrete, discrete)))
-  expect_error(prepare_priorpred_lgtd(N_patient, t_max, max_score, as.numeric(discrete)))
-})
-
-# Test get_index ----------------------------------------------------------
-
-test_that("get_index works", {
-
-  N_pt <- 10
-  t_max <- rpois(N_pt, 20)
-
-  id2 <- get_index2(t_max)
-
-  df <- do.call(bind_rows,
-                lapply(1:N_pt,
-                       function(i) {
-                         data.frame(Patient = i, Time = 1:t_max[i]) %>%
-                           filter(!generate_missing(n()))
-                         }))
-  id <- get_index(df %>% filter(Time <= 10),
-                  df %>% filter(Time > 10))
-
-  for (x in list(id2, id)) {
-    expect_s3_class(x, "data.frame")
-    expect_true(all(c("Patient", "Time", "Index") %in% colnames(x)))
-    expect_equal(nrow(x), sum(t_max))
-    expect_equal(length(unique(x[["Index"]])), nrow(x))
-  }
-
-})
-
-# Test plot_ppc_traj_pmf --------------------------------------------------
-
-# In test_BinRW
+# In test-model_MC.R

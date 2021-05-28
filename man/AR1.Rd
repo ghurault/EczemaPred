@@ -33,7 +33,7 @@ Autoregressive model (order 1)
 \item \code{y_mis}: Missing values
 }
 
-See \code{list_parameters(model = "AR1")}.
+See \code{list_parameters(model = "AR1")} for more details.
 }
 
 \section{Priors}{

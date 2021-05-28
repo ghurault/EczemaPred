@@ -30,7 +30,7 @@ and the variance is sufficiently large.
 \item \code{y_mis}: Missing values
 }
 
-See \code{list_parameters(model = "RW")}.
+See \code{list_parameters(model = "RW")} for more details.
 }
 
 \section{Priors}{

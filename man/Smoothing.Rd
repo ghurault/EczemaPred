@@ -27,7 +27,7 @@ Exponential smoothing model
 \item \code{y_mis}: Missing values
 }
 
-See \code{list_parameters(model = "Smoothing")}.
+See \code{list_parameters(model = "Smoothing")} for more details.
 }
 
 \section{Priors}{

@@ -25,7 +25,7 @@ sample_prior(model, ...)
 
 \item{t_max}{Vector of size \code{N_patient} indicating the time-series length of each patient}
 
-\item{data}{Dataframe (details of the format in ...)
+\item{data}{Dataframe (see details below).
 Only the columns \code{y0} and \code{dt} are relevant to simulate data from.}
 }
 \value{

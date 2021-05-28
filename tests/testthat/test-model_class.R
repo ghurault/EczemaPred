@@ -1,11 +1,18 @@
-# General tests -----------------------------------------------------------
 
 for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing", "AR1", "MixedAR1")) {
-  for (max_score in c(10, 100)) {
 
-    model <- EczemaModel(model_name,
-                         max_score = max_score,
-                         discrete = !(model_name %in% c("RW") && max_score > 50))
+  ms <- c(10, 100)
+  ks <- c(5, 10)
+
+  for (i in 1:length(ms)) {
+
+    if (model_name == "MC") {
+      model <- EczemaModel(model_name, K = ks[i])
+    } else {
+      model <- EczemaModel(model_name,
+                           max_score = ms[i],
+                           discrete = !(model_name %in% c("RW") && ms[i] > 50))
+    }
 
     test_that(paste0("We can construct a ", model_name, " object"), {
       expect_true(all(c(model_name, "EczemaModel") %in% class(model)))
@@ -13,7 +20,11 @@ for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing", "AR1", "M
 
     test_that("Content of the EczemaModel is correct", {
       expect_equal(model$name, model_name)
-      expect_equal(model$max_score, max_score)
+      if (model_name == "MC") {
+        expect_equal(model$K, ks[i])
+      } else {
+        expect_equal(model$max_score, ms[i])
+      }
     })
 
     test_that(paste0("The default prior of ", model_name, " is a correct prior"), {
@@ -25,22 +36,30 @@ for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing", "AR1", "M
       expect_output(print(model), paste0("^", model_name, " model"))
     })
 
+    test_that("The discrete attributes of model is correct", {
+      if (model_name %in% c("BinRW", "OrderedRW", "BinMC", "MC")) {
+        expect_true(model$discrete)
+      }
+      if (model_name %in% c("Smoothing", "AR1", "MixedAR1")) {
+        expect_false(model$discrete)
+      }
+      if (model_name %in% c("RW")) {
+        expect_equal(model$discrete, !(ms[i] > 50))
+      }
+    })
+
   }
 
-  test_that(paste0("Missing max_score argument when constructing ", model_name, "throws an error"), {
-    expect_error(EczemaModel(model_name))
-  })
-
-  test_that(paste0("Incorrect max_score when constructing ", model_name, "throws an error"), {
-    wrong_maxscore <- list(0,
-                           c(10, 10),
-                           10.1)
-    for (wms in wrong_maxscore) {
-      expect_error(EczemaModel(model_name, max_score = wms))
-    }
-
-  })
+  if (model_name != "MC") {
+    test_that(paste0("Incorrect max_score when constructing ", model_name, "throws an error"), {
+      wrong_maxscore <- list(NULL,
+                             0,
+                             c(10, 10),
+                             10.1)
+      for (wms in wrong_maxscore) {
+        expect_error(EczemaModel(model_name, max_score = wms))
+      }
+    })
+  }
 
 }
-
-# Test MC separately

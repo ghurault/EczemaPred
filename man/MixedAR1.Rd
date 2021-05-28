@@ -20,8 +20,7 @@ Mixed effect autoregressive model (order 1)
 }
 \section{Parameters}{
 
-
-Population parameters:
+\subsection{Population parameters:}{
 \itemize{
 \item \code{sigma}: Standard deviation of the autoregression
 \item \code{mu_logit_alpha}: Population mean of the logit of \code{alpha}
@@ -29,20 +28,23 @@ Population parameters:
 \item \code{mu_inf}: Population mean of \code{y_inf}
 \item \code{sigma_inf}: Population standard deviation of \code{y_inf}
 }
+}
 
-Patient-dependent parameters:
+\subsection{Patient-dependent parameters:}{
 \itemize{
 \item \code{alpha}: Autocorrelation parameter
 \item \code{y_inf}: Autoregression mean
 \item \code{b}: Intercept
 }
+}
 
-Other parameters:
+\subsection{Other parameters:}{
 \itemize{
 \item \code{y_mis}: Missing values
 }
 
-See \code{list_parameters(model = "MixedAR1")}.
+See \code{list_parameters(model = "MixedAR1")} for more details.
+}
 }
 
 \section{Priors}{

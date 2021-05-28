@@ -24,7 +24,7 @@ reference:
   - validate_prior
   - print_prior
   - print_distribution
-  - prepare_data_lgtd
+  - prepare_standata
   - add_prior
   - get_index
 - title: "Plotting models"
@@ -32,9 +32,6 @@ reference:
   - plot_ppc
   - plot_latent_OrderedRW
   - plot_transition_MC
-- title: "Other models"
-- contents:
-  - ends_with("_MC")
 - title: "Validation"
   desc: "Utility functions for validating models"
 - contents:

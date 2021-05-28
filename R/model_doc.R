@@ -12,22 +12,22 @@
 #'
 #' @section Parameters:
 #'
-#' Population parameters:
+#' ## Population parameters:
 #'
 #' - `sigma`: Standard deviation of the random walk (in logit scale)
 #' - `mu_logit_y0`: Population mean of the initial condition (in logit scale)
 #' - `sigma_logit_y0`: Population standard deviation of the initial condition (logit scale)
 #'
-#' Patient-dependent parameters:
+#' ## Patient-dependent parameters:
 #'
 #' - `logit_y0`: Logit of the initial condition
 #'
-#' Observation-dependent (patient- and time-dependent) parameters:
+#' ## Observation-dependent (patient- and time-dependent) parameters:
 #'
 #' - `y_lat`: Latent score (probability)
 #' - `logit_lat`: logit of `y_lat`
 #'
-#' See `list_parameters(model = "BinRW")`.
+#' See `list_parameters(model = "BinRW")` for more details.
 #'
 #' @section Priors:
 #' The priors are passed as a named list with elements `sigma`, `mu_logit_y0` and `sigma_logit_y0`
@@ -66,7 +66,7 @@ NULL
 #'
 #' @section Parameters:
 #'
-#' Population parameters:
+#' ## Population parameters:
 #'
 #' - `sigma`: Standard deviation of the random walk
 #' - `mu_y0`: Population mean of `y0` (initial condition).
@@ -75,15 +75,15 @@ NULL
 #' - `ct`: Cutpoints (vector of length `max_score`)
 #' - `p0`: Probability distribution of the average patient at t0 (vector of length `max_score`)
 #'
-#' Patient-dependent parameters:
+#' ## Patient-dependent parameters:
 #'
 #' - `y0`: `y_lat` at t0.
 #'
-#' Observation-dependent (patient- and time-dependent) parameters:
+#' ## Observation-dependent (patient- and time-dependent) parameters:
 #'
 #' - `y_lat`: Latent score
 #'
-#' See `list_parameters(model = "OrderedRW")`.
+#' See `list_parameters(model = "OrderedRW")` for more details.
 #'
 #' @section Priors:
 #' The priors are passed as a named list with elements `delta`, `sigma`, `mu_y0` and `sigma_y0`
@@ -128,26 +128,26 @@ NULL
 #'
 #' @section Parameters:
 #'
-#' Population parameters:
+#' ## Population parameters:
 #'
 #' - `sigma`: Standard deviation of the evolution of `ss1`
 #' - `mu_logit_p10`: Population logit mean of `p10`
 #' - `sigma_logit_p10`: Population logit standard deviation of `p10`
 #'
-#' Patient-dependent parameters:
+#' ## Patient-dependent parameters:
 #'
 #' - `p10`: Probability of transitioning from state 1 to state 0
 #' - `logit_p10`: logit of `p10`
 #' - `logit_tss1_0`: Initial condition of the `logit(ss1 * (1 + p10))`
 #'
-#' Observation-dependent (patient- and time-dependent) parameters:
+#' ## Observation-dependent (patient- and time-dependent) parameters:
 #'
 #' - `p01`: Probability of transitioning from state 0 to state 1
 #' - `lambda`: Mobility of the Markov Chain (eigen value of the transition matrix)
 #' - `ss1`: Steady state probability of state 1
 #' - `y_lat`: Latent score (probability)
 #'
-#' See `list_parameters(model = "BinMC")`.
+#' See `list_parameters(model = "BinMC")` for more details.
 #'
 #' @section Priors:
 #' The priors are passed as a named list with elements `sigma`, `mu_logit_p10` and `sigma_logit_p10`
@@ -194,7 +194,7 @@ NULL
 #' - `sigma`: Standard deviation of the random walk
 #' - `y_mis`: Missing values
 #'
-#' See `list_parameters(model = "RW")`.
+#' See `list_parameters(model = "RW")` for more details.
 #'
 #' @section Priors:
 #' The priors are passed as a named list with element `sigma`
@@ -232,7 +232,7 @@ NULL
 #' - `tau`: Time constant associated with the smoothing factor
 #' - `y_mis`: Missing values
 #'
-#' See `list_parameters(model = "Smoothing")`.
+#' See `list_parameters(model = "Smoothing")` for more details.
 #'
 #' @section Priors:
 #' The priors are passed as a named list with elements `sigma` and `tau`
@@ -275,7 +275,7 @@ NULL
 #' - `y_inf`: Autoregression mean
 #' - `y_mis`: Missing values
 #'
-#' See `list_parameters(model = "AR1")`.
+#' See `list_parameters(model = "AR1")` for more details.
 #'
 #' @section Priors:
 #' The priors are passed as a named list with elements `sigma`, `y_inf` and `alpha`
@@ -319,7 +319,7 @@ NULL
 #'
 #' @section Parameters:
 #'
-#' Population parameters:
+#' ## Population parameters:
 #'
 #' - `sigma`: Standard deviation of the autoregression
 #' - `mu_logit_alpha`: Population mean of the logit of `alpha`
@@ -327,17 +327,17 @@ NULL
 #' - `mu_inf`: Population mean of `y_inf`
 #' - `sigma_inf`: Population standard deviation of `y_inf`
 #'
-#' Patient-dependent parameters:
+#' ## Patient-dependent parameters:
 #'
 #' - `alpha`: Autocorrelation parameter
 #' - `y_inf`: Autoregression mean
 #' - `b`: Intercept
 #'
-#' Other parameters:
+#' ## Other parameters:
 #'
 #' - `y_mis`: Missing values
 #'
-#' See `list_parameters(model = "MixedAR1")`.
+#' See `list_parameters(model = "MixedAR1")` for more details.
 #'
 #' @section Priors:
 #' The priors are passed as a named list with elements `sigma`, `mu_logit_alpha`, `sigma_logit_alpha`, `mu_inf`, `sigma_inf`
@@ -381,7 +381,7 @@ NULL
 #'
 #' - `p`: matrix of size K * K where `p[i, j]` represents the transition probabilities from state i to state j.
 #'
-#' See `list_parameters(model = "MC")`.
+#' See `list_parameters(model = "MC")` for more details.
 #'
 #' @section Priors:
 #' The priors are passed as a named list with element `p`.

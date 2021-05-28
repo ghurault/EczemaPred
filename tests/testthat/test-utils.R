@@ -24,10 +24,37 @@ test_that("get_compiled_model works", {
   expect_error(get_compiled_model("model_not_existing"))
 })
 
-# Test extract_simulation -------------------------------------------------
-
-# In test-AR1.R
-
 # Test samples_to_list ----------------------------------------------------
 
 # In test-predictions.R
+
+# Test get_index ----------------------------------------------------------
+
+test_that("get_index works", {
+
+  N_pt <- 10
+  t_max <- rpois(N_pt, 20)
+
+  id2 <- get_index2(t_max)
+
+  df <- lapply(1:N_pt,
+               function(i) {
+                 data.frame(Patient = i, Time = 1:t_max[i]) %>%
+                   filter(!generate_missing(n()))
+               }) %>%
+    bind_rows()
+  id <- get_index(df %>% filter(Time <= 10),
+                  df %>% filter(Time > 10))
+
+  for (x in list(id2, id)) {
+    expect_s3_class(x, "data.frame")
+    expect_true(all(c("Patient", "Time", "Index") %in% colnames(x)))
+    expect_equal(nrow(x), sum(t_max))
+    expect_equal(length(unique(x[["Index"]])), nrow(x))
+  }
+
+})
+
+# Test extract_simulation -------------------------------------------------
+
+# In test-model_AR1.R

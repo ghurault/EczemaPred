@@ -17,8 +17,7 @@ Details of the model are available in the \href{#}{paper}.
 }
 \section{Parameters}{
 
-
-Population parameters:
+\subsection{Population parameters:}{
 \itemize{
 \item \code{sigma}: Standard deviation of the random walk
 \item \code{mu_y0}: Population mean of \code{y0} (initial condition).
@@ -27,18 +26,21 @@ Population parameters:
 \item \code{ct}: Cutpoints (vector of length \code{max_score})
 \item \code{p0}: Probability distribution of the average patient at t0 (vector of length \code{max_score})
 }
+}
 
-Patient-dependent parameters:
+\subsection{Patient-dependent parameters:}{
 \itemize{
 \item \code{y0}: \code{y_lat} at t0.
 }
+}
 
-Observation-dependent (patient- and time-dependent) parameters:
+\subsection{Observation-dependent (patient- and time-dependent) parameters:}{
 \itemize{
 \item \code{y_lat}: Latent score
 }
 
-See \code{list_parameters(model = "OrderedRW")}.
+See \code{list_parameters(model = "OrderedRW")} for more details.
+}
 }
 
 \section{Priors}{

@@ -20,7 +20,7 @@ Details of the model are available in the \href{#}{paper}.
 \item \code{p}: matrix of size K * K where \code{p[i, j]} represents the transition probabilities from state i to state j.
 }
 
-See \code{list_parameters(model = "MC")}.
+See \code{list_parameters(model = "MC")} for more details.
 }
 
 \section{Priors}{

@@ -36,9 +36,11 @@ default_prior(model, ...)
 \arguments{
 \item{model}{Object}
 
-\item{...}{Arguments to pass to \code{\link[=default_prior.EczemaModel]{default_prior.EczemaModel()}}}
+\item{...}{Arguments to pass to \code{\link[=default_prior]{default_prior()}} as an EczemaPred object}
 
 \item{max_score}{Maximum value that the score can take}
+
+\item{K}{Number of categories}
 }
 \value{
 Named list of parameters' priors.

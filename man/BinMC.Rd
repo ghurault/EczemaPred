@@ -17,22 +17,23 @@ Details of the model are available in the \href{#}{paper}.
 }
 \section{Parameters}{
 
-
-Population parameters:
+\subsection{Population parameters:}{
 \itemize{
 \item \code{sigma}: Standard deviation of the evolution of \code{ss1}
 \item \code{mu_logit_p10}: Population logit mean of \code{p10}
 \item \code{sigma_logit_p10}: Population logit standard deviation of \code{p10}
 }
+}
 
-Patient-dependent parameters:
+\subsection{Patient-dependent parameters:}{
 \itemize{
 \item \code{p10}: Probability of transitioning from state 1 to state 0
 \item \code{logit_p10}: logit of \code{p10}
 \item \code{logit_tss1_0}: Initial condition of the \code{logit(ss1 * (1 + p10))}
 }
+}
 
-Observation-dependent (patient- and time-dependent) parameters:
+\subsection{Observation-dependent (patient- and time-dependent) parameters:}{
 \itemize{
 \item \code{p01}: Probability of transitioning from state 0 to state 1
 \item \code{lambda}: Mobility of the Markov Chain (eigen value of the transition matrix)
@@ -40,7 +41,8 @@ Observation-dependent (patient- and time-dependent) parameters:
 \item \code{y_lat}: Latent score (probability)
 }
 
-See \code{list_parameters(model = "BinMC")}.
+See \code{list_parameters(model = "BinMC")} for more details.
+}
 }
 
 \section{Priors}{

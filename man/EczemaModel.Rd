@@ -9,7 +9,7 @@ EczemaModel(
     "MC"),
   max_score = NULL,
   K = NULL,
-  discrete = TRUE,
+  discrete = FALSE,
   prior = NULL
 )
 }

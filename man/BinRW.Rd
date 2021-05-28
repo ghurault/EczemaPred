@@ -17,26 +17,28 @@ Details of the model are available in the \href{#}{paper}.
 }
 \section{Parameters}{
 
-
-Population parameters:
+\subsection{Population parameters:}{
 \itemize{
 \item \code{sigma}: Standard deviation of the random walk (in logit scale)
 \item \code{mu_logit_y0}: Population mean of the initial condition (in logit scale)
 \item \code{sigma_logit_y0}: Population standard deviation of the initial condition (logit scale)
 }
+}
 
-Patient-dependent parameters:
+\subsection{Patient-dependent parameters:}{
 \itemize{
 \item \code{logit_y0}: Logit of the initial condition
 }
+}
 
-Observation-dependent (patient- and time-dependent) parameters:
+\subsection{Observation-dependent (patient- and time-dependent) parameters:}{
 \itemize{
 \item \code{y_lat}: Latent score (probability)
 \item \code{logit_lat}: logit of \code{y_lat}
 }
 
-See \code{list_parameters(model = "BinRW")}.
+See \code{list_parameters(model = "BinRW")} for more details.
+}
 }
 
 \section{Priors}{

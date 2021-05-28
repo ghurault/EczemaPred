@@ -2,7 +2,7 @@ set.seed(2021)
 options(warn = -1)
 
 N_patient <- 10
-t_max <- rpois(N_patient, 25)
+t_max <- rpois(N_patient, 20)
 max_score <- 100
 
 model <- EczemaModel("BinMC", max_score = max_score)

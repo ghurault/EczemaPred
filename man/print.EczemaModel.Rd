@@ -4,10 +4,10 @@
 \alias{print.EczemaModel}
 \title{Print model}
 \usage{
-\method{print}{EczemaModel}(model, digits = 2)
+\method{print}{EczemaModel}(x, digits = 2, ...)
 }
 \arguments{
-\item{model}{Object of class EczemaModel}
+\item{x}{Object of class EczemaModel}
 
 \item{digits}{Number of significant digits to print}
 }

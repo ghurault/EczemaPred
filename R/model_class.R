@@ -18,7 +18,7 @@
 EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing", "AR1", "MixedAR1", "MC"),
                         max_score = NULL,
                         K = NULL,
-                        discrete = TRUE,
+                        discrete = FALSE,
                         prior = NULL) {
 
   model_name <- match.arg(model_name)
@@ -42,7 +42,8 @@ EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC", "RW", "Smo
     } else {
       # NB: max_score must be a wholenumber even if discrete=FALSE
       stopifnot(is_scalar_wholenumber(max_score),
-                max_score > 0)
+                max_score > 0,
+                max_score > 1 || model_name != "OrderedRW")
       model_spec$max_score <- max_score
     }
   }
@@ -144,21 +145,57 @@ list_parameters <- function(model, ...) {
   UseMethod("list_parameters")
 }
 
-# See when we would include MC
-if (FALSE) {
-  prepare_standata <- function(model, train, test, ...) {
-    UseMethod("prepare_standata")
-  }
+#' Prepare the data list to pass to the Stan sampler
+#'
+#' Used internally.
+#'
+#' @param model Object
+#' @param train Training dataframe (details of the format in [EczemaFit()])
+#' @param test Testing dataframe (details of the format in [EczemaFit()])
+#' @param ... Arguments to pass to other methods
+#'
+#' @return List to serve as input to the Stan sampler.
+#' The list is usually incomplete needs to be optional parameters, such as:
+#' - `run` (binary, for main and MC models, indicating whether to evaluate the likelihood)
+#' - `discrete` (binary, for RW model, indicating whether the predictions should be discretised)
+#'
+#' @details
+#' - `prepare_data_lgtd` is helps build `prepare_standata.EczemaModel` and is kept for compatibility reasons.
+#' The list that it outputs does not include the priors.
+#'
+#' @export
+prepare_standata <- function(model, train, test, ...) {
+  UseMethod("prepare_standata")
 }
 
 #' Fit an EczemaModel
 #'
 #' @param model Object
-#' @param train Training dataframe (details of the format in [prepare_data_lgtd()])
-#' @param test Testing dataframe (details of the format in [prepare_data_lgtd()])
+#' @param train Training dataframe (see details below)
+#' @param test Testing dataframe (see details below)
 #' @param ... Arguments to pass to other methods
 #'
 #' @return Stanfit object
+#'
+#' @section Data format:
+#'
+#' ## All models except "MC"
+#'
+#' - `train` and `test` should have the columns `Patient` (patient ID), `Time` (timepoint) and `Score` (score to model).
+#' - `Patient` should take integer values between 1 and the number of patients in the training set.
+#' - `Time` should take integer (so discrete) values and starts with one for every patient.
+#' - `Score` should take values between 0 and max_score.
+#' - Missing values are not allowed (but Time values are not necessarily consecutive,
+#' for example if Score at t=5 is missing, but not at t=4 and t=6, just remove t=5).
+#'
+#' ## "MC" model
+#'
+#' - `train` and `test` should have columns `y0` (for the current state), `y1` (for the next state) and
+#' `dt` (for the time delay between states).
+#' - `y0` and `y1` should take integer values between 1 and K.
+#' - `dt` should take integer values greater than or equal to 1.
+#' - Missing values are not allowed.
+#'
 #' @export
 EczemaFit <- function(model, train, test, ...) {
   UseMethod("EczemaFit")
@@ -179,27 +216,27 @@ sample_prior <- function(model, ...) {
 
 #' Print model
 #'
-#' @param model Object of class EczemaModel
+#' @param x Object of class EczemaModel
 #' @param digits Number of significant digits to print
 #'
 #' @return None
 #' @export
-print.EczemaModel <- function(model, digits = 2, ...) {
+print.EczemaModel <- function(x, digits = 2, ...) {
 
-  cat(model$name, " model", sep = "")
-  if ("discrete" %in% names(model)) {
-    cat(" (", ifelse(model$discrete, "discrete", "continuous"), ")", sep = "")
+  cat(x$name, " model", sep = "")
+  if ("discrete" %in% names(x)) {
+    cat(" (", ifelse(x$discrete, "discrete", "continuous"), ")", sep = "")
   }
   cat("\n", sep = "")
 
-  if ("max_score" %in% names(model)) {
-    cat("- max_score =", model$max_score, "\n")
+  if ("max_score" %in% names(x)) {
+    cat("max_score =", x$max_score, "\n")
   }
-  if ("K" %in% names(model)) {
-    cat("-", model$K, "categories \n")
+  if ("K" %in% names(x)) {
+    cat(x$K, "categories \n")
   }
 
   cat("Prior: \n")
-  print_prior(model, digits = digits)
+  print_prior(x, digits = digits)
 
 }
