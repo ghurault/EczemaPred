@@ -1,29 +1,37 @@
 reference:
-- title: "Longitudinal data models"
+- title: "Available models"
+- subtitle: "Main models"
 - contents:
-  - prepare_data_lgtd
+  - BinRW
+  - OrderedRW
+  - BinMC
+- subtitle: "Reference models"
+- contents:
+  - MC
+  - RW
+  - Smoothing
+  - AR1
+  - MixedAR1
+- title: "Fitting models"
+- contents:
+  - EczemaModel
+  - EczemaFit
+  - sample_prior
+- title: "Manipulating models"
+- contents:
+  - list_parameters
+  - default_prior
+  - validate_prior
+  - print_prior
+  - print_distribution
+  - prepare_standata
+  - add_prior
   - get_index
+- title: "Plotting models"
+- contents:
   - plot_ppc
-- subtitle: "Discrete models"
-- contents:
-  - fit_discrete
-  - sample_prior_discrete
-  - ends_with("_BinRW")
-  - ends_with("_BinMC")
-  - ends_with("_OrderedRW")
   - plot_latent_OrderedRW
-  - ends_with("_RW")
-- subtitle: "Continuous models"
-- contents:
-  - fit_continuous
-  - sample_prior_continuous
-  - ends_with("_RW")
-  - ends_with("_Smoothing")
-  - ends_with("_AR1")
-  - ends_with("_MixedAR1")
-- title: "Other models"
-- contents:
-  - ends_with("_MC")
+  - plot_transition_MC
 - title: "Validation"
   desc: "Utility functions for validating models"
 - contents:
@@ -36,9 +44,6 @@ reference:
 - contents:
   - get_compiled_model
   - generate_missing
-  - default_prior
-  - add_prior
-  - list_parameters
   - extract_parameters
   - extract_simulations
   - samples_to_list

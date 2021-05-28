@@ -17,7 +17,8 @@ df2 <- data.frame(t0 = 1:N,
 train2 <- df2 %>% filter(Label == "Training")
 test2 <- df2 %>% filter(Label == "Testing")
 
-fit <- fit_MC(train = train2, test = test2, K = K2, chains = 1, refresh = 0)
+model <- EczemaModel("MC", K = K2)
+fit <- EczemaFit(model, train = train2, test = test2, chains = 1, refresh = 0)
 
 # Test extract_lpd and extract_RPS ----------------------------------------
 

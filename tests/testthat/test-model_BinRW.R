@@ -4,16 +4,14 @@ options(warn = -1)
 N_patient <- 10
 t_max <- rpois(N_patient, 25)
 max_score <- 100
+
 param <- c("sigma", "mu_logit_y0", "sigma_logit_y0", "logit_y0")
 
-# Test default_prior_BinRW ---------------------------------------------------
+model <- EczemaModel("BinRW", max_score = max_score)
 
-test_that("default_prior_BinRW works", {
-  expect_null(stopifnot_prior_BinRW(default_prior_BinRW()))
-  expect_equal(default_prior_BinRW(), default_prior(model = "BinRW"))
-})
+# Test incorrect priors ---------------------------------------------------
 
-dprior <- default_prior_BinRW()
+dprior <- model$prior
 
 wrong_priors <- list(
   1:4,
@@ -26,22 +24,21 @@ wrong_priors <- list(
   c(dprior[names(dprior) != "sigma_logit_y0"], list(sigma_logit_y0 = c(0, -1)))
 )
 
-# Test sample_prior_BinRW ----------------------------------------------------
-
-fit0 <- sample_prior_BinRW(N_patient = N_patient, t_max = t_max, max_score = max_score, chains = 1, refresh = 0)
-
-test_that("sample_prior_BinRW returns a stanfit object", {
-  expect_true(is_stanfit(fit0))
-})
-
-test_that("sample_prior_BinRW catches errors in prior", {
-  # cf. stopifnot_prior_BinRW
+test_that("BinRW constructor catches errors in prior", {
   for (i in 1:length(wrong_priors)) {
-    expect_error(sample_prior_BinRW(df, max_score = max_score, prior = wrong_priors[[i]]))
+    expect_error(EczemaModel("BinRW", max_score = max_score, prior = wrong_priors[[i]]))
   }
 })
 
-# Test fit_BinRW ----------------------------------------------------
+# Test sample_prior ----------------------------------------------------
+
+fit0 <- sample_prior(model, N_patient = N_patient, t_max = t_max, chains = 1, refresh = 0)
+
+test_that("sample_prior returns a stanfit object", {
+  expect_true(is_stanfit(fit0))
+})
+
+# Test fit ----------------------------------------------------
 
 l <- extract_fakedata(fit = fit0,
                       id = get_index2(t_max),
@@ -49,11 +46,11 @@ l <- extract_fakedata(fit = fit0,
                       pars = param,
                       horizon = 2)
 
-fit <- fit_BinRW(train = l$Train, test = l$Test, max_score = max_score, chains = 1, refresh = 0)
+fit <- EczemaFit(model, train = l$Train, test = l$Test, chains = 1, refresh = 0)
 
 id <- get_index(train = l$Train, test = l$Test)
 
-test_that("fit_BinRW returns a stanfit object", {
+test_that("EczemaFit returns a stanfit object", {
   expect_true(is_stanfit(fit))
 })
 
@@ -63,18 +60,11 @@ par <- HuraultMisc::summary_statistics(fit, pars = param) %>%
   mutate(Coverage90 = (True > `5%` & True < `95%`),
          NormError = abs(Mean - True) / sd)
 
-test_that("sigma estimate from fit_BinRW is accurate", {
+test_that("sigma estimate from EczemaFit is accurate", {
   par %>%
     filter(Variable == "sigma") %>%
     pull(NormError) %>%
     expect_lte(., 2.5)
-})
-
-test_that("fit_BinRW catches errors in prior", {
-  # cf. stopifnot_prior_BinRW
-  for (i in 1:length(wrong_priors)) {
-    expect_error(fit_BinRW(train = l$Train, test = l$Test, max_score = max_score, prior = wrong_priors[[i]]))
-  }
 })
 
 # Test plot_ppc --------------------------------------------------
