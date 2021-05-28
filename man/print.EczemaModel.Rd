@@ -10,6 +10,8 @@
 \item{x}{Object of class EczemaModel}
 
 \item{digits}{Number of significant digits to print}
+
+\item{...}{Arguments to pass to \code{\link[=print_prior]{print_prior()}}}
 }
 \value{
 None

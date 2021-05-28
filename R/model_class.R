@@ -218,6 +218,7 @@ sample_prior <- function(model, ...) {
 #'
 #' @param x Object of class EczemaModel
 #' @param digits Number of significant digits to print
+#' @param ... Arguments to pass to [print_prior()]
 #'
 #' @return None
 #' @export
@@ -237,6 +238,6 @@ print.EczemaModel <- function(x, digits = 2, ...) {
   }
 
   cat("Prior: \n")
-  print_prior(x, digits = digits)
+  print_prior(x, digits = digits, ...)
 
 }
