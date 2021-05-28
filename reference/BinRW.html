@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Binomial random walk model — BinRW" />
-<meta property="og:description" content="This is a state-space model defined by a Binomial measurement error and a latent random walk." />
+<meta property="og:description" content="This is a state-space model defined by a Binomial measurement error and a latent random walk.
+For more details see the vignette." />
 
 
 
@@ -127,106 +128,89 @@
     </div>
 
     <div class="ref-description">
-    <p>This is a state-space model defined by a Binomial measurement error and a latent random walk.</p>
+    <p>This is a state-space model defined by a Binomial measurement error and a latent random walk.
+For more details see the <a href='https://ghurault.github.io/EczemaPred/articles/BinRW.html'>vignette</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>default_prior_BinRW</span><span class='op'>(</span><span class='op'>)</span>
-
-<span class='fu'>fit_BinRW</span><span class='op'>(</span><span class='va'>train</span>, test <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>max_score</span>, prior <span class='op'>=</span> <span class='fu'>default_prior_BinRW</span><span class='op'>(</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>sample_prior_BinRW</span><span class='op'>(</span>
-  N_patient <span class='op'>=</span> <span class='fl'>1</span>,
-  t_max <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>,
-  <span class='va'>max_score</span>,
-  prior <span class='op'>=</span> <span class='fu'>default_prior_BinRW</span><span class='op'>(</span><span class='op'>)</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>train</th>
-      <td><p>Training dataframe (details of the format in <code><a href='prepare_data_lgtd.html'>prepare_data_lgtd()</a></code>)</p></td>
-    </tr>
-    <tr>
-      <th>test</th>
-      <td><p>Testing dataframe (details of the format in <code><a href='prepare_data_lgtd.html'>prepare_data_lgtd()</a></code>)</p></td>
-    </tr>
     <tr>
       <th>max_score</th>
       <td><p>Maximum value that the score can take</p></td>
     </tr>
     <tr>
       <th>prior</th>
-      <td><p>A named list with elements <code>sigma</code>, <code>mu_logit_y0</code> and <code>sigma_logit_y0</code>
-specifying priors for the corresponding parameters.
-Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 &gt; 0, such as:</p><ul>
-<li><p><code>sigma ~ normal(x1, x2)</code>.</p></li>
-<li><p><code>mu_logit_y0 ~ normal(x1, x2)</code></p></li>
-<li><p><code>sigma_logit_y0 ~ normal(x1, x2)</code></p></li>
-</ul>
-
-<p>NB: For <code>sigma</code> and <code>sigma_logit_y0</code>, usually x1=0 to define a half-normal distribution
-since the parameters are constrained to be positive.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Arguments to be pass to <code><a href='https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html'>rstan::sampling()</a></code></p></td>
-    </tr>
-    <tr>
-      <th>N_patient</th>
-      <td><p>Number of patients</p></td>
-    </tr>
-    <tr>
-      <th>t_max</th>
-      <td><p>Vector of size N_patient indicating the time-series length</p></td>
+      <td><p>Named list of the model's priors. If <code>NULL</code>, uses the default prior for the model (see <code><a href='default_prior.html'>default_prior()</a></code>).</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    
-<ul>
-<li><p><code>default_prior_BinRW</code>: named list defining the default priors</p></li>
-<li><p><code>fit_BinRW</code>: Stanfit object</p></li>
-<li><p><code>sample_prior_BinRW</code>: Stanfit object</p></li>
-</ul>
-
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>Details of the model are available in the <a href='#'>paper</a>.</p>
+    <h2 class="hasAnchor" id="parameters"><a class="anchor" href="#parameters"></a>Parameters</h2>
+
     
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Population parameters:</h3>
+
 <ul>
-<li><p><code>default_prior_BinRW</code> returns the default prior</p></li>
-<li><p><code>fit_BinRW</code> fits the Binomial random walk model</p></li>
-<li><p><code>sample_prior_BinRW</code> samples the prior predictive distribution</p></li>
-<li><p>The default prior for <code>sigma</code> translates to an odd ratio increment of at most 5 (~ 2 * upper bound of prior).</p></li>
-<li><p>The default priors for <code>mu_logit_y0</code> and <code>sigma_logit_y0</code> translates to an approximately uniform prior on <code>y0</code>.</p></li>
-<li><p>For more details see the <a href='https://ghurault.github.io/EczemaPred/articles/BinRW.html'>vignette</a>.</p></li>
-</ul>
-
-    <h2 class="hasAnchor" id="model-s-parameters"><a class="anchor" href="#model-s-parameters"></a>Model's parameters</h2>
-
-    
-
-
-<p>Population parameters:</p><ul>
 <li><p><code>sigma</code>: Standard deviation of the random walk (in logit scale)</p></li>
 <li><p><code>mu_logit_y0</code>: Population mean of the initial condition (in logit scale)</p></li>
 <li><p><code>sigma_logit_y0</code>: Population standard deviation of the initial condition (logit scale)</p></li>
 </ul>
 
-<p>Patient-dependent parameters:</p><ul>
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Patient-dependent parameters:</h3>
+
+<ul>
 <li><p><code>logit_y0</code>: Logit of the initial condition</p></li>
 </ul>
 
-<p>Observation-dependent (patient- and time-dependent) parameters:</p><ul>
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Observation-dependent (patient- and time-dependent) parameters:</h3>
+
+<ul>
 <li><p><code>y_lat</code>: Latent score (probability)</p></li>
 <li><p><code>logit_lat</code>: logit of <code>y_lat</code></p></li>
 </ul>
 
-<p>See <code><a href='list_parameters.html'>list_parameters(model = "BinRW")</a></code>.</p>
+<p>See <code><a href='list_parameters.html'>list_parameters(model = "BinRW")</a></code> for more details.</p>
 
+    <h2 class="hasAnchor" id="priors"><a class="anchor" href="#priors"></a>Priors</h2>
+
+    
+
+<p>The priors are passed as a named list with elements <code>sigma</code>, <code>mu_logit_y0</code> and <code>sigma_logit_y0</code>
+specifying priors for the corresponding parameters.
+Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 &gt; 0, such as:</p><ul>
+<li><p><code>sigma ~ normal+(x1, x2)</code>.</p></li>
+<li><p><code>mu_logit_y0 ~ normal(x1, x2)</code></p></li>
+<li><p><code>sigma_logit_y0 ~ normal+(x1, x2)</code></p></li>
+</ul>
+
+<p>NB: For <code>sigma</code> and <code>sigma_logit_y0</code>, usually x1=0 to define a half-normal distribution
+since the parameters are constrained to be positive.</p>
+    <h2 class="hasAnchor" id="default-priors"><a class="anchor" href="#default-priors"></a>Default priors</h2>
+
+    
+
+<ul>
+<li><p>The default priors do not depend on <code>max_score</code>, and are printed in the examples section.</p></li>
+<li><p>The default prior for <code>sigma</code> translates to an odd ratio increment of at most 5 (~ 2 * upper bound of prior).</p></li>
+<li><p>The default priors for <code>mu_logit_y0</code> and <code>sigma_logit_y0</code> translates to an approximately uniform prior on <code>y0</code>.</p></li>
+</ul>
+
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='EczemaModel.html'>EczemaModel</a></span><span class='op'>(</span><span class='st'>"BinRW"</span>, max_score <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; BinRW model (discrete)
+#&gt; max_score = 100 
+#&gt; Prior: 
+#&gt; - sigma ~ normal+(0,0.4)
+#&gt; - mu_logit_y0 ~ normal(0,1)
+#&gt; - sigma_logit_y0 ~ normal(0,1.5)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

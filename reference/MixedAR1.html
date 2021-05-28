@@ -40,13 +40,7 @@
 
 
 <meta property="og:title" content="Mixed effect autoregressive model (order 1) — MixedAR1" />
-<meta property="og:description" content="
-
-default_prior_MixedAR1 returns the default prior
-fit_MixedAR1 fits the mixed AR1 model
-sample_prior_MixedAR1 samples the prior predictive distribution
-
-" />
+<meta property="og:description" content="Mixed effect autoregressive model (order 1)" />
 
 
 
@@ -133,105 +127,39 @@ sample_prior_MixedAR1 samples the prior predictive distribution
     </div>
 
     <div class="ref-description">
-    
-<ul>
-<li><p><code>default_prior_MixedAR1</code> returns the default prior</p></li>
-<li><p><code>fit_MixedAR1</code> fits the mixed AR1 model</p></li>
-<li><p><code>sample_prior_MixedAR1</code> samples the prior predictive distribution</p></li>
-</ul>
-
+    <p>Mixed effect autoregressive model (order 1)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>default_prior_MixedAR1</span><span class='op'>(</span><span class='op'>)</span>
-
-<span class='fu'>fit_MixedAR1</span><span class='op'>(</span>
-  <span class='va'>train</span>,
-  test <span class='op'>=</span> <span class='cn'>NULL</span>,
-  <span class='va'>max_score</span>,
-  prior <span class='op'>=</span> <span class='fu'>default_prior_MixedAR1</span><span class='op'>(</span><span class='op'>)</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span>
-
-<span class='fu'>sample_prior_MixedAR1</span><span class='op'>(</span>
-  N_patient <span class='op'>=</span> <span class='fl'>1</span>,
-  t_max <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>,
-  <span class='va'>max_score</span>,
-  prior <span class='op'>=</span> <span class='fu'>default_prior_MixedAR1</span><span class='op'>(</span><span class='op'>)</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>train</th>
-      <td><p>Training dataframe (details of the format in <code><a href='prepare_data_lgtd.html'>prepare_data_lgtd()</a></code>)</p></td>
-    </tr>
-    <tr>
-      <th>test</th>
-      <td><p>Testing dataframe (details of the format in <code><a href='prepare_data_lgtd.html'>prepare_data_lgtd()</a></code>)</p></td>
-    </tr>
     <tr>
       <th>max_score</th>
       <td><p>Maximum value that the score can take</p></td>
     </tr>
     <tr>
       <th>prior</th>
-      <td><p>A named list with elements <code>sigma</code>, <code>mu_logit_alpha</code>, <code>sigma_logit_alpha</code>, <code>mu_inf</code>, <code>sigma_inf</code>
-specifying priors for the corresponding parameters.
-Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 &gt; 0, such as:</p><ul>
-<li><p><code>sigma / max_score ~ normal(x1, x2)</code>.</p></li>
-<li><p><code>mu_logit_alpha ~ normal(x1, x2)</code>.</p></li>
-<li><p><code>sigma_logit_alpha ~ normal(x1, x2)</code>.</p></li>
-<li><p><code>mu_inf / max_score ~ normal(x1, x2)</code>.</p></li>
-<li><p><code>sigma_inf / max_score ~ normal(x1, x2)</code>.</p></li>
-</ul>
-
-<p>NB: For <code>sigma</code>, <code>sigma_logit_alpha</code> and <code>sigma_inf</code>, usually x1=0 to define a half-normal distribution
-since the parameter is constrained to be positive.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Arguments to be pass to <code><a href='https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html'>rstan::sampling()</a></code></p></td>
-    </tr>
-    <tr>
-      <th>N_patient</th>
-      <td><p>Number of patients</p></td>
-    </tr>
-    <tr>
-      <th>t_max</th>
-      <td><p>Vector of size N_patient indicating the time-series length</p></td>
+      <td><p>Named list of the model's priors. If <code>NULL</code>, uses the default prior for the model (see <code><a href='default_prior.html'>default_prior()</a></code>).</p></td>
     </tr>
     </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    
-<ul>
-<li><p><code>default_prior_MixedAR1</code>: named list defining the default priors (see details).</p></li>
-<li><p><code>fit_MixedAR1</code>: Stanfit object</p></li>
-<li><p><code>sample_prior_MixedAR1</code>: Stanfit object</p></li>
-</ul>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     
 <ul>
-<li><p>The default prior for <code>sigma</code> translates to a width of the predictive distribution to be at most <code>max_score</code>.</p></li>
-<li><p>The default priors for <code>mu_logit_alpha</code> and <code>sigma_logit_alpha</code> have "reasonable" ranges and
-translate to a prior on <code>alpha</code> that is approximately uniform.</p></li>
-<li><p>The default prior for <code>mu_inf</code> spans the entire range of the score.</p></li>
-<li><p>The default prior for <code>sigma_inf</code> translates to a range in the distribution of <code>y_inf</code> to be at most <code>max_score</code>.</p></li>
+<li><p>Details of the model are available in the <a href='#'>paper</a>.</p></li>
 <li><p>The model is naive as it is trained with a non-truncated.</p></li>
 <li><p>For more details see the <a href='https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html'>vignette</a>.</p></li>
 </ul>
 
-    <h2 class="hasAnchor" id="model-s-parameters"><a class="anchor" href="#model-s-parameters"></a>Model's parameters</h2>
+    <h2 class="hasAnchor" id="parameters"><a class="anchor" href="#parameters"></a>Parameters</h2>
 
     
 
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Population parameters:</h3>
 
-<p>Population parameters:</p><ul>
+<ul>
 <li><p><code>sigma</code>: Standard deviation of the autoregression</p></li>
 <li><p><code>mu_logit_alpha</code>: Population mean of the logit of <code>alpha</code></p></li>
 <li><p><code>sigma_logit_alpha</code>: Population standard deviation of the logit of <code>alpha</code></p></li>
@@ -239,18 +167,63 @@ translate to a prior on <code>alpha</code> that is approximately uniform.</p></l
 <li><p><code>sigma_inf</code>: Population standard deviation of <code>y_inf</code></p></li>
 </ul>
 
-<p>Patient-dependent parameters:</p><ul>
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Patient-dependent parameters:</h3>
+
+<ul>
 <li><p><code>alpha</code>: Autocorrelation parameter</p></li>
 <li><p><code>y_inf</code>: Autoregression mean</p></li>
 <li><p><code>b</code>: Intercept</p></li>
 </ul>
 
-<p>Other parameters:</p><ul>
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Other parameters:</h3>
+
+<ul>
 <li><p><code>y_mis</code>: Missing values</p></li>
 </ul>
 
-<p>See <code><a href='list_parameters.html'>list_parameters(model = "MixedAR1")</a></code>.</p>
+<p>See <code><a href='list_parameters.html'>list_parameters(model = "MixedAR1")</a></code> for more details.</p>
 
+    <h2 class="hasAnchor" id="priors"><a class="anchor" href="#priors"></a>Priors</h2>
+
+    
+
+<p>The priors are passed as a named list with elements <code>sigma</code>, <code>mu_logit_alpha</code>, <code>sigma_logit_alpha</code>, <code>mu_inf</code>, <code>sigma_inf</code>
+specifying priors for the corresponding parameters.
+Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 &gt; 0, such as:</p><ul>
+<li><p><code>sigma / max_score ~ normal+(x1, x2)</code>.</p></li>
+<li><p><code>mu_logit_alpha ~ normal(x1, x2)</code>.</p></li>
+<li><p><code>sigma_logit_alpha ~ normal+(x1, x2)</code>.</p></li>
+<li><p><code>mu_inf / max_score ~ normal(x1, x2)</code>.</p></li>
+<li><p><code>sigma_inf / max_score ~ normal+(x1, x2)</code>.</p></li>
+</ul>
+
+<p>NB: For <code>sigma</code>, <code>sigma_logit_alpha</code> and <code>sigma_inf</code>, usually x1=0 to define a half-normal distribution
+since the parameter is constrained to be positive.</p>
+    <h2 class="hasAnchor" id="default-priors"><a class="anchor" href="#default-priors"></a>Default priors</h2>
+
+    
+
+<ul>
+<li><p>The default prior for <code>sigma</code> translates to a width of the predictive distribution to be at most <code>max_score</code>.</p></li>
+<li><p>The default priors for <code>mu_logit_alpha</code> and <code>sigma_logit_alpha</code> have "reasonable" ranges and
+translate to a prior on <code>alpha</code> that is approximately uniform.</p></li>
+<li><p>The default prior for <code>mu_inf</code> spans the entire range of the score.</p></li>
+<li><p>The default prior for <code>sigma_inf</code> translates to a range in the distribution of <code>y_inf</code> to be at most <code>max_score</code>.</p></li>
+</ul>
+
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='EczemaModel.html'>EczemaModel</a></span><span class='op'>(</span><span class='st'>"MixedAR1"</span>, max_score <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; MixedAR1 model (continuous)
+#&gt; max_score = 100 
+#&gt; Prior: 
+#&gt; - sigma / max_score ~ normal+(0,0.1)
+#&gt; - mu_logit_alpha ~ normal(0,1)
+#&gt; - sigma_logit_alpha ~ normal+(0,1.5)
+#&gt; - mu_inf / max_score ~ normal(0.5,0.25)
+#&gt; - sigma_inf / max_score ~ normal+(0.5,0.25)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

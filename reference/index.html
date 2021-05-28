@@ -134,39 +134,17 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-longitudinal-data-models" class="hasAnchor"><a href="#section-longitudinal-data-models" class="anchor"></a>Longitudinal data models</h2>
+          <h2 id="section-available-models" class="hasAnchor"><a href="#section-available-models" class="anchor"></a>Available models</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
       
       
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="prepare_data_lgtd.html">prepare_data_lgtd()</a></code> </p>
-        </td>
-        <td><p>Prepares the data list to pass to the Stan sampler for longitudinal models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_index.html">get_index()</a></code> <code><a href="get_index.html">get_index2()</a></code> </p>
-        </td>
-        <td><p>Associate (Patient, Time) pairs to corresponding index in the model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot_ppc.html">plot_post_traj_pmf()</a></code> <code><a href="plot_ppc.html">plot_post_traj_fanchart()</a></code> <code><a href="plot_ppc.html">plot_ppc_traj_pmf()</a></code> <code><a href="plot_ppc.html">plot_ppc_traj_fanchart()</a></code> </p>
-        </td>
-        <td><p>Plot posterior predictive trajectory</p></td>
-      </tr>
     </tbody><tbody>
       
       <tr>
         <th colspan="2">
-          <h3 id="section-discrete-models" class="hasAnchor"><a href="#section-discrete-models" class="anchor"></a>Discrete models</h3>
+          <h3 id="section-main-models" class="hasAnchor"><a href="#section-main-models" class="anchor"></a>Main models</h3>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -177,51 +155,27 @@
       <tr>
         
         <td>
-          <p><code><a href="fit_discrete.html">fit_discrete()</a></code> </p>
-        </td>
-        <td><p>Fit discrete models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sample_prior_discrete.html">sample_prior_discrete()</a></code> </p>
-        </td>
-        <td><p>Sample prior for discrete models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="BinRW.html">default_prior_BinRW()</a></code> <code><a href="BinRW.html">fit_BinRW()</a></code> <code><a href="BinRW.html">sample_prior_BinRW()</a></code> </p>
+          <p><code><a href="BinRW.html">BinRW</a></code> </p>
         </td>
         <td><p>Binomial random walk model</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="BinMC.html">default_prior_BinMC()</a></code> <code><a href="BinMC.html">fit_BinMC()</a></code> <code><a href="BinMC.html">sample_prior_BinMC()</a></code> </p>
-        </td>
-        <td><p>Binomial Markov Chain model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="OrderedRW.html">default_prior_OrderedRW()</a></code> <code><a href="OrderedRW.html">fit_OrderedRW()</a></code> <code><a href="OrderedRW.html">sample_prior_OrderedRW()</a></code> </p>
+          <p><code><a href="OrderedRW.html">OrderedRW</a></code> </p>
         </td>
         <td><p>Ordered Logistic random walk model</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plot_latent_OrderedRW.html">plot_latent_OrderedRW()</a></code> </p>
+          <p><code><a href="BinMC.html">BinMC</a></code> </p>
         </td>
-        <td><p>Plot the evolution of the expected latent score of the OrderedRW model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="RW.html">default_prior_RW()</a></code> <code><a href="RW.html">fit_RW()</a></code> <code><a href="RW.html">sample_prior_RW()</a></code> </p>
-        </td>
-        <td><p>Random walk model</p></td>
+        <td><p>Binomial Markov Chain model</p></td>
       </tr>
     </tbody><tbody>
       
       <tr>
         <th colspan="2">
-          <h3 id="section-continuous-models" class="hasAnchor"><a href="#section-continuous-models" class="anchor"></a>Continuous models</h3>
+          <h3 id="section-reference-models" class="hasAnchor"><a href="#section-reference-models" class="anchor"></a>Reference models</h3>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -232,44 +186,38 @@
       <tr>
         
         <td>
-          <p><code><a href="fit_continuous.html">fit_continuous()</a></code> </p>
+          <p><code><a href="MC.html">MC</a></code> </p>
         </td>
-        <td><p>Fit continuous models</p></td>
+        <td><p>Markov Chain model</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="sample_prior_continuous.html">sample_prior_continuous()</a></code> </p>
-        </td>
-        <td><p>Sample prior for continuous models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="RW.html">default_prior_RW()</a></code> <code><a href="RW.html">fit_RW()</a></code> <code><a href="RW.html">sample_prior_RW()</a></code> </p>
+          <p><code><a href="RW.html">RW</a></code> </p>
         </td>
         <td><p>Random walk model</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="Smoothing.html">default_prior_Smoothing()</a></code> <code><a href="Smoothing.html">fit_Smoothing()</a></code> <code><a href="Smoothing.html">sample_prior_Smoothing()</a></code> </p>
+          <p><code><a href="Smoothing.html">Smoothing</a></code> </p>
         </td>
         <td><p>Exponential smoothing model</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="AR1.html">default_prior_AR1()</a></code> <code><a href="AR1.html">fit_AR1()</a></code> <code><a href="AR1.html">sample_prior_AR1()</a></code> </p>
+          <p><code><a href="AR1.html">AR1</a></code> </p>
         </td>
         <td><p>Autoregressive model (order 1)</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="MixedAR1.html">default_prior_MixedAR1()</a></code> <code><a href="MixedAR1.html">fit_MixedAR1()</a></code> <code><a href="MixedAR1.html">sample_prior_MixedAR1()</a></code> </p>
+          <p><code><a href="MixedAR1.html">MixedAR1</a></code> </p>
         </td>
         <td><p>Mixed effect autoregressive model (order 1)</p></td>
       </tr>
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-other-models" class="hasAnchor"><a href="#section-other-models" class="anchor"></a>Other models</h2>
+          <h2 id="section-fitting-models" class="hasAnchor"><a href="#section-fitting-models" class="anchor"></a>Fitting models</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -281,9 +229,107 @@
       <tr>
         
         <td>
-          <p><code><a href="MC.html">default_prior_MC()</a></code> <code><a href="MC.html">prepare_data_MC()</a></code> <code><a href="MC.html">fit_MC()</a></code> <code><a href="MC.html">sample_prior_MC()</a></code> </p>
+          <p><code><a href="EczemaModel.html">EczemaModel()</a></code> </p>
         </td>
-        <td><p>Markov Chain model</p></td>
+        <td><p>EczemaModel constructor</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="EczemaFit.html">EczemaFit()</a></code> </p>
+        </td>
+        <td><p>Fit an EczemaModel</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sample_prior.html">sample_prior()</a></code> </p>
+        </td>
+        <td><p>Prior predictive distribution</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-manipulating-models" class="hasAnchor"><a href="#section-manipulating-models" class="anchor"></a>Manipulating models</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="list_parameters.html">list_parameters()</a></code> </p>
+        </td>
+        <td><p>List available parameters</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="default_prior.html">default_prior()</a></code> </p>
+        </td>
+        <td><p>Default prior</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="validate_prior.html">validate_prior()</a></code> </p>
+        </td>
+        <td><p>Check the prior of an EczemaModel is correct</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="print_prior.html">print_prior()</a></code> </p>
+        </td>
+        <td><p>Print prior distribution</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="print_distribution.html">print_distribution()</a></code> </p>
+        </td>
+        <td><p>Print distribution</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="prepare_standata.html">prepare_standata()</a></code> <code><a href="prepare_standata.html">prepare_data_lgtd()</a></code> </p>
+        </td>
+        <td><p>Prepare the data list to pass to the Stan sampler</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_prior.html">add_prior()</a></code> </p>
+        </td>
+        <td><p>Add prior to the list serving as input to the Stan sampler</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="get_index.html">get_index()</a></code> <code><a href="get_index.html">get_index2()</a></code> </p>
+        </td>
+        <td><p>Associate (Patient, Time) pairs to corresponding index in the model</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-plotting-models" class="hasAnchor"><a href="#section-plotting-models" class="anchor"></a>Plotting models</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="plot_ppc.html">plot_post_traj_pmf()</a></code> <code><a href="plot_ppc.html">plot_post_traj_fanchart()</a></code> <code><a href="plot_ppc.html">plot_ppc_traj_pmf()</a></code> <code><a href="plot_ppc.html">plot_ppc_traj_fanchart()</a></code> </p>
+        </td>
+        <td><p>Plot posterior predictive trajectory</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot_latent_OrderedRW.html">plot_latent_OrderedRW()</a></code> </p>
+        </td>
+        <td><p>Plot the evolution of the expected latent score of the OrderedRW model</p></td>
       </tr><tr>
         
         <td>
@@ -358,24 +404,6 @@
           <p><code><a href="generate_missing.html">generate_missing()</a></code> </p>
         </td>
         <td><p>Generate missing values in a times-series</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="default_prior.html">default_prior()</a></code> </p>
-        </td>
-        <td><p>Call default_prior_* for different models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="add_prior.html">add_prior()</a></code> </p>
-        </td>
-        <td><p>Add prior to the list serving as input to the Stan sampler</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="list_parameters.html">list_parameters()</a></code> </p>
-        </td>
-        <td><p>List available parameters</p></td>
       </tr><tr>
         
         <td>

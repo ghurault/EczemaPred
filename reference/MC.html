@@ -40,14 +40,7 @@
 
 
 <meta property="og:title" content="Markov Chain model — MC" />
-<meta property="og:description" content="
-
-default_prior_MC returns the default prior
-prepare_data_MC prepares the data list to pass to the Stan sampler
-fit_MC fits the Markov Chain model
-sample_prior_MC samples the prior predictive distribution
-
-" />
+<meta property="og:description" content="For more details see the Markov Chain vignette." />
 
 
 
@@ -134,28 +127,9 @@ sample_prior_MC samples the prior predictive distribution
     </div>
 
     <div class="ref-description">
-    
-<ul>
-<li><p><code>default_prior_MC</code> returns the default prior</p></li>
-<li><p><code>prepare_data_MC</code> prepares the data list to pass to the Stan sampler</p></li>
-<li><p><code>fit_MC</code> fits the Markov Chain model</p></li>
-<li><p><code>sample_prior_MC</code> samples the prior predictive distribution</p></li>
-</ul>
-
+    <p>For more details see the <a href='https://ghurault.github.io/EczemaPred/articles/MC.html'>Markov Chain vignette</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>default_prior_MC</span><span class='op'>(</span><span class='va'>K</span><span class='op'>)</span>
-
-<span class='fu'>prepare_data_MC</span><span class='op'>(</span><span class='va'>train</span>, test <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>K</span>, prior <span class='op'>=</span> <span class='fu'>default_prior_MC</span><span class='op'>(</span><span class='va'>K</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='fu'>fit_MC</span><span class='op'>(</span><span class='va'>train</span>, test <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>K</span>, prior <span class='op'>=</span> <span class='fu'>default_prior_MC</span><span class='op'>(</span><span class='va'>K</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>sample_prior_MC</span><span class='op'>(</span>
-  train <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>y0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>integer</a></span><span class='op'>(</span><span class='op'>)</span>, y1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>integer</a></span><span class='op'>(</span><span class='op'>)</span>, dt <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>integer</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>,
-  <span class='va'>K</span>,
-  prior <span class='op'>=</span> <span class='fu'>default_prior_MC</span><span class='op'>(</span><span class='va'>K</span><span class='op'>)</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -165,51 +139,15 @@ sample_prior_MC samples the prior predictive distribution
       <td><p>Number of states of the Markov Chain</p></td>
     </tr>
     <tr>
-      <th>train</th>
-      <td><p>Training dataframe</p></td>
-    </tr>
-    <tr>
-      <th>test</th>
-      <td><p>Testing dataframe</p></td>
-    </tr>
-    <tr>
       <th>prior</th>
-      <td><p>A named list of corresponding to parameters' prior.
-The transition probabilities from state i <code>p[i, ]</code> is assumed to follow a Dirichlet distribution.
-The prior should be a matrix where each line correspond to the parameters of the Dirichlet distribution for <code>p[i, ]</code>.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Arguments to be pass to <code><a href='https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html'>rstan::sampling()</a></code></p></td>
+      <td><p>Named list of the model's priors. If <code>NULL</code>, uses the default prior for the model (see <code><a href='default_prior.html'>default_prior()</a></code>).</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    
-<ul>
-<li><p><code>default_prior_MC</code>: list corresponding to a uniform Dirichlet prior of concentration for each distribution <code>p[i, ]</code></p></li>
-<li><p><code>prepare_data_MC</code>: list to serve as input to the Stan sampler.</p></li>
-<li><p><code>fit_MC</code>: Stanfit object</p></li>
-<li><p><code>sample_prior_MC</code>: Stanfit object</p></li>
-</ul>
-
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>For more details see the <a href='Markov Chain vignette'>Markov Chain vignette</a>.</p>
-    <h2 class="hasAnchor" id="dataframe-format"><a class="anchor" href="#dataframe-format"></a>Dataframe format</h2>
-
-    
-
-<ul>
-<li><p><code>train</code> and <code>test</code> should have columns <code>y0</code> (for the current state), <code>y1</code> (for the next state) and
-<code>dt</code> (for the time delay between states).</p></li>
-<li><p><code>y0</code> and <code>y1</code> should take integer values between 1 and K.</p></li>
-<li><p><code>dt</code> should take integer values greater than or equal to 1.</p></li>
-</ul>
-
-<p>Missing values are not allowed.</p>
-    <h2 class="hasAnchor" id="model-s-parameters"><a class="anchor" href="#model-s-parameters"></a>Model's parameters</h2>
+    <p>Details of the model are available in the <a href='#'>paper</a>.</p>
+    <h2 class="hasAnchor" id="parameters"><a class="anchor" href="#parameters"></a>Parameters</h2>
 
     
 
@@ -217,8 +155,30 @@ The prior should be a matrix where each line correspond to the parameters of the
 <li><p><code>p</code>: matrix of size K * K where <code>p[i, j]</code> represents the transition probabilities from state i to state j.</p></li>
 </ul>
 
-<p>See <code><a href='list_parameters.html'>list_parameters(model = "MC")</a></code>.</p>
+<p>See <code><a href='list_parameters.html'>list_parameters(model = "MC")</a></code> for more details.</p>
+    <h2 class="hasAnchor" id="priors"><a class="anchor" href="#priors"></a>Priors</h2>
 
+    
+
+<p>The priors are passed as a named list with element <code>p</code>.
+The transition probabilities from state i <code>p[i, ]</code> are assumed to follow a Dirichlet distribution.
+The prior should be a matrix where each line correspond to the parameters of the Dirichlet distribution for <code>p[i, ]</code>.</p>
+    <h2 class="hasAnchor" id="default-priors"><a class="anchor" href="#default-priors"></a>Default priors</h2>
+
+    
+
+<p>The default prior for all <code>p[i, ]</code> is a symmetric uniform Dirichlet distribution (all concentration parameters are equal to 1).</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='EczemaModel.html'>EczemaModel</a></span><span class='op'>(</span><span class='st'>"MC"</span>, K <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; MC model (discrete)
+#&gt; 5 categories 
+#&gt; Prior: 
+#&gt; - p[1, ] ~ dirichlet(1,1,1,1,1)
+#&gt; - p[2, ] ~ dirichlet(1,1,1,1,1)
+#&gt; - p[3, ] ~ dirichlet(1,1,1,1,1)
+#&gt; - p[4, ] ~ dirichlet(1,1,1,1,1)
+#&gt; - p[5, ] ~ dirichlet(1,1,1,1,1)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

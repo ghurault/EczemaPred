@@ -97,7 +97,9 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/rstan">rstan</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>mc.cores <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html">detectCores</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="co"># Parallel computing</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2021</span><span class="op">)</span> <span class="co"># For reproducibility</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2021</span><span class="op">)</span> <span class="co"># For reproducibility</span>
+
+<span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/EczemaModel.html">EczemaModel</a></span><span class="op">(</span><span class="st">"MC"</span>, K <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">K</span><span class="op">)</span></code></pre></div>
 <div id="prior-predictive-distribution" class="section level2">
 <h2 class="hasAnchor">
 <a href="#prior-predictive-distribution" class="anchor"></a>Prior predictive distribution</h2>
@@ -106,19 +108,15 @@
 <code class="sourceCode R"><span class="va">df0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>y0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">params</span><span class="op">$</span><span class="va">K</span>, each <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">t_max</span><span class="op">)</span>,
                   y1 <span class="op">=</span> <span class="fl">1</span>, <span class="co"># does not matter</span>
                   dt <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="va">prior1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MC.html">sample_prior_MC</a></span><span class="op">(</span><span class="va">df0</span>,
-                          K <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">K</span>,
-                          chains <span class="op">=</span> <span class="fl">1</span>,
-                          refresh <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
-<p>The default prior that we used was a uniform Dirichlet distribution (symmetric Dirichilet distribution with concentration parameter 1). We can inspect the empirical distribution of the transition probabilities.</p>
+<span class="va">fit_prior1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_prior.html">sample_prior</a></span><span class="op">(</span><span class="va">model</span>, data <span class="op">=</span> <span class="va">df0</span>, chains <span class="op">=</span> <span class="fl">1</span>, refresh <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<p>The default prior that we used was a symmetric uniform Dirichlet distribution (Dirichlet distribution where all concentration parameters are equal to 1). We can inspect the empirical distribution of the transition probabilities.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">rstan</span><span class="fu">::</span><span class="fu">plot</span><span class="op">(</span><span class="va">prior1</span>, pars <span class="op">=</span> <span class="st">"p"</span>, plotfun <span class="op">=</span> <span class="st">"hist"</span><span class="op">)</span>
-<span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
-<p><img src="MC_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<code class="sourceCode R"><span class="fu">rstan</span><span class="fu">::</span><span class="fu">plot</span><span class="op">(</span><span class="va">fit_prior1</span>, pars <span class="op">=</span> <span class="st">"p"</span>, plotfun <span class="op">=</span> <span class="st">"hist"</span><span class="op">)</span></code></pre></div>
+<p><img src="MC_files/figure-html/plot-prior1-1.png" width="700"></p>
 <p>We can also plot the expected transition matrix as an heatmap.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_transition_MC.html">plot_transition_MC</a></span><span class="op">(</span><span class="va">prior1</span><span class="op">)</span></code></pre></div>
-<p><img src="MC_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_transition_MC.html">plot_transition_MC</a></span><span class="op">(</span><span class="va">fit_prior1</span><span class="op">)</span></code></pre></div>
+<p><img src="MC_files/figure-html/plot-transition1-1.png" width="700"></p>
 <p>If the categories are ordinal, we may assume that the probabilities of transitioning from state 5 to 1 is much smaller than the probability from transitioning from state 5 to 4. In that case, we could use an RBF-like Dirichlet prior for the transition probabilities, for example:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">prior_RBF_MC</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">K</span>, <span class="va">alpha</span>, <span class="va">l</span><span class="op">)</span> <span class="op">{</span>
@@ -144,11 +142,9 @@
   <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>p <span class="op">=</span> <span class="va">p</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span>
 
-<span class="va">prior2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MC.html">sample_prior_MC</a></span><span class="op">(</span>train <span class="op">=</span> <span class="va">df0</span>,
-                          K <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">K</span>,
-                          prior <span class="op">=</span> <span class="fu">prior_RBF_MC</span><span class="op">(</span><span class="va">params</span><span class="op">$</span><span class="va">K</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,
-                          chains <span class="op">=</span> <span class="fl">1</span>,
-                          refresh <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
+<span class="va">model2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/EczemaModel.html">EczemaModel</a></span><span class="op">(</span><span class="st">"MC"</span>, K <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">K</span>, prior <span class="op">=</span> <span class="fu">prior_RBF_MC</span><span class="op">(</span><span class="va">params</span><span class="op">$</span><span class="va">K</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">fit_prior2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_prior.html">sample_prior</a></span><span class="op">(</span><span class="va">model2</span>, data <span class="op">=</span> <span class="va">df0</span>, chains <span class="op">=</span> <span class="fl">1</span>, refresh <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
 <span class="co">#&gt; Warning: There were 877 divergent transitions after warmup. See</span>
 <span class="co">#&gt; http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</span>
 <span class="co">#&gt; to find out why this is a problem and how to eliminate them.</span>
@@ -163,8 +159,8 @@
 <span class="co">#&gt; Running the chains for more iterations may help. See</span>
 <span class="co">#&gt; http://mc-stan.org/misc/warnings.html#tail-ess</span>
 
-<span class="fu"><a href="../reference/plot_transition_MC.html">plot_transition_MC</a></span><span class="op">(</span><span class="va">prior2</span><span class="op">)</span></code></pre></div>
-<p><img src="MC_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<span class="fu"><a href="../reference/plot_transition_MC.html">plot_transition_MC</a></span><span class="op">(</span><span class="va">fit_prior2</span><span class="op">)</span></code></pre></div>
+<p><img src="MC_files/figure-html/new-prior-1.png" width="700"></p>
 <p>This prior as the same information value (same number of pseudo-count) as the prior above, but favours neighbouring transitions.</p>
 </div>
 <div id="generating-fake-data" class="section level2">
@@ -175,7 +171,7 @@
 <code class="sourceCode R"><span class="va">draw</span> <span class="op">&lt;-</span> <span class="fl">501</span>
 <span class="va">initial</span> <span class="op">&lt;-</span> <span class="fl">2</span>
 
-<span class="va">yrep</span> <span class="op">&lt;-</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html">extract</a></span><span class="op">(</span><span class="va">prior1</span>, pars <span class="op">=</span> <span class="st">"y_rep"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
+<span class="va">yrep</span> <span class="op">&lt;-</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html">extract</a></span><span class="op">(</span><span class="va">fit_prior1</span>, pars <span class="op">=</span> <span class="st">"y_rep"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 
 <span class="va">yrep1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="va">yrep</span><span class="op">[</span><span class="va">draw</span>, <span class="op">]</span>, ncol <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">t_max</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
@@ -188,7 +184,7 @@
 <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">params</span><span class="op">$</span><span class="va">t_max</span>, y <span class="op">=</span> <span class="va">out</span><span class="op">)</span></code></pre></div>
 <p>The parameters used to generate this sequence can be extracted with:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">true_param</span> <span class="op">&lt;-</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html">extract</a></span><span class="op">(</span><span class="va">prior1</span>, pars <span class="op">=</span> <span class="st">"p"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">true_param</span> <span class="op">&lt;-</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html">extract</a></span><span class="op">(</span><span class="va">fit_prior1</span>, pars <span class="op">=</span> <span class="st">"p"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/extract_draws.html">extract_draws</a></span><span class="op">(</span><span class="va">draw</span><span class="op">)</span></code></pre></div>
 <p>In practice, some values are often missing. We can generate missing values with the following:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -200,7 +196,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
-<p><img src="MC_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="MC_files/figure-html/add-missing-1.png" width="700"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">t</span> <span class="op">%in%</span> <span class="va">t_mis</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -219,11 +215,11 @@
 <span class="va">train</span> <span class="op">&lt;-</span> <span class="va">df_MC</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">t</span> <span class="op">&lt;=</span> <span class="fl">0.9</span> <span class="op">*</span> <span class="va">params</span><span class="op">$</span><span class="va">t_max</span><span class="op">)</span>
 <span class="va">test</span> <span class="op">&lt;-</span> <span class="va">df_MC</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">t</span> <span class="op">&gt;</span> <span class="fl">0.9</span> <span class="op">*</span> <span class="va">params</span><span class="op">$</span><span class="va">t_max</span><span class="op">)</span>
 
-<span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MC.html">fit_MC</a></span><span class="op">(</span>train <span class="op">=</span> <span class="va">train</span>,
-              test <span class="op">=</span> <span class="va">test</span>,
-              K <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">K</span>,
-              chains <span class="op">=</span> <span class="fl">1</span>,
-              refresh <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/EczemaFit.html">EczemaFit</a></span><span class="op">(</span><span class="va">model</span>,
+                 train <span class="op">=</span> <span class="va">train</span>,
+                 test <span class="op">=</span> <span class="va">test</span>,
+                 chains <span class="op">=</span> <span class="fl">1</span>,
+                 refresh <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <div id="diagnostics" class="section level3">
 <h3 class="hasAnchor">
 <a href="#diagnostics" class="anchor"></a>Diagnostics</h3>
@@ -232,37 +228,34 @@
 <code class="sourceCode R"><span class="fu"><a href="https://mc-stan.org/rstan/reference/check_hmc_diagnostics.html">check_hmc_diagnostics</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Divergences:</span>
-<span class="co">#&gt; 0 of 1000 iterations ended with a divergence.</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Tree depth:</span>
-<span class="co">#&gt; 0 of 1000 iterations saturated the maximum tree depth of 10.</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Energy:</span>
-<span class="co">#&gt; E-BFMI indicated no pathological behavior.</span>
 
 <span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html">pairs</a></span><span class="op">(</span><span class="va">fit</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"p[1,"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">params</span><span class="op">$</span><span class="va">K</span>, <span class="st">"]"</span><span class="op">)</span><span class="op">)</span> <span class="co"># transitions probabilities from state 1</span></code></pre></div>
-<p><img src="MC_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+<p><img src="MC_files/figure-html/check-fit-1.png" width="700"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"p[1,"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">params</span><span class="op">$</span><span class="va">K</span>, <span class="st">"]"</span><span class="op">)</span>, plotfun <span class="op">=</span> <span class="st">"trace"</span><span class="op">)</span></code></pre></div>
-<p><img src="MC_files/figure-html/unnamed-chunk-11-2.png" width="700"></p>
+<p><img src="MC_files/figure-html/check-fit-2.png" width="700"></p>
 </div>
 <div id="posterior-estimates" class="section level3">
 <h3 class="hasAnchor">
 <a href="#posterior-estimates" class="anchor"></a>Posterior estimates</h3>
 <p>Then, we visualise posterior estimates and compare them to their prior.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">par0</span> <span class="op">&lt;-</span> <span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/summary_statistics.html">summary_statistics</a></span><span class="op">(</span><span class="va">prior1</span>, pars <span class="op">=</span> <span class="st">"p"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">par0</span> <span class="op">&lt;-</span> <span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/summary_statistics.html">summary_statistics</a></span><span class="op">(</span><span class="va">fit_prior1</span>, pars <span class="op">=</span> <span class="st">"p"</span><span class="op">)</span>
 <span class="va">par</span> <span class="op">&lt;-</span> <span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/summary_statistics.html">summary_statistics</a></span><span class="op">(</span><span class="va">fit</span>, pars <span class="op">=</span> <span class="st">"p"</span><span class="op">)</span>
 <span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/prior_posterior.html">plot_prior_posterior</a></span><span class="op">(</span><span class="va">par0</span>, <span class="va">par</span>, pars <span class="op">=</span> <span class="st">"p"</span>, match_exact <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<p><img src="MC_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="MC_files/figure-html/plot-estimates-1.png" width="700"></p>
 <p>We can also quantify the influence of the prior on the posterior estimates by computing the posterior shrinkage and Mahalanobis distance between the mean posterior and the prior. The posterior shrinkage roughly quantifies how much the model is learning, and is defined for a parameter <span class="math inline">\(\theta\)</span> as <span class="math inline">\(1 - \frac{\operatorname{Var}(\theta_\text{post})}{\operatorname{Var}(\theta_\text{prior}}\)</span>. The distance between the prior and posterior can be used to assess whether the prior is informative or not, where a distance greater than 2 or 3 could be interpreted as a posterior that is not “included” in the prior.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/prior_posterior.html">plot_prior_influence</a></span><span class="op">(</span><span class="va">par0</span>, <span class="va">par</span>, pars <span class="op">=</span> <span class="st">"p"</span>, match_exact <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<p><img src="MC_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p><img src="MC_files/figure-html/plot-prior-influence-1.png" width="700"></p>
 <p>We also visualise the expected transition matrix:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_transition_MC.html">plot_transition_MC</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></code></pre></div>
-<p><img src="MC_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p><img src="MC_files/figure-html/plot-transition-matrix-1.png" width="700"></p>
 </div>
 <div id="can-we-recover-the-true-parameters" class="section level3">
 <h3 class="hasAnchor">
@@ -280,12 +273,12 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span>, y <span class="op">=</span> <span class="st">"Estimate"</span>, colour <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></code></pre></div>
-<p><img src="MC_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
+<p><img src="MC_files/figure-html/check-computation-1.png" width="700"></p>
 <p>We can also quantify the “accuracy” of posterior estimates by computing the coverage probability of the parameters in the model, that is the proportion of parameters for which the x% credible interval includes the true value. For instance, we would expect that approximately 50% of the parameters have their 50% credible interval including the true value.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/coverage.html">plot_coverage</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span><span class="op">(</span><span class="va">cbind</span>, <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html">extract</a></span><span class="op">(</span><span class="va">fit</span>, pars <span class="op">=</span> <span class="va">true_param</span><span class="op">[[</span><span class="st">"Parameter"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,
                            <span class="va">true_param</span><span class="op">[[</span><span class="st">"Value"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></code></pre></div>
-<p><img src="MC_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<p><img src="MC_files/figure-html/plot-coverage-1.png" width="700"></p>
 </div>
 <div id="performance" class="section level3">
 <h3 class="hasAnchor">

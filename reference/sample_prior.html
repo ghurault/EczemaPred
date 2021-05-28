@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Binomial Markov Chain model — BinMC • EczemaPred</title>
+<title>Prior predictive distribution — sample_prior • EczemaPred</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Binomial Markov Chain model — BinMC" />
-<meta property="og:description" content="This is a state-space model defined by a Binomial measurement error and a latent Markov Chain.
-For more details see the BinRW vignette." />
+<meta property="og:title" content="Prior predictive distribution — sample_prior" />
+<meta property="og:description" content="Prior predictive distribution" />
 
 
 
@@ -122,101 +121,67 @@ For more details see the BinRW vignette." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Binomial Markov Chain model</h1>
+    <h1>Prior predictive distribution</h1>
     
-    <div class="hidden name"><code>BinMC.Rd</code></div>
+    <div class="hidden name"><code>sample_prior.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This is a state-space model defined by a Binomial measurement error and a latent Markov Chain.
-For more details see the BinRW <a href='https://ghurault.github.io/EczemaPred/articles/BinRW.html'>vignette</a>.</p>
+    <p>Prior predictive distribution</p>
     </div>
 
+    <pre class="usage"><span class='fu'>sample_prior</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='co'># S3 method for EczemaModel</span>
+<span class='fu'>sample_prior</span><span class='op'>(</span><span class='va'>model</span>, N_patient <span class='op'>=</span> <span class='fl'>1</span>, t_max <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='co'># S3 method for MC</span>
+<span class='fu'>sample_prior</span><span class='op'>(</span>
+  <span class='va'>model</span>,
+  data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>y0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>integer</a></span><span class='op'>(</span><span class='op'>)</span>, y1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>integer</a></span><span class='op'>(</span><span class='op'>)</span>, dt <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>integer</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>max_score</th>
-      <td><p>Maximum value that the score can take</p></td>
+      <th>model</th>
+      <td><p>Object</p></td>
     </tr>
     <tr>
-      <th>prior</th>
-      <td><p>Named list of the model's priors. If <code>NULL</code>, uses the default prior for the model (see <code><a href='default_prior.html'>default_prior()</a></code>).</p></td>
+      <th>...</th>
+      <td><p>Arguments to pass to <code><a href='https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html'>rstan::sampling()</a></code></p></td>
+    </tr>
+    <tr>
+      <th>N_patient</th>
+      <td><p>Number of patients to simulate</p></td>
+    </tr>
+    <tr>
+      <th>t_max</th>
+      <td><p>Vector of size <code>N_patient</code> indicating the time-series length of each patient</p></td>
+    </tr>
+    <tr>
+      <th>data</th>
+      <td><p>Dataframe (see details below).
+Only the columns <code>y0</code> and <code>dt</code> are relevant to simulate data from.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Details of the model are available in the <a href='#'>paper</a>.</p>
-    <h2 class="hasAnchor" id="parameters"><a class="anchor" href="#parameters"></a>Parameters</h2>
-
-    
-
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Population parameters:</h3>
-
-<ul>
-<li><p><code>sigma</code>: Standard deviation of the evolution of <code>ss1</code></p></li>
-<li><p><code>mu_logit_p10</code>: Population logit mean of <code>p10</code></p></li>
-<li><p><code>sigma_logit_p10</code>: Population logit standard deviation of <code>p10</code></p></li>
-</ul>
-
-
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Patient-dependent parameters:</h3>
-
-<ul>
-<li><p><code>p10</code>: Probability of transitioning from state 1 to state 0</p></li>
-<li><p><code>logit_p10</code>: logit of <code>p10</code></p></li>
-<li><p><code>logit_tss1_0</code>: Initial condition of the <code>logit(ss1 * (1 + p10))</code></p></li>
-</ul>
-
-
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Observation-dependent (patient- and time-dependent) parameters:</h3>
-
-<ul>
-<li><p><code>p01</code>: Probability of transitioning from state 0 to state 1</p></li>
-<li><p><code>lambda</code>: Mobility of the Markov Chain (eigen value of the transition matrix)</p></li>
-<li><p><code>ss1</code>: Steady state probability of state 1</p></li>
-<li><p><code>y_lat</code>: Latent score (probability)</p></li>
-</ul>
-
-<p>See <code><a href='list_parameters.html'>list_parameters(model = "BinMC")</a></code> for more details.</p>
-
-    <h2 class="hasAnchor" id="priors"><a class="anchor" href="#priors"></a>Priors</h2>
-
-    
-
-<p>The priors are passed as a named list with elements <code>sigma</code>, <code>mu_logit_p10</code> and <code>sigma_logit_p10</code>
-specifying priors for the corresponding parameters.
-Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 &gt; 0, such as:</p><ul>
-<li><p><code>sigma ~ normal+(x1, x2)</code></p></li>
-<li><p><code>mu_logit_p10 ~ normal(x1, x2)</code></p></li>
-<li><p><code>sigma_logit_p10 ~ normal+(x1, x2)</code></p></li>
-<li><p><code>logit_tss1_0 ~ normal(x1, x2)</code></p></li>
-</ul>
-
-<p>NB: For <code>sigma</code> and <code>sigma_logit_p10</code>, usually x1=0 to define a half-normal distribution
-since the parameter is constrained to be positive.</p>
-    <h2 class="hasAnchor" id="default-priors"><a class="anchor" href="#default-priors"></a>Default priors</h2>
-
-    
-
-<ul>
-<li><p>The default prior for <code>sigma</code> translates to an odd ratio increment of at most 5 (~ 2 * upper bound of prior).</p></li>
-<li><p>The default priors for <code>mu_logit_p10</code> and <code>sigma_logit_p10</code> translate to an approximately uniform prior on <code>p10</code>.</p></li>
-<li><p>The prior for the initial condition of <code>ss1</code> is hard coded and a function of <code>p10</code>.</p></li>
-</ul>
-
+    <p>Object of class stanfit</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='EczemaModel.html'>EczemaModel</a></span><span class='op'>(</span><span class='st'>"BinMC"</span>, max_score <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; BinMC model (discrete)
-#&gt; max_score = 100 
-#&gt; Prior: 
-#&gt; - sigma ~ normal+(0,0.4)
-#&gt; - mu_logit_p10 ~ normal(0,1)
-#&gt; - sigma_logit_p10 ~ normal+(0,1.5)
-#&gt; - logit_tss1_0 ~ normal(-1,1)</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='EczemaModel.html'>EczemaModel</a></span><span class='op'>(</span><span class='st'>"BinRW"</span>, max_score <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span>
+<span class='fu'>sample_prior</span><span class='op'>(</span><span class='va'>model</span><span class='op'>)</span>
+<span class='op'>}</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='EczemaModel.html'>EczemaModel</a></span><span class='op'>(</span><span class='st'>"MC"</span>, K <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>
+<span class='fu'>sample_prior</span><span class='op'>(</span><span class='va'>model</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
