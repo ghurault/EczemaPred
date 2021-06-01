@@ -90,14 +90,16 @@ print_prior.BinRW <- function(model, digits = 2, ...) {
 #' @export
 validate_prior.OrderedRW <- function(model, ...) {
   prior <- model$prior
-  stopifnot(is.list(prior),
-            length(prior) == 4,
-            all(c("delta", "sigma", "mu_y0", "sigma_y0") %in% names(prior)),
-            all(sapply(prior, is.numeric)),
-            dim(prior$delta_sd) == c(2, model$max_score - 1),
-            all(prior$delta[2, ] > 0),
-            all(sapply(prior[c("sigma", "mu_y0", "sigma_y0")], function(x) {length(x) == 2})),
-            all(sapply(prior[c("sigma", "mu_y0", "sigma_y0")], function(x) {x[2] > 0})))
+  stopifnot(
+    is.list(prior),
+    length(prior) == 4,
+    all(c("delta", "sigma", "mu_y0", "sigma_y0") %in% names(prior)),
+    all(vapply(prior, is.numeric, logical(1))),
+    dim(prior$delta_sd) == c(2, model$max_score - 1),
+    all(prior$delta[2, ] > 0),
+    all(vapply(prior[c("sigma", "mu_y0", "sigma_y0")], function(x) {length(x) == 2}, logical(1))),
+    all(vapply(prior[c("sigma", "mu_y0", "sigma_y0")], function(x) {x[2] > 0}, logical(1)))
+  )
 }
 
 #' @rdname default_prior

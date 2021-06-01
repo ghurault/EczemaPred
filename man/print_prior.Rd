@@ -2,6 +2,7 @@
 % Please edit documentation in R/model_class.R, R/model_prior.R
 \name{print_prior}
 \alias{print_prior}
+\alias{print_prior.EczemaModel}
 \alias{print_prior.BinRW}
 \alias{print_prior.OrderedRW}
 \alias{print_prior.BinMC}
@@ -13,6 +14,8 @@
 \title{Print prior distribution}
 \usage{
 print_prior(model, ...)
+
+\method{print_prior}{EczemaModel}(model, ...)
 
 \method{print_prior}{BinRW}(model, digits = 2, ...)
 

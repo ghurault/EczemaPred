@@ -241,3 +241,18 @@ print.EczemaModel <- function(x, digits = 2, ...) {
   print_prior(x, digits = digits, ...)
 
 }
+
+#' @rdname print_prior
+#' @export
+print_prior.EczemaModel <- function(model, ...) {
+  print(model$prior)
+}
+
+#' @rdname validate_prior
+#' @export
+validate_prior.EczemaModel <- function(model, ...) {
+  message("Using the method for EczemaModel object")
+  stopifnot(
+    is.list(model$prior)
+  )
+}

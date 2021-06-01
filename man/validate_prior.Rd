@@ -2,6 +2,7 @@
 % Please edit documentation in R/model_class.R, R/model_prior.R
 \name{validate_prior}
 \alias{validate_prior}
+\alias{validate_prior.EczemaModel}
 \alias{validate_prior.BinRW}
 \alias{validate_prior.OrderedRW}
 \alias{validate_prior.BinMC}
@@ -13,6 +14,8 @@
 \title{Check the prior of an EczemaModel is correct}
 \usage{
 validate_prior(model, ...)
+
+\method{validate_prior}{EczemaModel}(model, ...)
 
 \method{validate_prior}{BinRW}(model, ...)
 
