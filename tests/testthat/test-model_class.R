@@ -51,6 +51,7 @@ for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing", "AR1", "M
   }
 
   if (model_name != "MC") {
+
     test_that(paste0("Incorrect max_score when constructing ", model_name, "throws an error"), {
       wrong_maxscore <- list(NULL,
                              0,
@@ -60,6 +61,20 @@ for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing", "AR1", "M
         expect_error(EczemaModel(model_name, max_score = wms))
       }
     })
+
+    test_that("We can change priors", {
+
+      model0 <- EczemaModel(model_name, max_score = 10)
+
+      new_prior <- c(0, 10.2)
+      model1 <- EczemaModel(model_name, max_score = 10, prior = list(sigma = new_prior))
+      model2 <- expect_warning(EczemaModel(model_name, max_score = 10, prior = list(parameter_not_in_model = new_prior)))
+
+      expect_equal(model1$prior$sigma, new_prior)
+      expect_equal(model0$prior, model2$prior)
+
+    })
+
   }
 
 }

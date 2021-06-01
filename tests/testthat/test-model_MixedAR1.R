@@ -15,8 +15,6 @@ dprior <- model$prior
 
 wrong_priors <- list(
   1,
-  list(1),
-  as.list(1:5),
   replace(dprior, which(names(dprior) == "sigma"), as.character(dprior$sigma)),
   replace(dprior, which(names(dprior) == "sigma"), 1),
   replace(dprior, which(names(dprior) == "sigma"), c(0, -1)),

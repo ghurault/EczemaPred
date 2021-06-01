@@ -22,7 +22,8 @@ EczemaModel(
 
 \item{discrete}{Whether the model is discrete or not. Only required for "RW".}
 
-\item{prior}{Named list of the model's priors. If \code{NULL}, uses the default prior for the model (see \code{\link[=default_prior]{default_prior()}}).}
+\item{prior}{Named list of the model's priors.
+It uses the default priors (see \code{\link[=default_prior]{default_prior()}}) if \code{NULL} and for the parameters that are not provided.}
 }
 \value{
 An object (list) of class \code{model_name} and EczemaModel

@@ -12,12 +12,12 @@ model <- EczemaModel("Smoothing", max_score = max_score)
 
 wrong_priors <- list(
   1,
-  list(sigma_sd = 0.1, log_tau_mean = 1),
-  list(a = 0.1, sigma = c(0, 1), tau = c(0, 1)),
-  list(sigma_sd = c("0", "1"), tau = c(0, 1)),
+  # list(sigma_sd = 0.1, log_tau_mean = 1),
+  # list(a = 0.1, sigma = c(0, 1), tau = c(0, 1)),
+  list(sigma = c("0", "1"), tau = c(0, 1)),
   list(sigma = 1, tau = c(0, 1)),
-  list(sigma_sd = c(0, -1), tau = c(0, 1)),
-  list(sigma_sd = c(0, 1), tau = c(0, -1))
+  list(sigma = c(0, -1), tau = c(0, 1)),
+  list(sigma = c(0, 1), tau = c(0, -1))
 )
 
 test_that("Smoothing constructor catches errors in prior", {

@@ -16,7 +16,7 @@ dprior <- model$prior
 wrong_priors <- list(
   1:4,
   list(sigma = 1),
-  c(dprior[names(dprior) != "sigma"], list(a = dprior$sigma)),
+  # c(dprior[names(dprior) != "sigma"], list(a = dprior$sigma)),
   c(dprior[names(dprior) != "sigma"], list(sigma = as.character(dprior$sigma))),
   c(dprior[names(dprior) != "sigma"], list(sigma = 1)),
   c(dprior[names(dprior) != "sigma"], list(sigma = c(0, -1))),

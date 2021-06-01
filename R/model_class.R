@@ -8,7 +8,8 @@
 #' @param max_score Maximum value that the score can take. Required for all models except "MC".
 #' @param K Number of categories. Only required for "MC" model.
 #' @param discrete Whether the model is discrete or not. Only required for "RW".
-#' @param prior Named list of the model's priors. If `NULL`, uses the default prior for the model (see [default_prior()]).
+#' @param prior Named list of the model's priors.
+#' It uses the default priors (see [default_prior()]) if `NULL` and for the parameters that are not provided.
 #'
 #' @return An object (list) of class `model_name` and EczemaModel
 #' @export
@@ -61,11 +62,51 @@ EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC", "RW", "Smo
   x <- structure(model_spec,
                  class = c(model_name, "EczemaModel"))
 
-  if (is.null(prior)) {
-    prior <- default_prior(x)
-  }
-  x$prior <- prior
+  x$prior <- default_prior(x)
+  x <- replace_prior(x, prior = prior)
   validate_prior(x)
+
+  return(x)
+
+}
+
+#' Replace prior
+#'
+#' Used internally to overwrite default prior in the constructor.
+#' Beware that the validity of the new prior is not tested in this function,
+#' you may want to call [validate_prior()] after using this function.
+#'
+#' @param x EczemaModel object
+#' @param prior Named list of the model's prior to replace. If NULL, the prior stays the same
+#'
+#' @return Object of the same class as `x`
+#' @export
+#'
+#' @examples
+#' model <- EczemaModel("OrderedRW", max_score = 5)
+#' print(model)
+#' replace_prior(model, prior = list(sigma = c(0, 1)))
+replace_prior <- function(x, prior = NULL) {
+
+  if (!is.null(prior)) {
+    stopifnot(is.list(prior),
+              length(names(prior)) == length(unique(names(prior))))
+
+    old_prior <- x$prior
+    x$prior <- NULL
+
+    replaced_pars <- intersect(names(prior), names(old_prior))
+    unused_pars <- setdiff(names(prior), replaced_pars)
+    if (length(unused_pars) > 0) {
+      warning("The following parameters do not exist or their priors do not need to be specified: ",
+              paste(unused_pars, collapse = ","))
+    }
+
+    old_prior[replaced_pars] <- NULL
+    new_prior <- c(old_prior, prior[replaced_pars])
+
+    x$prior <- new_prior
+  }
 
   return(x)
 

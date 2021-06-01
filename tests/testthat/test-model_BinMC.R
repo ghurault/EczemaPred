@@ -13,13 +13,11 @@ dprior <- model$prior
 
 wrong_priors <- list(
   1:4,
-  list(1, 2),
-  c(dprior[names(dprior) != "sigma"], list(a = dprior$sigma)),
   c(dprior[names(dprior) != "sigma"], list(sigma = as.character(dprior$sigma))),
   c(dprior[names(dprior) != "sigma"], list(sigma = 1)),
   c(dprior[names(dprior) != "sigma"], list(sigma = c(0, -1))),
-  c(dprior[names(dprior) != "mu_logit_p10"], list(mu_logit_y0 = c(0, -1))),
-  c(dprior[names(dprior) != "sigma_logit_p10"], list(sigma_logit_y0 = c(0, -1))),
+  c(dprior[names(dprior) != "mu_logit_p10"], list(mu_logit_p10 = c(0, -1))),
+  c(dprior[names(dprior) != "sigma_logit_p10"], list(sigma_logit_p10 = c(0, -1))),
   c(dprior[names(dprior) != "logit_tss1_0"], list(logit_tss1_0 = c(0, -1)))
 )
 

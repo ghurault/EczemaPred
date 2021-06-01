@@ -26,6 +26,7 @@ reference:
   - print_distribution
   - prepare_standata
   - add_prior
+  - replace_prior
   - get_index
 - title: "Plotting models"
 - contents:

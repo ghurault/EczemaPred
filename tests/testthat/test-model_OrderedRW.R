@@ -14,8 +14,8 @@ dprior <- model$prior
 
 wrong_priors <- list(
   1:4,
-  as.list(1:4),
-  c(dprior[names(dprior) != "delta"], list(a = dprior$delta)),
+  # as.list(1:4),
+  # c(dprior[names(dprior) != "delta"], list(a = dprior$delta)),
   c(dprior[names(dprior) != "delta"], list(delta = as.character(dprior$delta))),
   c(dprior[names(dprior) != "delta"], list(delta = matrix(rep(c(0, -3.5), max_score - 1),
                                                           nrow = 2, byrow = FALSE))),

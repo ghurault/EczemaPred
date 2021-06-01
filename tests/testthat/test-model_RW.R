@@ -13,10 +13,9 @@ model <- EczemaModel("RW", max_score = max_score, discrete = FALSE)
 
 wrong_priors <- list(
   1,
-  list(sigma_mean = 0, sigma_sd = 1),
+  list(sigma = c(0, 1), sigma = c(0, 1)),
   list(sigma = 1),
-  list(sigma = c("0", "1")),
-  list(sigma_sd = c(0, -1))
+  list(sigma = c("0", "1"))
 )
 
 test_that("RW constructor catches errors in prior", {
