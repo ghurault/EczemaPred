@@ -28,6 +28,7 @@ reference:
   - add_prior
   - replace_prior
   - get_index
+  - make_empty_data
 - title: "Plotting models"
 - contents:
   - plot_ppc
