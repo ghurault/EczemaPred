@@ -28,7 +28,7 @@ EczemaFit.EczemaModel <- function(model, train, test = NULL, ...) {
 
 # sample_prior ------------------------------------------------------------
 
-#' Create "empty" train and test set for `sample_prior`
+#' Create "empty" train and test set to pass to `prepare_standata` for `sample_prior`
 #'
 #' Used internally.
 #'
@@ -39,7 +39,7 @@ EczemaFit.EczemaModel <- function(model, train, test = NULL, ...) {
 #'
 #' @return List containing "Training" and "Testing" dataframes
 #'
-#' @noRd
+#' @export
 #'
 #' @examples
 #' make_empty_data(max_score = 10, discrete = TRUE)
