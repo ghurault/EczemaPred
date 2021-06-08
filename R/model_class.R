@@ -292,7 +292,7 @@ print_prior.EczemaModel <- function(model, ...) {
 #' @rdname validate_prior
 #' @export
 validate_prior.EczemaModel <- function(model, ...) {
-  message("Using the method for EczemaModel object")
+  message("Using the validate_prior method for EczemaModel object")
   stopifnot(
     is.list(model$prior)
   )
