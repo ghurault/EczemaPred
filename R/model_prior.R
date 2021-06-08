@@ -56,7 +56,6 @@ validate_prior.BinRW <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
-    length(prior) == 3,
     all(c("sigma", "mu_logit_y0", "sigma_logit_y0") %in% names(prior)),
     all(sapply(prior, is.numeric)),
     all(sapply(prior, function(x) {length(x) == 2})),
@@ -92,7 +91,6 @@ validate_prior.OrderedRW <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
-    length(prior) == 4,
     all(c("delta", "sigma", "mu_y0", "sigma_y0") %in% names(prior)),
     all(vapply(prior, is.numeric, logical(1))),
     dim(prior$delta_sd) == c(2, model$max_score - 1),
@@ -135,7 +133,6 @@ validate_prior.BinMC <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
-    length(prior) == 4,
     all(c("sigma", "mu_logit_p10", "sigma_logit_p10", "logit_tss1_0") %in% names(prior)),
     all(sapply(prior, is.numeric)),
     all(sapply(prior, function(x) {length(x) == 2})),
@@ -173,7 +170,6 @@ validate_prior.RW <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
-    length(prior) == 1,
     "sigma" %in% names(prior),
     all(is.numeric(prior$sigma)),
     length(prior$sigma) == 2,
@@ -203,7 +199,6 @@ validate_prior.Smoothing <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
-    length(prior) == 2,
     all(c("sigma", "tau") %in% names(prior)),
     all(sapply(prior, is.numeric)),
     all(sapply(prior, function(x) {length(x) == 2})),
@@ -238,7 +233,6 @@ validate_prior.AR1 <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
-    length(prior) == 3,
     all(c("sigma", "alpha", "y_inf") %in% names(prior)),
     all(sapply(prior, is.numeric)),
     all(sapply(prior, function(x) {length(x) == 2})),
@@ -276,7 +270,6 @@ validate_prior.MixedAR1 <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
-    length(prior) == 5,
     all(c("sigma", "mu_logit_alpha", "sigma_logit_alpha",
           "mu_inf", "sigma_inf") %in% names(prior)),
     all(sapply(prior, is.numeric)),
