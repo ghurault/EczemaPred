@@ -28,6 +28,38 @@ EczemaFit.EczemaModel <- function(model, train, test = NULL, ...) {
 
 # sample_prior ------------------------------------------------------------
 
+#' Create "empty" train and test set for `sample_prior`
+#'
+#' Used internally.
+#'
+#' @param N_patient Number of patients in the datasets
+#' @param t_max Vector of size `N_patient` indicating the time-series length of each patient
+#' @param max_score Maximum value that the score can take
+#' @param discrete Whether to use a discrete normal distribution (only relevant for testing)
+#'
+#' @return List containing "Training" and "Testing" dataframes
+#'
+#' @noRd
+#'
+#' @examples
+#' make_empty_data(max_score = 10, discrete = TRUE)
+make_empty_data <- function(N_patient = 1, t_max = c(2), max_score, discrete) {
+
+  train <- data.frame(Patient = 1:N_patient,
+                      Time = 1,
+                      Score = stats::runif(N_patient, 0, max_score))
+  if (discrete) {
+    train[["Score"]] <- round(train[["Score"]])
+  }
+
+  test <- data.frame(Patient = 1:N_patient,
+                     Time = t_max,
+                     Score = 0)
+
+  return(list(Training = train, Testing = test))
+
+}
+
 #' @param N_patient Number of patients to simulate
 #' @param t_max Vector of size `N_patient` indicating the time-series length of each patient
 #' @param ... Arguments to pass to [rstan::sampling()]
@@ -43,17 +75,12 @@ EczemaFit.EczemaModel <- function(model, train, test = NULL, ...) {
 #' }
 sample_prior.EczemaModel <- function(model, N_patient = 1, t_max = c(2), ...) {
 
-  train <- data.frame(Patient = 1:N_patient,
-                      Time = 1,
-                      Score = stats::runif(N_patient, 0, model$max_score))
-  if (model$discrete) {
-    train[["Score"]] <- round(train[["Score"]])
-  }
+  tmp <- make_empty_data(N_patient = N_patient,
+                         t_max = t_max,
+                         max_score = model$max_score,
+                         discrete = model$discrete)
 
-  test <- data.frame(Patient = 1:N_patient,
-                     Time = t_max,
-                     Score = 0)
-  data_stan <- prepare_standata(model, train = train, test = test) %>%
+  data_stan <- prepare_standata(model, train = tmp[["Training"]], test = tmp[["Testing"]]) %>%
     c(list(
       discrete = as.numeric(model$discrete), # only useful for RW
       run = 0 # only useful for state-space models
