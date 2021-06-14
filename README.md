@@ -30,6 +30,8 @@ The package is loaded with:
 library(EczemaPred)
 ```
 
+If you are working on a local, multicore CPU with excess RAM, you may want to call `options(mc.cores = parallel::detectCores())` to run Stan on multiple cores on parallel.
+
 The list of functions and datasets is available on the [package website](https://ghurault.github.io/EczemaPred/) or by typing `help(package = "EczemaPred")`.
 Examples on how the package can be used are provided in [vignettes](https://ghurault.github.io/EczemaPred/articles/) (long form documentation).
 
