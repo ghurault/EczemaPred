@@ -121,16 +121,26 @@ test_that("add_historical_pred catches incorrect inputs", {
   expect_error(compute_historical_performance(test = l$Testing, train = l$Training, max_score = max_score, discrete = FALSE, include_samples = TRUE, n_samples = "all"))
 })
 
-# Test add_predictions ------------------------------------------------
+# Test add_predictions and add_metrics (continuous) ------------------------------------------------
+# In test-metrics for discrete
 
-#   add_predictions(test, fit, discrete = TRUE, include_samples = FALSE, n_samples = NULL)
+test_that("add_metrics1_c returns a correct dataframe", {
+  perf <- add_metrics1_c(df = l$Testing, fit = fit)
+  test_when_continuous(perf, l$Testing)
+})
+
+test_that("add_metrics2_c returns a correct dataframe", {
+  perf <- l$Testing %>%
+    mutate(Samples = samples_to_list(fit, par_name = "y_pred")) %>%
+    add_metrics2_c() %>%
+    select(-Samples)
+  test_when_continuous(perf, l$Testing)
+})
 
 test_that("add_predictions returns a correct dataframe (continuous)", {
   perf <- add_predictions(df = l$Testing, fit = fit, discrete = FALSE, include_samples = FALSE)
   test_when_continuous(perf, l$Testing)
 })
-
-# In test-metrics for discrete
 
 test_that("add_predictions returns samples when prompted", {
   for (ns in list(50, NULL)) {

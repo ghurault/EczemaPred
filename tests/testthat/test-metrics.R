@@ -64,15 +64,31 @@ test_that("RPS estimates from fit are accurate", {
   expect_lte(abs(eRPS(p10) - eRPS1_est$Mean), 2.5 * eRPS1_est$SE)
 })
 
-# Test add_predictions (discrete) -------------------------------------
+# Test add_predictions and add_metrics (discrete) -------------------------------------
+
+test_metrics_d <- function(perf, test) {
+  expect_s3_class(perf, "data.frame")
+  expect_true(all(c("lpd", "RPS") %in% colnames(perf)))
+  expect_equal(perf %>% select(!all_of(c("lpd", "RPS"))), test)
+  expect_gte(max(perf[["RPS"]]), 0)
+}
 
 test_that("add_predictions returns a correct dataframe (discrete)", {
   perf <- add_predictions(df = test2, fit = fit, discrete = TRUE, include_samples = FALSE)
-  test_when_discrete <- function(perf, test) {
-    expect_s3_class(perf, "data.frame")
-    expect_true(all(c("lpd", "RPS") %in% colnames(perf)))
-    expect_equal(perf %>% select(!all_of(c("lpd", "RPS"))), test)
-    expect_gte(max(perf[["RPS"]]), 0)
-  }
-  test_when_discrete(perf, test2)
+  test_metrics_d(perf, test2)
+})
+
+test_that("add_metrics1_d returns a correct dataframe", {
+  perf <- add_metrics1_d(df = test2, fit = fit)
+  test_metrics_d(perf, test2)
+})
+
+test_that("add_metrics2_d returns a correct dataframe", {
+  perf <- test2 %>%
+    rename(Score = y1) %>%
+    mutate(Samples = samples_to_list(fit, par_name = "y_pred")) %>%
+    add_metrics2_d(support = 1:K2) %>%
+    rename(y1 = Score) %>%
+    select(-Samples)
+  test_metrics_d(perf, test2)
 })

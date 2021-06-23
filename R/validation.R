@@ -1,37 +1,3 @@
-# Extract metric ---------------------------------------------------------------------
-
-#' Extract lpd and RPS from stanfit object
-#'
-#' The lpd and RPS are computed for the expected forecast distribution.
-#' The lpd is defined for continuous and discrete outcomes.
-#' The RPS is defined for discrete outcomes only and is computed by
-#' extracting the cumulative error distribution (cumulative forecast - cumulative distribution),
-#' for which we take the expected value, square it and apply and `sum() / (R-1)`.
-#'
-#' @param fit Stanfit object
-#'
-#' @return Vector of lpd/RPS for each prediction
-#'
-#' @name extract_metric
-NULL
-
-#' @export
-#' @rdname extract_metric
-extract_lpd <- function(fit) {
-  stopifnot(is_stanfit(fit)) # presence of "lpd" checked in rstan::extract
-  lpd_mat <- rstan::extract(fit, pars = "lpd")[[1]]
-  apply(lpd_mat, 2, function(x) {log(mean(exp(x)))}) # Taking expectation of probability (mean(exp)) and use log scoring rule
-}
-
-#' @export
-#' @rdname extract_metric
-extract_RPS <- function(fit) {
-  stopifnot(is_stanfit(fit)) # presence of "cum_err" checked in rstan::extract
-  cum_err_mat <- rstan::extract(fit, pars = "cum_err")[[1]]
-  cum_err <- apply(cum_err_mat, c(2, 3), mean) # Taking expectation
-  apply(cum_err, 1, function(x) {sum(x^2) / (length(x) - 1)})
-}
-
 # Forward chaining --------------------------------------------------------
 
 #' Forward chaining
@@ -338,7 +304,7 @@ add_historical_pred <- function(test,
 
 # Compute performance -----------------------------------------------------
 
-#' Append lpd, (C)RPS and predictive samples to testing dataframe
+#' Append lpd, (C)RPS and predictive samples to (test) dataframe
 #'
 #' @param df Dataframe.
 #' For `add_metrics`, when `discrete = FALSE`, it must contain a column "Score".
@@ -346,53 +312,28 @@ add_historical_pred <- function(test,
 #' @param discrete Whether to estimate a discrete or continuous forecast.
 #' For a discrete forecast, the RPS will be computed and the CRPS for a continuous forecast.
 #' @param include_samples Whether to return samples from the historical forecast in the output
-#' @param n_samples If include_samples=TRUE, how many samples to return. Default (=NULL) to all samples.
+#' @param n_samples If `include_samples=TRUE`, how many samples to return. Default (=NULL) to all samples.
 #'
-#' @return Dataframe df appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"
+#' @return Dataframe `df` appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"
+#'
+#' @seealso [add_metrics1_d()] and [add_metrics1_c()]
+#'
 #' @export
-#' @name add_predictions
-NULL
-
-#' @export
-#' @rdname add_predictions
 add_predictions <- function(df, fit, discrete = TRUE, include_samples = FALSE, n_samples = NULL) {
 
   stopifnot(is_scalar(include_samples),
             is.logical(include_samples))
 
-  df <- add_metrics(df = df, fit = fit, discrete = discrete)
+  if (discrete) {
+    df <- add_metrics1_d(df = df, fit = fit)
+  } else {
+    df <- add_metrics1_c(df = df, fit = fit)
+  }
 
   if (include_samples) {
     df <- mutate(df, Samples = samples_to_list(fit, par_name = "y_pred", n_samples = n_samples))
   }
 
   return(df)
-
-}
-
-#' @export
-#' @rdname add_predictions
-add_metrics <- function(df, fit, discrete = TRUE) {
-
-  stopifnot(is.data.frame(df),
-            is_stanfit(fit),
-            is_scalar(discrete),
-            is.logical(discrete))
-
-  if (discrete) {
-    out <- df %>%
-      mutate(lpd = extract_lpd(fit),
-             RPS = extract_RPS(fit))
-  } else {
-    stopifnot("Score" %in% colnames(df),
-              is.vector(df[["Score"]], mode = "numeric"),
-              "y_pred" %in% fit@model_pars)
-    pred <- rstan::extract(fit, pars = "y_pred")[[1]]
-    out <- df %>%
-      mutate(lpd = extract_lpd(fit),
-             CRPS = scoringRules::crps_sample(df[["Score"]], t(pred)))
-  }
-
-  return(out)
 
 }

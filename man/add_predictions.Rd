@@ -2,8 +2,7 @@
 % Please edit documentation in R/validation.R
 \name{add_predictions}
 \alias{add_predictions}
-\alias{add_metrics}
-\title{Append lpd, (C)RPS and predictive samples to testing dataframe}
+\title{Append lpd, (C)RPS and predictive samples to (test) dataframe}
 \usage{
 add_predictions(
   df,
@@ -12,8 +11,6 @@ add_predictions(
   include_samples = FALSE,
   n_samples = NULL
 )
-
-add_metrics(df, fit, discrete = TRUE)
 }
 \arguments{
 \item{df}{Dataframe.
@@ -26,11 +23,14 @@ For a discrete forecast, the RPS will be computed and the CRPS for a continuous 
 
 \item{include_samples}{Whether to return samples from the historical forecast in the output}
 
-\item{n_samples}{If include_samples=TRUE, how many samples to return. Default (=NULL) to all samples.}
+\item{n_samples}{If \code{include_samples=TRUE}, how many samples to return. Default (=NULL) to all samples.}
 }
 \value{
-Dataframe df appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"
+Dataframe \code{df} appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"
 }
 \description{
-Append lpd, (C)RPS and predictive samples to testing dataframe
+Append lpd, (C)RPS and predictive samples to (test) dataframe
+}
+\seealso{
+\code{\link[=add_metrics1_d]{add_metrics1_d()}} and \code{\link[=add_metrics1_c]{add_metrics1_c()}}
 }
