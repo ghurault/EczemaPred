@@ -28,7 +28,7 @@ This ensures that all states are visited.}
 
 \item{include_samples}{Whether to return samples from the historical forecast in the output}
 
-\item{n_samples}{If include_samples=TRUE, how many samples to return. When NULL, the function return the training set.}
+\item{n_samples}{If \code{include_samples=TRUE}, how many samples to return. When NULL, the function return the training set.}
 }
 \value{
 Dataframe \code{test} appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"

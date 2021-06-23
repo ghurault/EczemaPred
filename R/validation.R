@@ -164,6 +164,7 @@ get_fc_training_iteration <- function(it_test) {
 # Uniform forecast --------------------------------------------------------
 
 #' @rdname add_uniform_pred
+#' @noRd
 #' @import dplyr
 add_discrete_uniform_pred <- function(test, max_score, include_samples, n_samples) {
 
@@ -175,7 +176,11 @@ add_discrete_uniform_pred <- function(test, max_score, include_samples, n_sample
            RPS = RPS_dict[.data$Score + 1])
 
   if (include_samples) {
-    smp <- lapply(1:nrow(test), function(i) {sample(0:max_score, size = n_samples, replace = TRUE)})
+    if (is.null(n_samples)) {
+      smp <- lapply(1:nrow(test), function(i) {0:max_score})
+    } else {
+      smp <- lapply(1:nrow(test), function(i) {sample(0:max_score, size = n_samples, replace = TRUE)})
+    }
     out <- mutate(out, Samples = smp)
   }
 
@@ -183,6 +188,7 @@ add_discrete_uniform_pred <- function(test, max_score, include_samples, n_sample
 }
 
 #' @rdname add_uniform_pred
+#' @noRd
 #' @import dplyr
 add_continuous_uniform_pred <- function(test, max_score, include_samples, n_samples) {
 
@@ -191,7 +197,11 @@ add_continuous_uniform_pred <- function(test, max_score, include_samples, n_samp
            CRPS = scoringRules::crps_unif(test[["Score"]], min = 0, max = max_score))
 
   if (include_samples) {
-    smp <- lapply(1:nrow(test), function(i) {stats::runif(n_samples, 0, max_score)})
+    if (is.null(n_samples)) {
+      smp <- lapply(1:nrow(test), function(i) {0:max_score})
+    } else {
+      smp <- lapply(1:nrow(test), function(i) {stats::runif(n_samples, 0, max_score)})
+    }
     out <- mutate(out, Samples = smp)
   }
 
@@ -204,7 +214,8 @@ add_continuous_uniform_pred <- function(test, max_score, include_samples, n_samp
 #' @param max_score Maximum value that the score can take
 #' @param discrete Whether to estimate a discrete or continuous historical forecast
 #' @param include_samples Whether to return samples from the historical forecast in the output
-#' @param n_samples If include_samples=TRUE, how many samples to return
+#' @param n_samples If include_samples=TRUE, how many samples to return.
+#' When NULL, the samples `0:max_score` are returned.
 #'
 #' @return Dataframe `test` appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"
 #' @export
@@ -213,7 +224,7 @@ add_continuous_uniform_pred <- function(test, max_score, include_samples, n_samp
 #' max_score <- 100
 #' test <- data.frame(Score = rbinom(1e2, max_score, 0.5))
 #' add_uniform_pred(test, max_score)
-add_uniform_pred <- function(test, max_score, discrete = TRUE, include_samples = FALSE, n_samples = max_score + 1) {
+add_uniform_pred <- function(test, max_score, discrete = TRUE, include_samples = FALSE, n_samples = NULL) {
 
   stopifnot(is.data.frame(test),
             all(c("Score") %in% colnames(test)),
@@ -255,7 +266,7 @@ add_uniform_pred <- function(test, max_score, discrete = TRUE, include_samples =
 #' @param add_uniform Whether to include samples from uniform distribution when computing a discrete historical forecast.
 #' This ensures that all states are visited.
 #' @param include_samples Whether to return samples from the historical forecast in the output
-#' @param n_samples If include_samples=TRUE, how many samples to return. When NULL, the function return the training set.
+#' @param n_samples If `include_samples=TRUE`, how many samples to return. When NULL, the function return the training set.
 #'
 #' @details
 #' The continuous historical forecast is calculated by considering the training set as samples from the predictive distribution.
