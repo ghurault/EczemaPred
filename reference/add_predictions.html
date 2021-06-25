@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Append lpd, (C)RPS and predictive samples to testing dataframe — add_predictions • EczemaPred</title>
+<title>Append lpd, (C)RPS and predictive samples to (test) dataframe — add_predictions • EczemaPred</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Append lpd, (C)RPS and predictive samples to testing dataframe — add_predictions" />
-<meta property="og:description" content="Append lpd, (C)RPS and predictive samples to testing dataframe" />
+<meta property="og:title" content="Append lpd, (C)RPS and predictive samples to (test) dataframe — add_predictions" />
+<meta property="og:description" content="Append lpd, (C)RPS and predictive samples to (test) dataframe" />
 
 
 
@@ -101,6 +101,9 @@
       <a href="../articles/ContinuousModels.html">Continuous models</a>
     </li>
     <li>
+      <a href="../articles/ExtendModels.html">Extending EczemaPred models</a>
+    </li>
+    <li>
       <a href="../articles/MC.html">Markov Chain model</a>
     </li>
   </ul>
@@ -121,13 +124,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Append lpd, (C)RPS and predictive samples to testing dataframe</h1>
+    <h1>Append lpd, (C)RPS and predictive samples to (test) dataframe</h1>
     
     <div class="hidden name"><code>add_predictions.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Append lpd, (C)RPS and predictive samples to testing dataframe</p>
+    <p>Append lpd, (C)RPS and predictive samples to (test) dataframe</p>
     </div>
 
     <pre class="usage"><span class='fu'>add_predictions</span><span class='op'>(</span>
@@ -136,9 +139,7 @@
   discrete <span class='op'>=</span> <span class='cn'>TRUE</span>,
   include_samples <span class='op'>=</span> <span class='cn'>FALSE</span>,
   n_samples <span class='op'>=</span> <span class='cn'>NULL</span>
-<span class='op'>)</span>
-
-<span class='fu'>add_metrics</span><span class='op'>(</span><span class='va'>df</span>, <span class='va'>fit</span>, discrete <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -163,13 +164,16 @@ For a discrete forecast, the RPS will be computed and the CRPS for a continuous 
     </tr>
     <tr>
       <th>n_samples</th>
-      <td><p>If include_samples=TRUE, how many samples to return. Default (=NULL) to all samples.</p></td>
+      <td><p>If <code>include_samples=TRUE</code>, how many samples to return. Default (=NULL) to all samples.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Dataframe df appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"</p>
+    <p>Dataframe <code>df</code> appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='add_metrics.html'>add_metrics1_d()</a></code> and <code><a href='add_metrics.html'>add_metrics1_c()</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Note to contributors • EczemaPred</title>
+<title>Replace prior — replace_prior • EczemaPred</title>
 
 
 <!-- jquery -->
@@ -18,8 +18,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
 <!-- bootstrap-toc -->
-<link rel="stylesheet" href="bootstrap-toc.css">
-<script src="bootstrap-toc.js"></script>
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
@@ -33,13 +33,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
-<link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script>
+<link href="../pkgdown.css" rel="stylesheet">
+<script src="../pkgdown.js"></script>
 
 
 
 
-<meta property="og:title" content="Note to contributors" />
+<meta property="og:title" content="Replace prior — replace_prior" />
+<meta property="og:description" content="Used internally to overwrite default prior in the constructor.
+Beware that the validity of the new prior is not tested in this function,
+you may want to call validate_prior() after using this function." />
 
 
 
@@ -58,7 +61,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-title-body">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -70,7 +73,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">EczemaPred</a>
+        <a class="navbar-link" href="../index.html">EczemaPred</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
       </span>
     </div>
@@ -78,13 +81,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="index.html">
+  <a href="../index.html">
     <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -94,16 +97,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="articles/BinRW.html">Binomial random walk model</a>
+      <a href="../articles/BinRW.html">Binomial random walk model</a>
     </li>
     <li>
-      <a href="articles/ContinuousModels.html">Continuous models</a>
+      <a href="../articles/ContinuousModels.html">Continuous models</a>
     </li>
     <li>
-      <a href="articles/ExtendModels.html">Extending EczemaPred models</a>
+      <a href="../articles/ExtendModels.html">Extending EczemaPred models</a>
     </li>
     <li>
-      <a href="articles/MC.html">Markov Chain model</a>
+      <a href="../articles/MC.html">Markov Chain model</a>
     </li>
   </ul>
 </li>
@@ -121,51 +124,68 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Note to contributors</h1>
+    <h1>Replace prior</h1>
+    
+    <div class="hidden name"><code>replace_prior.Rd</code></div>
     </div>
 
-<div id="note-to-contributors" class="section level1">
+    <div class="ref-description">
+    <p>Used internally to overwrite default prior in the constructor.
+Beware that the validity of the new prior is not tested in this function,
+you may want to call <code><a href='validate_prior.html'>validate_prior()</a></code> after using this function.</p>
+    </div>
 
-<div id="updating-stan-files" class="section level2">
-<h2 class="hasAnchor">
-<a href="#updating-stan-files" class="anchor"></a>Updating Stan files</h2>
-<p>When updating Stan files, run the following:</p>
-<pre><code><a href="https://mc-stan.org/rstantools/reference/rstan_config.html">rstantools::rstan_config()
-example(source) # defines the sourceDir() function
-try(roxygen2::roxygenize(load_code = sourceDir), silent = TRUE)
-pkgbuild::compile_dll()
-roxygen2::roxygenize()</a></code></pre>
-</div>
-<div id="website" class="section level2">
-<h2 class="hasAnchor">
-<a href="#website" class="anchor"></a>Website</h2>
-<p>The website is deployed to the “gh-pages” branch of the repository, using GitHub Actions. To regenerate the website locally, use <code><a href="https://pkgdown.r-lib.org/reference/build_site.html">pkgdown::build_site()</a></code>.</p>
-</div>
-<div id="stan-specific-notes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#stan-specific-notes" class="anchor"></a>Stan-specific notes</h2>
-<ul>
-<li>All ‘.stan’ files containing stanmodel definitions must be placed in ‘inst/stan’.</li>
-<li>Additional files to be included by stanmodel definition files (via e.g., #include “mylib.stan”) must be placed in any subfolder of ‘inst/stan’.</li>
-<li>Additional C++ files needed by any ‘.stan’ file must be placed in ‘inst/include’, and can only interact with the Stan C++ library via ‘#include’ directives placed in the file ‘inst/include/stan_meta_header.hpp’.</li>
-<li>The precompiled stanmodel objects will appear in a named list called ‘stanmodels’, and you can call them with e.g., ‘rstan::sampling(stanmodels$foo, …)’</li>
-</ul>
-<p>See <a href="https://mc-stan.org/rstantools/articles/developer-guidelines.html">Guidelines for developers of R packages interfacing with Stan</a> for more information.</p>
-</div>
-</div>
+    <pre class="usage"><span class='fu'>replace_prior</span><span class='op'>(</span><span class='va'>x</span>, prior <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>EczemaModel object</p></td>
+    </tr>
+    <tr>
+      <th>prior</th>
+      <td><p>Named list of the model's prior to replace. If NULL, the prior stays the same</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Object of the same class as <code>x</code></p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='EczemaModel.html'>EczemaModel</a></span><span class='op'>(</span><span class='st'>"OrderedRW"</span>, max_score <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>model</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; OrderedRW model (discrete)
+#&gt; max_score = 5 
+#&gt; Prior: 
+#&gt; - delta[1] ~ normal+(0,3.6)
+#&gt; - delta[2] ~ normal+(0,3.6)
+#&gt; - delta[3] ~ normal+(0,3.6)
+#&gt; - delta[4] ~ normal+(0,3.6)
+#&gt; - sigma ~ normal+(0,0.1)
+#&gt; - mu_y0 ~ normal(0.5,0.25)
+#&gt; - sigma_y0 ~ normal+(0,0.12)</div><div class='input'><span class='fu'>replace_prior</span><span class='op'>(</span><span class='va'>model</span>, prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>sigma <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; OrderedRW model (discrete)
+#&gt; max_score = 5 
+#&gt; Prior: 
+#&gt; - delta[1] ~ normal+(0,3.6)
+#&gt; - delta[2] ~ normal+(0,3.6)
+#&gt; - delta[3] ~ normal+(0,3.6)
+#&gt; - delta[4] ~ normal+(0,3.6)
+#&gt; - sigma ~ normal+(0,1)
+#&gt; - mu_y0 ~ normal(0.5,0.25)
+#&gt; - sigma_y0 ~ normal+(0,0.12)</div></pre>
   </div>
-
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
-
 </div>
-
 
 
       <footer>

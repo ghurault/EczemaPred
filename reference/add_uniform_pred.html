@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Performance of a uniform forecast — add_discrete_uniform_pred • EczemaPred</title>
+<title>Performance of a uniform forecast — add_uniform_pred • EczemaPred</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Performance of a uniform forecast — add_discrete_uniform_pred" />
+<meta property="og:title" content="Performance of a uniform forecast — add_uniform_pred" />
 <meta property="og:description" content="Performance of a uniform forecast" />
 
 
@@ -101,6 +101,9 @@
       <a href="../articles/ContinuousModels.html">Continuous models</a>
     </li>
     <li>
+      <a href="../articles/ExtendModels.html">Extending EczemaPred models</a>
+    </li>
+    <li>
       <a href="../articles/MC.html">Markov Chain model</a>
     </li>
   </ul>
@@ -130,16 +133,12 @@
     <p>Performance of a uniform forecast</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_discrete_uniform_pred</span><span class='op'>(</span><span class='va'>test</span>, <span class='va'>max_score</span>, <span class='va'>include_samples</span>, <span class='va'>n_samples</span><span class='op'>)</span>
-
-<span class='fu'>add_continuous_uniform_pred</span><span class='op'>(</span><span class='va'>test</span>, <span class='va'>max_score</span>, <span class='va'>include_samples</span>, <span class='va'>n_samples</span><span class='op'>)</span>
-
-<span class='fu'>add_uniform_pred</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>add_uniform_pred</span><span class='op'>(</span>
   <span class='va'>test</span>,
   <span class='va'>max_score</span>,
   discrete <span class='op'>=</span> <span class='cn'>TRUE</span>,
   include_samples <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  n_samples <span class='op'>=</span> <span class='va'>max_score</span> <span class='op'>+</span> <span class='fl'>1</span>
+  n_samples <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -154,16 +153,17 @@
       <td><p>Maximum value that the score can take</p></td>
     </tr>
     <tr>
+      <th>discrete</th>
+      <td><p>Whether to estimate a discrete or continuous historical forecast</p></td>
+    </tr>
+    <tr>
       <th>include_samples</th>
       <td><p>Whether to return samples from the historical forecast in the output</p></td>
     </tr>
     <tr>
       <th>n_samples</th>
-      <td><p>If include_samples=TRUE, how many samples to return</p></td>
-    </tr>
-    <tr>
-      <th>discrete</th>
-      <td><p>Whether to estimate a discrete or continuous historical forecast</p></td>
+      <td><p>If include_samples=TRUE, how many samples to return.
+When NULL, the samples <code>0:max_score</code> are returned.</p></td>
     </tr>
     </table>
 

@@ -100,6 +100,9 @@
       <a href="../articles/ContinuousModels.html">Continuous models</a>
     </li>
     <li>
+      <a href="../articles/ExtendModels.html">Extending EczemaPred models</a>
+    </li>
+    <li>
       <a href="../articles/MC.html">Markov Chain model</a>
     </li>
   </ul>
@@ -302,9 +305,21 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="replace_prior.html">replace_prior()</a></code> </p>
+        </td>
+        <td><p>Replace prior</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="get_index.html">get_index()</a></code> <code><a href="get_index.html">get_index2()</a></code> </p>
         </td>
         <td><p>Associate (Patient, Time) pairs to corresponding index in the model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="make_empty_data.html">make_empty_data()</a></code> </p>
+        </td>
+        <td><p>Create "empty" train and test set to pass to <code>prepare_standata</code> for <code>sample_prior</code></p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -364,13 +379,19 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="add_predictions.html">add_predictions()</a></code> <code><a href="add_predictions.html">add_metrics()</a></code> </p>
+          <p><code><a href="add_metrics.html">add_metrics1_d()</a></code> <code><a href="add_metrics.html">add_metrics1_c()</a></code> <code><a href="add_metrics.html">add_metrics2_d()</a></code> <code><a href="add_metrics.html">add_metrics2_c()</a></code> </p>
         </td>
-        <td><p>Append lpd, (C)RPS and predictive samples to testing dataframe</p></td>
+        <td><p>Append lpd and (C)RPS to (test) dataframe</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="add_uniform_pred.html">add_discrete_uniform_pred()</a></code> <code><a href="add_uniform_pred.html">add_continuous_uniform_pred()</a></code> <code><a href="add_uniform_pred.html">add_uniform_pred()</a></code> </p>
+          <p><code><a href="add_predictions.html">add_predictions()</a></code> </p>
+        </td>
+        <td><p>Append lpd, (C)RPS and predictive samples to (test) dataframe</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_uniform_pred.html">add_uniform_pred()</a></code> </p>
         </td>
         <td><p>Performance of a uniform forecast</p></td>
       </tr><tr>

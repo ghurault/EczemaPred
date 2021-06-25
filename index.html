@@ -60,6 +60,9 @@
       <a href="articles/ContinuousModels.html">Continuous models</a>
     </li>
     <li>
+      <a href="articles/ExtendModels.html">Extending EczemaPred models</a>
+    </li>
+    <li>
       <a href="articles/MC.html">Markov Chain model</a>
     </li>
   </ul>
@@ -89,6 +92,7 @@
 <p>The package requires RStan and C++ toolchain, which can be installed by following these <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">instructions</a>.</p>
 <p>Then, the package can be installed by typing the following commands in R:</p>
 <pre><code>devtools::install_github("ghurault/EczemaPred")</code></pre>
+<p>The package can take a few minutes to install as the models needs to be compiled (but no compilation will be required when using the package). Many warnings may be displayed during compilation but they can be safely ignored.</p>
 <p>NB: EczemaPred requires <a href="https://github.com/ghurault/HuraultMisc">HuraultMisc</a>, my personal function library, to work.</p>
 </div>
 <div id="usage" class="section level2">
@@ -96,7 +100,9 @@
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>The package is loaded with:</p>
 <pre><code><a href="https://rdrr.io/r/base/library.html">library(EczemaPred)</a></code></pre>
+<p>If you are working on a local, multicore CPU with excess RAM, you may want to call <code><a href="https://rdrr.io/r/base/options.html">options(mc.cores = parallel::detectCores())</a></code> to run Stan on multiple cores on parallel.</p>
 <p>The list of functions and datasets is available on the <a href="https://ghurault.github.io/EczemaPred/">package website</a> or by typing <code><a href="https://rdrr.io/pkg/EczemaPred/man">help(package = "EczemaPred")</a></code>. Examples on how the package can be used are provided in <a href="https://ghurault.github.io/EczemaPred/articles/">vignettes</a> (long form documentation).</p>
+<p>Basic knowledge of Bayesian modelling with Stan and the package <a href="https://mc-stan.org/users/interfaces/rstan">rstan</a> is required to analyse models’ outputs. The Stan documentation is available <a href="https://mc-stan.org/users/documentation/">here</a>.</p>
 <p>NB: While the purpose of the package is to abstract the implementation to the user, the R code and Stan code can be accessed in the <a href="R/">R/</a> and <a href="inst/stan">inst/stan</a> directories, respectively.</p>
 </div>
 </div>
