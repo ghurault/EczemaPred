@@ -18,6 +18,11 @@ Then, the package can be installed by typing the following commands in R:
 devtools::install_github("ghurault/EczemaPred")
 ```
 
+Or to install a specific version, for example the initial release (v0.1.0):
+```
+devtools::install_github("ghurault/EczemaPred@v0.1.0")
+```
+
 The package can take a few minutes to install as the models needs to be compiled (but no compilation will be required when using the package).
 Many warnings may be displayed during compilation but they can be safely ignored.
 
