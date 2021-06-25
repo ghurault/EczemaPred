@@ -238,7 +238,7 @@ plot_post_traj_pmf <- function(obj,
     if (is_maxscore_valid) {
       support <- 0:max_score
     } else {
-      warning("support is not provided but max_score is not valid")
+      warning("support is not provided and max_score is not valid")
     }
   }
 
