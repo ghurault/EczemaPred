@@ -39,6 +39,7 @@ reference:
 - contents:
   - forward_chaining
   - extract_metric
+  - add_metrics
   - add_predictions
   - add_uniform_pred
   - add_historical_pred
