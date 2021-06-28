@@ -1,15 +1,11 @@
 # Utilities ---------------------------------------------------------------
 
-#' Print distribution
-#'
-#' Used internally in [print_prior()].
+#' @rdname print_prior
 #'
 #' @param parameter_name Name of the parameter
 #' @param distribution_name Name of the distribution
-#' @param arguments Arguments of the distribution
-#' @param digits Number of significant digits to print
-#'
-#' @return None
+#' @param arguments Arguments of the distribution (numeric vector)
+#' @param digits Number of significant digits to print (cf. [base::signif()])
 #'
 #' @export
 #'
@@ -24,7 +20,7 @@ print_distribution <- function(parameter_name, distribution_name, arguments, dig
             is.vector(arguments, mode = "numeric"))
 
   tmp <- arguments %>%
-    signif(2) %>%
+    signif(digits = digits) %>%
     paste0(collapse = ",")
 
   cat("- ", parameter_name, " ~ ", distribution_name, "(", tmp,  ")\n", sep = "")

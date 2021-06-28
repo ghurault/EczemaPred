@@ -164,10 +164,12 @@ validate_prior <- function(model, ...) {
 #' Used internally in the `print.EczemaModel` method.
 #'
 #' @param model Object
-#' @param digits Number of significant digits to print
 #' @param ... Arguments to pass to other methods
 #'
 #' @return None
+#'
+#' @details `print_prior` usually calls `print_distribution` with the additional argument `digits`
+#' (except for the base method for `EczemaModel` object).
 #'
 #' @export
 #'
