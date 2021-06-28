@@ -4,6 +4,8 @@
 \alias{prepare_standata}
 \alias{prepare_data_lgtd}
 \alias{prepare_standata.EczemaModel}
+\alias{prepare_standata.RW}
+\alias{prepare_standata.Smoothing}
 \alias{prepare_standata.MC}
 \title{Prepare the data list to pass to the Stan sampler}
 \usage{
@@ -12,6 +14,10 @@ prepare_standata(model, train, test, ...)
 prepare_data_lgtd(train, test = NULL, max_score, discrete)
 
 \method{prepare_standata}{EczemaModel}(model, train, test = NULL, ...)
+
+\method{prepare_standata}{RW}(model, train, test = NULL, ...)
+
+\method{prepare_standata}{Smoothing}(model, train, test = NULL, ...)
 
 \method{prepare_standata}{MC}(model, train, test = NULL, ...)
 }

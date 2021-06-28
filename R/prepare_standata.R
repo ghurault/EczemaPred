@@ -160,6 +160,25 @@ prepare_standata.EczemaModel <- function(model, train, test = NULL, ...) {
     add_prior(model$prior)
 }
 
+#' @rdname prepare_standata
+#' @export
+prepare_standata.RW <- function(model, train, test = NULL, ...) {
+  NextMethod() %>%
+    c(list(discrete = as.numeric(model$discrete),
+           alpha_known = 1,
+           alpha_data = array(1))) %>%
+    add_prior(list(tau = numeric(0)))
+}
+
+#' @rdname prepare_standata
+#' @export
+prepare_standata.Smoothing <- function(model, train, test = NULL, ...) {
+  NextMethod() %>%
+    c(list(discrete = as.numeric(model$discrete),
+           alpha_known = 0,
+           alpha_data = numeric(0)))
+}
+
 # Prepare data for Markov Chain model -------------------------------------
 
 #' Stop if the dataframe is not a correct input for the Markov Chain model.

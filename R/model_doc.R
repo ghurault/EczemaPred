@@ -218,6 +218,8 @@ NULL
 #' Exponential smoothing model
 #'
 #' @param max_score Maximum value that the score can take
+#' @param discrete Whether to use a discrete normal distribution.
+#' This will be used to check whether the data is discrete or not, and for rounding predictions (cf. testing).
 #' @param prior Named list of the model's priors. If `NULL`, uses the default prior for the model (see [default_prior()]).
 #'
 #' @details

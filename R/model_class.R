@@ -26,12 +26,15 @@ EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC", "RW", "Smo
 
   model_spec <- list(name = model_name,
                      stanmodel = model_name)
+  if (model_name %in% c("RW", "Smoothing")) {
+    model_spec$stanmodel <- "Smoothing"
+  }
 
   if (model_name %in% c("BinRW", "OrderedRW", "BinMC", "MC")) {
     discrete <- TRUE
-  } else if (model_name %in% c("Smoothing", "AR1", "MixedAR1")) {
+  } else if (model_name %in% c("AR1", "MixedAR1")) {
     discrete <- FALSE
-  } else if (model_name %in% c("RW")) {
+  } else {
     stopifnot(is_scalar(discrete),
               is.logical(discrete))
   }

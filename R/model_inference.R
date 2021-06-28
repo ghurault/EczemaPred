@@ -15,10 +15,7 @@
 EczemaFit.EczemaModel <- function(model, train, test = NULL, ...) {
 
   data_stan <- prepare_standata(model, train = train, test = test) %>%
-    c(list(
-      discrete = as.numeric(model$discrete), # only useful for RW
-      run = 1 # only useful for main models and MC
-    ))
+    c(list(run = 1)) # only useful for main models and MC
 
   fit <- rstan::sampling(stanmodels[[model$stanmodel]], data = data_stan, ...)
 
@@ -81,10 +78,7 @@ sample_prior.EczemaModel <- function(model, N_patient = 1, t_max = c(2), ...) {
                          discrete = model$discrete)
 
   data_stan <- prepare_standata(model, train = tmp[["Training"]], test = tmp[["Testing"]]) %>%
-    c(list(
-      discrete = as.numeric(model$discrete), # only useful for RW
-      run = 0 # only useful for state-space models
-    ))
+    c(list(run = 0)) # only useful for state-space models
 
   fit <- rstan::sampling(stanmodels[[model$stanmodel]], data = data_stan, ...)
 
