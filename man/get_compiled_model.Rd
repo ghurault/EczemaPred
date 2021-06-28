@@ -4,10 +4,11 @@
 \alias{get_compiled_model}
 \title{Get compiled model}
 \usage{
-get_compiled_model(model)
+get_compiled_model(stanmodel)
 }
 \arguments{
-\item{model}{Stan model name}
+\item{stanmodel}{Stan model name.
+NB: this may differ from the name of the model}
 }
 \value{
 Compiled model (object to pass to \code{rstan::sampling})
