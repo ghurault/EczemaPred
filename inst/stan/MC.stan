@@ -1,9 +1,5 @@
 // Markov Chain model with K states
 
-functions {
-#include /include/get_ts_length.stan
-}
-
 data {
   int<lower = 1> K; // Number of categories
 
