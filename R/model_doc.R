@@ -184,7 +184,7 @@ NULL
 #'
 #' @details
 #' - Details of the model are available in the [paper](#).
-#' - The model is naive as it is trained with a non-truncated, not discretised distribution.
+#' - The model is naive as the likelihood is non-truncated and not discretised (when `discrete = TRUE`).
 #' As a result, sampling from the prior predictive distribution can be challenging if the score is near the bounds
 #' and the variance is sufficiently large.
 #' - For more details see the [vignette](https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html).
@@ -224,7 +224,9 @@ NULL
 #'
 #' @details
 #' - Details of the model are available in the [paper](#).
-#' - The model is naive as it is trained with a non-truncated distribution.
+#' - The model is naive as the likelihood is non-truncated and not discretised (when `discrete = TRUE`).
+#' As a result, sampling from the prior predictive distribution can be challenging if the score is near the bounds
+#' and the variance is sufficiently large.
 #' - For more details see the [vignette](https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html).
 #'
 #' @section Parameters:
@@ -266,7 +268,8 @@ NULL
 #'
 #' @details
 #' - Details of the model are available in the [paper](#).
-#' - The model is naive as it is trained with a non-truncated distribution
+#' - The model takes as input a continuous score defined between 0 and `max_score`.
+#' - The model is naive as the likelihood distribution is not truncated.
 #' - For more details see the [vignette](https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html).
 #'
 #' @section Parameters:
@@ -316,7 +319,8 @@ NULL
 #'
 #' @details
 #' - Details of the model are available in the [paper](#).
-#' - The model is naive as it is trained with a non-truncated.
+#' The model takes as input a continuous score defined between 0 and `max_score`.
+#' - The model is naive as the likelihood distribution is not truncated.
 #' - For more details see the [vignette](https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html).
 #'
 #' @section Parameters:

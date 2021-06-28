@@ -1,9 +1,6 @@
 # List parameters ---------------------------------------------------------
 
-#' @rdname list_parameters
 #' @export
-#' @examples
-#' list_parameters("BinRW")
 list_parameters.character <- function(model, ...) {
   structure(list(name = model),
             class = c(model)) %>%
@@ -77,10 +74,7 @@ list_parameters.BinMC <- function(model, main = TRUE, ...) {
 
 }
 
-#' @rdname list_parameters
 #' @export
-#' @examples
-#' list_parameters(EczemaModel("RW", max_score = 100))
 list_parameters.RW <- function(model, ...) {
   list(Population = "sigma",
        PatientTime = "y_rep",
@@ -88,10 +82,7 @@ list_parameters.RW <- function(model, ...) {
        Misc = "y_mis")
 }
 
-#' @rdname list_parameters
 #' @export
-#' @examples
-#' list_parameters(EczemaModel("Smoothing", max_score = 100))
 list_parameters.Smoothing <- function(model, ...) {
   list(Population = c("sigma", "tau", "alpha"),
        PatientTime = c("L", "y_rep"),
@@ -99,10 +90,7 @@ list_parameters.Smoothing <- function(model, ...) {
        Misc = "y_mis")
 }
 
-#' @rdname list_parameters
 #' @export
-#' @examples
-#' list_parameters(EczemaModel("AR1", max_score = 100))
 list_parameters.AR1 <- function(model, ...) {
   list(Population = c("sigma", "alpha", "b", "y_inf"),
        PatientTime = "y_rep",
@@ -110,10 +98,7 @@ list_parameters.AR1 <- function(model, ...) {
        Misc = "y_mis")
 }
 
-#' @rdname list_parameters
 #' @export
-#' @examples
-#' list_parameters(EczemaModel("MixedAR1", max_score = 100))
 list_parameters.MixedAR1 <- function(model, ...) {
   list(Population = c("sigma", "mu_logit_alpha", "sigma_logit_alpha", "mu_inf", "sigma_inf"),
        Patient = c("alpha", "y_inf", "b"),
@@ -122,10 +107,7 @@ list_parameters.MixedAR1 <- function(model, ...) {
        Misc = "y_mis")
 }
 
-#' @rdname list_parameters
 #' @export
-#' @examples
-#' list_parameters(EczemaModel("MC", K = 5))
 list_parameters.MC <- function(model, ...) {
   list(Population = "p",
        Observation  = "y_rep",

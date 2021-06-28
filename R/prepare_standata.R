@@ -150,7 +150,6 @@ prepare_data_lgtd <- function(train, test = NULL, max_score, discrete) {
 
 }
 
-#' @rdname prepare_standata
 #' @export
 prepare_standata.EczemaModel <- function(model, train, test = NULL, ...) {
   prepare_data_lgtd(train = train,
@@ -160,7 +159,6 @@ prepare_standata.EczemaModel <- function(model, train, test = NULL, ...) {
     add_prior(model$prior)
 }
 
-#' @rdname prepare_standata
 #' @export
 prepare_standata.RW <- function(model, train, test = NULL, ...) {
   NextMethod() %>%
@@ -170,7 +168,6 @@ prepare_standata.RW <- function(model, train, test = NULL, ...) {
     add_prior(list(tau = numeric(0)))
 }
 
-#' @rdname prepare_standata
 #' @export
 prepare_standata.Smoothing <- function(model, train, test = NULL, ...) {
   NextMethod() %>%
@@ -203,7 +200,6 @@ stopifnot_MC_dataframe <- function(df, K) {
 
 }
 
-#' @rdname prepare_standata
 #' @export
 prepare_standata.MC <- function(model, train, test = NULL, ...) {
 

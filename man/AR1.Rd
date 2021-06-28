@@ -14,7 +14,8 @@ Autoregressive model (order 1)
 \details{
 \itemize{
 \item Details of the model are available in the \href{#}{paper}.
-\item The model is naive as it is trained with a non-truncated distribution
+\item The model takes as input a continuous score defined between 0 and \code{max_score}.
+\item The model is naive as the likelihood distribution is not truncated.
 \item For more details see the \href{https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html}{vignette}.
 }
 

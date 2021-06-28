@@ -3,23 +3,11 @@
 \name{prepare_standata}
 \alias{prepare_standata}
 \alias{prepare_data_lgtd}
-\alias{prepare_standata.EczemaModel}
-\alias{prepare_standata.RW}
-\alias{prepare_standata.Smoothing}
-\alias{prepare_standata.MC}
 \title{Prepare the data list to pass to the Stan sampler}
 \usage{
 prepare_standata(model, train, test, ...)
 
 prepare_data_lgtd(train, test = NULL, max_score, discrete)
-
-\method{prepare_standata}{EczemaModel}(model, train, test = NULL, ...)
-
-\method{prepare_standata}{RW}(model, train, test = NULL, ...)
-
-\method{prepare_standata}{Smoothing}(model, train, test = NULL, ...)
-
-\method{prepare_standata}{MC}(model, train, test = NULL, ...)
 }
 \arguments{
 \item{model}{Object}
@@ -39,7 +27,6 @@ List to serve as input to the Stan sampler.
 The list is usually incomplete needs to be optional parameters, such as:
 \itemize{
 \item \code{run} (binary, for main and MC models, indicating whether to evaluate the likelihood)
-\item \code{discrete} (binary, for RW model, indicating whether the predictions should be discretised)
 }
 }
 \description{

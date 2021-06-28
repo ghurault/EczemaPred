@@ -17,7 +17,9 @@ Exponential smoothing model
 \details{
 \itemize{
 \item Details of the model are available in the \href{#}{paper}.
-\item The model is naive as it is trained with a non-truncated distribution.
+\item The model is naive as the likelihood is non-truncated and not discretised (when \code{discrete = TRUE}).
+As a result, sampling from the prior predictive distribution can be challenging if the score is near the bounds
+and the variance is sufficiently large.
 \item For more details see the \href{https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html}{vignette}.
 }
 }

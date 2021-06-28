@@ -24,6 +24,7 @@ reference:
   - validate_prior
   - print_prior
   - print_distribution
+  - print.EczemaModel
   - prepare_standata
   - add_prior
   - replace_prior

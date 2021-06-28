@@ -26,7 +26,17 @@ EczemaModel(
 It uses the default priors (see \code{\link[=default_prior]{default_prior()}}) if \code{NULL} and for the parameters that are not provided.}
 }
 \value{
-An object (list) of class \code{model_name} and EczemaModel
+An object (list) of class \code{model_name} and EczemaModel, with elements:
+\itemize{
+\item \code{model_name}: Name of the model
+\item \code{stanmodel}: Name of the Stan model.
+Used internally to locate the compiled code.
+It can also be used to store the filepath of the Stan code.
+\item \code{discrete}: Whether the model is discrete or not.
+\item \code{max_score}: Maximum value that the score can take (when applicable)
+\item \code{K}: Number of categories (when applicable)
+\item \code{prior}: List of parameters' priors
+}
 }
 \description{
 EczemaModel constructor
