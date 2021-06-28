@@ -2,6 +2,10 @@
 // - Measurement error by binomial
 // - Latent dynamic by Markov Chain, parametrised by steady state ss1 (random walk) and p10 (patient-dependent)
 
+functions {
+#include /include/get_ts_length.stan
+}
+
 data {
 #include /include/data_lgtd_discrete.stan
 

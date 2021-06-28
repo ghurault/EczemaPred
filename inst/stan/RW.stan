@@ -7,6 +7,7 @@ functions {
 #include /include/bin_search.stan
 #include /include/truncated_normal.stan
 #include /include/discrete_normal.stan
+#include /include/get_ts_length.stan
 }
 
 data {

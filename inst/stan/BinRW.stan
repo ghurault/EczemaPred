@@ -2,6 +2,10 @@
 // - Measurement error by binomial
 // - Latent dynamic by logit normal random walk
 
+functions {
+#include /include/get_ts_length.stan
+}
+
 data {
 #include /include/data_lgtd_discrete.stan
 

@@ -4,6 +4,10 @@
 
 // The observations are assumed to take discrete values in [0, M] (M + 1 categories)
 
+functions {
+#include /include/get_ts_length.stan
+}
+
 data {
 #include /include/data_lgtd.stan
 

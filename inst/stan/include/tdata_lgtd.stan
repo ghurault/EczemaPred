@@ -9,12 +9,7 @@ int id_end[N_pt]; // index of last observation for each patient
 int idx_obs[N_obs]; // index of non-missing observations
 int idx_test[N_test]; // index of predictions
 
-for (i in 1:N_obs) {
-  t_max[k_obs[i]] = max(t_obs[i], t_max[k_obs[i]]);
-}
-for (i in 1:N_test) {
-  t_max[k_test[i]] = max(t_test[i], t_max[k_test[i]]);
-}
+t_max = get_ts_length(append_array(k_obs, k_test), append_array(t_obs, t_test));
 N = sum(t_max);
 
 for (k in 1:N_pt) {

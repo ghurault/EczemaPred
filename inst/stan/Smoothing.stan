@@ -5,6 +5,7 @@
 
 functions {
 #include /include/truncated_normal.stan
+#include /include/get_ts_length.stan
 }
 
 data {
