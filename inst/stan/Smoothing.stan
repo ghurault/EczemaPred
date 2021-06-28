@@ -6,6 +6,7 @@
 functions {
 #include /include/truncated_normal.stan
 #include /include/get_ts_length.stan
+#include /include/get_ragged_bounds.stan
 }
 
 data {
@@ -34,8 +35,8 @@ transformed parameters {
 #include /include/tparameters_missing.stan // Concatenate missing and observed values in y
 
   for (k in 1:N_pt) {
-    L[id_start[k]] = y[id_start[k]];
-    for (t in (id_start[k] + 1):id_end[k]){
+    L[id_ts[k, 1]] = y[id_ts[k, 1]];
+    for (t in (id_ts[k, 1] + 1):id_ts[k, 2]){
       L[t] = alpha * y[t] + (1 - alpha) * L[t - 1];
     }
   }
@@ -48,7 +49,7 @@ model {
 
   for (k in 1:N_pt) {
     // Naive random walk (not truncated); vectorised for efficiency
-    to_vector(y[(id_start[k] + 1):id_end[k]]) ~ normal(to_vector(L[id_start[k]:(id_end[k] - 1)]), sigma);
+    to_vector(y[(id_ts[k, 1] + 1):id_ts[k, 2]]) ~ normal(to_vector(L[id_ts[k, 1]:(id_ts[k, 2] - 1)]), sigma);
   }
 
 }
@@ -59,15 +60,15 @@ generated quantities {
   real y_pred[N_test]; // Predictive sample of y_test
 
   for (k in 1:N_pt) {
-    y_rep[id_start[k]] = y[id_start[k]];
-    for (t in id_start[k]:(id_end[k] - 1)) {
+    y_rep[id_ts[k, 1]] = y[id_ts[k, 1]];
+    for (t in id_ts[k, 1]:(id_ts[k, 2] - 1)) {
       y_rep[t + 1] = truncated_normal_rng(M, L[t], sigma);
     }
   }
   y_pred = y_rep[idx_test];
 
   for (i in 1:N_test) {
-    if (id_start[k_test[i]] == idx_test[i]) {
+    if (id_ts[k_test[i], 1] == idx_test[i]) {
       // cf. autoregressive model doesn't work for t=1, assume uniform distribution
       lpd[i] = -log(M);
     } else {

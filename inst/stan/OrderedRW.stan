@@ -6,6 +6,7 @@
 
 functions {
 #include /include/get_ts_length.stan
+#include /include/get_ragged_bounds.stan
 }
 
 data {
@@ -56,9 +57,9 @@ transformed parameters {
   }
 
   for (k in 1:N_pt) {
-    y0[k] = mu_y0 + sigma_y0 * eta[id_start[k]];
-    y_lat[id_start[k]] = y0[k];
-    for (t in (id_start[k] + 1):id_end[k]) {
+    y0[k] = mu_y0 + sigma_y0 * eta[id_ts[k, 1]];
+    y_lat[id_ts[k, 1]] = y0[k];
+    for (t in (id_ts[k, 1] + 1):id_ts[k, 2]) {
       y_lat[t] = y_lat[t - 1] + sigma * eta[t]; // Random Walk
     }
   }

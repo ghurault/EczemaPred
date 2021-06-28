@@ -4,6 +4,7 @@
 
 functions {
 #include /include/get_ts_length.stan
+#include /include/get_ragged_bounds.stan
 }
 
 data {
@@ -47,18 +48,18 @@ transformed parameters {
     logit_p10[k] = mu_logit_p10 + sigma_logit_p10 * eta_logit_p10[k];
     p10[k] = inv_logit(logit_p10[k]);
     p11[k] = 1 - p10[k];
-    logit_tss1_0[k] = prior_logit_tss1_0[1] + prior_logit_tss1_0[2] * eta[id_start[k]]; // Logit normal prior for tss1
-    for (t in id_start[k]:id_end[k]) {
-      if (t == id_start[k]) {
-        logit_tss1[id_start[k]] = logit_tss1_0[k];
+    logit_tss1_0[k] = prior_logit_tss1_0[1] + prior_logit_tss1_0[2] * eta[id_ts[k, 1]]; // Logit normal prior for tss1
+    for (t in id_ts[k, 1]:id_ts[k, 2]) {
+      if (t == id_ts[k, 1]) {
+        logit_tss1[id_ts[k, 1]] = logit_tss1_0[k];
       } else {
         logit_tss1[t] = logit_tss1[t - 1] + sigma * eta[t]; // Random walk for ss1
       }
       ss1[t] = inv_logit(logit_tss1[t]) / (1 + p10[k]); // Divide (1 + p10) to make sure p01 between 0 and 1 (NB: change interpretation of sigma)
       p01[t] = p10[k] * ss1[t] / (1 - ss1[t]);
       lambda[t] =  1 - p10[k] - p01[t];
-      if (t == id_start[k]) {
-        y_lat[id_start[k]] = ss1[id_start[k]]; // Start at steady state
+      if (t == id_ts[k, 1]) {
+        y_lat[id_ts[k, 1]] = ss1[id_ts[k, 1]]; // Start at steady state
       } else {
         y_lat[t] = p01[t] * (1 - y_lat[t -1]) + p11[k] * y_lat[t - 1]; // Markov Chain
       }
