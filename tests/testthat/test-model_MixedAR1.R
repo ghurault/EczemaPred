@@ -4,8 +4,7 @@ options(warn = -1)
 N_patient <- 30
 t_max <- rpois(N_patient, 25)
 max_score <- 100
-param_pop <- c("sigma", "mu_logit_alpha", "sigma_logit_alpha", "mu_inf", "sigma_inf")
-param <- c(param_pop, "alpha", "y_inf", "b")
+param <- list_parameters("MixedAR1")
 
 model <- EczemaModel("MixedAR1", max_score = max_score)
 
@@ -18,8 +17,8 @@ wrong_priors <- list(
   replace(dprior, which(names(dprior) == "sigma"), as.character(dprior$sigma)),
   replace(dprior, which(names(dprior) == "sigma"), 1),
   replace(dprior, which(names(dprior) == "sigma"), c(0, -1)),
-  replace(dprior, which(names(dprior) == "mu_logit_alpha"), c(0, -1)),
-  replace(dprior, which(names(dprior) == "sigma_logit_alpha"), c(0, -1)),
+  replace(dprior, which(names(dprior) == "mu_logit_slope"), c(0, -1)),
+  replace(dprior, which(names(dprior) == "sigma_logit_slope"), c(0, -1)),
   replace(dprior, which(names(dprior) == "mu_inf"), c(0, -1)),
   replace(dprior, which(names(dprior) == "sigma_inf"), c(0, -1))
 )
@@ -44,15 +43,15 @@ test_that("sample_prior returns a stanfit object", {
 y0 <- rbeta(N_patient, 5, 5) * max_score
 sigma <- 2
 
-mu_logit_alpha <- 1
-sigma_logit_alpha <- 1
-alpha <- HuraultMisc::inv_logit(rnorm(N_patient, mu_logit_alpha, sigma_logit_alpha))
+mu_logit_slope <- 1
+sigma_logit_slope <- 1
+slope <- HuraultMisc::inv_logit(rnorm(N_patient, mu_logit_slope, sigma_logit_slope))
 
 mu_inf <- 0.1 * max_score
 sigma_inf <- 0.05 * max_score
 y_inf <- rnorm(N_patient, mu_inf, sigma_inf)
 
-b <- y_inf * (1 - alpha)
+intercept <- y_inf * (1 - slope)
 
 df <- lapply(1:N_patient,
              function(i) {
@@ -61,7 +60,7 @@ df <- lapply(1:N_patient,
                y <- rep(NA, t_max[i])
                y[1] <- y0[i]
                for (t in 2:t_max[i]) {
-                 y[t] = alpha[i] * y[t - 1] + b[i] + err[t - 1]
+                 y[t] = slope[i] * y[t - 1] + intercept[i] + err[t - 1]
                }
 
                out <- data.frame(Patient = i,
@@ -83,31 +82,31 @@ test_that("EczemaFit returns a stanfit object", {
 
 test_that("estimate of population parameters from EczemaFit is accurate", {
 
-  post <- rstan::extract(fit, pars = c("sigma", "mu_logit_alpha", "sigma_logit_alpha", "mu_inf", "sigma_inf"))
+  post <- rstan::extract(fit, pars = param$Population)
   post_mean <- sapply(post, mean)
   post_sd <- sapply(post, sd)
-  truth <- c(sigma, mu_logit_alpha, sigma_logit_alpha, mu_inf, sigma_inf)
+  truth <- c(sigma, mu_logit_slope, sigma_logit_slope, mu_inf, sigma_inf)
 
   expect_true(all(abs(post_mean - truth) / post_sd < 2.5))
 
 })
 
-test_that("estimates of alpha from EczemaFit are accurate", {
+test_that("estimates of slope from EczemaFit are accurate", {
   skip_on_ci()
 
-  post_alpha <- rstan::extract(fit, pars = "alpha")[[1]]
-  alpha_mean <- apply(post_alpha, 2, mean)
-  alpha_sd <- apply(post_alpha, 2, sd)
+  post_slope <- rstan::extract(fit, pars = "slope")[[1]]
+  slope_mean <- apply(post_slope, 2, mean)
+  slope_sd <- apply(post_slope, 2, sd)
 
-  expect_true(all(abs(alpha_mean - alpha) / alpha_sd < 2.5))
+  expect_true(all(abs(slope_mean - slope) / slope_sd < 2.5))
 })
 
-test_that("estimates of b from EczemaFit are accurate", {
+test_that("estimates of intercept from EczemaFit are accurate", {
   skip_on_ci()
 
-  post_b <- rstan::extract(fit, pars = "b")[[1]]
-  b_mean <- apply(post_b, 2, mean)
-  b_sd <- apply(post_b, 2, sd)
+  post_intercept <- rstan::extract(fit, pars = "intercept")[[1]]
+  intercept_mean <- apply(post_intercept, 2, mean)
+  intercept_sd <- apply(post_intercept, 2, sd)
 
-  expect_true(all(abs(b_mean - b) / b_sd < 2.5))
+  expect_true(all(abs(intercept_mean - intercept) / intercept_sd < 2.5))
 })

@@ -100,8 +100,8 @@ list_parameters.AR1 <- function(model, ...) {
 
 #' @export
 list_parameters.MixedAR1 <- function(model, ...) {
-  list(Population = c("sigma", "mu_logit_alpha", "sigma_logit_alpha", "mu_inf", "sigma_inf"),
-       Patient = c("alpha", "y_inf", "b"),
+  list(Population = c("sigma", "mu_logit_slope", "sigma_logit_slope", "mu_inf", "sigma_inf"),
+       Patient = c("slope", "y_inf", "intercept"),
        PatientTime = c("y_rep"),
        Test = c("y_pred", "lpd"),
        Misc = "y_mis")

@@ -335,16 +335,16 @@ NULL
 #' ## Population parameters:
 #'
 #' - `sigma`: Standard deviation of the autoregression
-#' - `mu_logit_alpha`: Population mean of the logit of `alpha`
-#' - `sigma_logit_alpha`: Population standard deviation of the logit of `alpha`
+#' - `mu_logit_slope`: Population mean of the logit of `slope`
+#' - `sigma_logit_slope`: Population standard deviation of the logit of `slope`
 #' - `mu_inf`: Population mean of `y_inf`
 #' - `sigma_inf`: Population standard deviation of `y_inf`
 #'
 #' ## Patient-dependent parameters:
 #'
-#' - `alpha`: Autocorrelation parameter
+#' - `slope`: Autocorrelation parameter
 #' - `y_inf`: Autoregression mean
-#' - `b`: Intercept
+#' - `intercept`: Intercept
 #'
 #' ## Other parameters:
 #'
@@ -353,23 +353,23 @@ NULL
 #' See `list_parameters(model = "MixedAR1")` for more details.
 #'
 #' @section Priors:
-#' The priors are passed as a named list with elements `sigma`, `mu_logit_alpha`, `sigma_logit_alpha`, `mu_inf`, `sigma_inf`
+#' The priors are passed as a named list with elements `sigma`, `mu_logit_slope`, `sigma_logit_slope`, `mu_inf`, `sigma_inf`
 #' specifying priors for the corresponding parameters.
 #' Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 > 0, such as:
 #'
 #' - `sigma / max_score ~ normal+(x1, x2)`.
-#' - `mu_logit_alpha ~ normal(x1, x2)`.
-#' - `sigma_logit_alpha ~ normal+(x1, x2)`.
+#' - `mu_logit_slope ~ normal(x1, x2)`.
+#' - `sigma_logit_slope ~ normal+(x1, x2)`.
 #' - `mu_inf / max_score ~ normal(x1, x2)`.
 #' - `sigma_inf / max_score ~ normal+(x1, x2)`.
 #'
-#' NB: For `sigma`, `sigma_logit_alpha` and `sigma_inf`, usually x1=0 to define a half-normal distribution
+#' NB: For `sigma`, `sigma_logit_slope` and `sigma_inf`, usually x1=0 to define a half-normal distribution
 #' since the parameter is constrained to be positive.
 #'
 #' @section Default priors:
 #' - The default prior for `sigma` translates to a width of the predictive distribution to be at most `max_score`.
-#' - The default priors for `mu_logit_alpha` and `sigma_logit_alpha` have "reasonable" ranges and
-#' translate to a prior on `alpha` that is approximately uniform.
+#' - The default priors for `mu_logit_slope` and `sigma_logit_slope` have "reasonable" ranges and
+#' translate to a prior on `slope` that is approximately uniform.
 #' - The default prior for `mu_inf` spans the entire range of the score.
 #' - The default prior for `sigma_inf` translates to a range in the distribution of `y_inf` to be at most `max_score`.
 #'
