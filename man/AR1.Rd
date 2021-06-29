@@ -6,6 +6,9 @@
 \arguments{
 \item{max_score}{Maximum value that the score can take}
 
+\item{discrete}{Whether to use a discrete normal distribution.
+This will be used to check whether the data is discrete or not, and for rounding predictions (cf. testing).}
+
 \item{prior}{Named list of the model's priors. If \code{NULL}, uses the default prior for the model (see \code{\link[=default_prior]{default_prior()}}).}
 }
 \description{
@@ -15,7 +18,9 @@ Autoregressive model (order 1)
 \itemize{
 \item Details of the model are available in the \href{#}{paper}.
 \item The model takes as input a continuous score defined between 0 and \code{max_score}.
-\item The model is naive as the likelihood distribution is not truncated.
+\item The model is naive as the likelihood is non-truncated and not discretised (when \code{discrete = TRUE}).
+As a result, sampling from the prior predictive distribution can be challenging if the score is near the bounds
+and the variance is sufficiently large.
 \item For more details see the \href{https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html}{vignette}.
 }
 
@@ -28,8 +33,8 @@ Autoregressive model (order 1)
 
 \itemize{
 \item \code{sigma}: Standard deviation of the autoregression
-\item \code{alpha}: Autocorrelation parameter
-\item \code{b}: Intercept
+\item \code{slope}: Autocorrelation parameter
+\item \code{intercept}: Intercept
 \item \code{y_inf}: Autoregression mean
 \item \code{y_mis}: Missing values
 }
@@ -39,18 +44,18 @@ See \code{list_parameters(model = "AR1")} for more details.
 
 \section{Priors}{
 
-The priors are passed as a named list with elements \code{sigma}, \code{y_inf} and \code{alpha}
+The priors are passed as a named list with elements \code{sigma}, \code{y_inf} and \code{slope}
 specifying priors for the corresponding parameters.
 Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 > 0, such as:
 \itemize{
 \item \verb{sigma / max_score ~ normal+(x1, x2)}.
 \item \code{y_inf / max_score ~ normal(x1, x2)}.
-\item \code{alpha ~ beta(x1, x2)}.
+\item \code{slope ~ beta(x1, x2)}.
 }
 
 NB: For \code{sigma}, usually x1=0 to define a half-normal distribution
 since the parameter is constrained to be positive.
-NB: For \code{alpha}, both \code{x1} and \code{x2} must be positive.
+NB: For \code{slope}, both \code{x1} and \code{x2} must be positive.
 }
 
 \section{Default priors}{
@@ -58,7 +63,7 @@ NB: For \code{alpha}, both \code{x1} and \code{x2} must be positive.
 \itemize{
 \item The default prior for \code{sigma} translates to a width of the predictive distribution to be at most \code{max_score}.
 \item The default prior for \code{y_inf} covers the full range of the score.
-\item The default prior for \code{alpha} is uniform in 0-1.
+\item The default prior for \code{slope} is uniform in 0-1.
 }
 }
 

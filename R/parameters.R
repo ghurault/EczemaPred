@@ -92,7 +92,7 @@ list_parameters.Smoothing <- function(model, ...) {
 
 #' @export
 list_parameters.AR1 <- function(model, ...) {
-  list(Population = c("sigma", "alpha", "b", "y_inf"),
+  list(Population = c("sigma", "slope", "intercept", "y_inf"),
        PatientTime = "y_rep",
        Test = c("y_pred", "lpd"),
        Misc = "y_mis")

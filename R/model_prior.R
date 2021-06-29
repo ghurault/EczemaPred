@@ -203,12 +203,12 @@ validate_prior.AR1 <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
-    all(c("sigma", "alpha", "y_inf") %in% names(prior)),
+    all(c("sigma", "slope", "y_inf") %in% names(prior)),
     all(sapply(prior, is.numeric)),
     all(sapply(prior, function(x) {length(x) == 2})),
     prior$sigma[2] > 0,
     prior$y_inf[2] > 0,
-    all(prior$alpha > 0)
+    all(prior$slope > 0)
   )
 }
 
@@ -216,7 +216,7 @@ validate_prior.AR1 <- function(model, ...) {
 default_prior.AR1 <- function(model, ...) {
   list(
     sigma = c(0, 0.1),
-    alpha = c(1, 1),
+    slope = c(1, 1),
     y_inf = c(0.5, 0.25)
   )
 }
@@ -224,7 +224,7 @@ default_prior.AR1 <- function(model, ...) {
 #' @export
 print_prior.AR1 <- function(model, digits = 2, ...) {
   print_distribution("sigma / max_score", "normal+", model$prior$sigma, digits = digits)
-  print_distribution("alpha", "beta", model$prior$alpha, digits = digits)
+  print_distribution("slope", "beta", model$prior$slope, digits = digits)
   print_distribution("y_inf / max_score", "normal", model$prior$y_inf, digits = digits)
 }
 

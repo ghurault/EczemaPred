@@ -184,6 +184,7 @@ NULL
 #'
 #' @details
 #' - Details of the model are available in the [paper](#).
+#' - The model takes as input a continuous score defined between 0 and `max_score`.
 #' - The model is naive as the likelihood is non-truncated and not discretised (when `discrete = TRUE`).
 #' As a result, sampling from the prior predictive distribution can be challenging if the score is near the bounds
 #' and the variance is sufficiently large.
@@ -224,6 +225,7 @@ NULL
 #'
 #' @details
 #' - Details of the model are available in the [paper](#).
+#' - The model takes as input a continuous score defined between 0 and `max_score`.
 #' - The model is naive as the likelihood is non-truncated and not discretised (when `discrete = TRUE`).
 #' As a result, sampling from the prior predictive distribution can be challenging if the score is near the bounds
 #' and the variance is sufficiently large.
@@ -264,41 +266,45 @@ NULL
 #' Autoregressive model (order 1)
 #'
 #' @param max_score Maximum value that the score can take
+#' @param discrete Whether to use a discrete normal distribution.
+#' This will be used to check whether the data is discrete or not, and for rounding predictions (cf. testing).
 #' @param prior Named list of the model's priors. If `NULL`, uses the default prior for the model (see [default_prior()]).
 #'
 #' @details
 #' - Details of the model are available in the [paper](#).
 #' - The model takes as input a continuous score defined between 0 and `max_score`.
-#' - The model is naive as the likelihood distribution is not truncated.
+#' - The model is naive as the likelihood is non-truncated and not discretised (when `discrete = TRUE`).
+#' As a result, sampling from the prior predictive distribution can be challenging if the score is near the bounds
+#' and the variance is sufficiently large.
 #' - For more details see the [vignette](https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html).
 #'
 #' @section Parameters:
 #'
 #' - `sigma`: Standard deviation of the autoregression
-#' - `alpha`: Autocorrelation parameter
-#' - `b`: Intercept
+#' - `slope`: Autocorrelation parameter
+#' - `intercept`: Intercept
 #' - `y_inf`: Autoregression mean
 #' - `y_mis`: Missing values
 #'
 #' See `list_parameters(model = "AR1")` for more details.
 #'
 #' @section Priors:
-#' The priors are passed as a named list with elements `sigma`, `y_inf` and `alpha`
+#' The priors are passed as a named list with elements `sigma`, `y_inf` and `slope`
 #' specifying priors for the corresponding parameters.
 #' Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 > 0, such as:
 #'
 #' - `sigma / max_score ~ normal+(x1, x2)`.
 #' - `y_inf / max_score ~ normal(x1, x2)`.
-#' - `alpha ~ beta(x1, x2)`.
+#' - `slope ~ beta(x1, x2)`.
 #'
 #' NB: For `sigma`, usually x1=0 to define a half-normal distribution
 #' since the parameter is constrained to be positive.
-#' NB: For `alpha`, both `x1` and `x2` must be positive.
+#' NB: For `slope`, both `x1` and `x2` must be positive.
 #'
 #' @section Default priors:
 #' - The default prior for `sigma` translates to a width of the predictive distribution to be at most `max_score`.
 #' - The default prior for `y_inf` covers the full range of the score.
-#' - The default prior for `alpha` is uniform in 0-1.
+#' - The default prior for `slope` is uniform in 0-1.
 #'
 #' @details
 #' - The model is naive as it is trained with a non-truncated distribution
@@ -321,6 +327,7 @@ NULL
 #' - Details of the model are available in the [paper](#).
 #' The model takes as input a continuous score defined between 0 and `max_score`.
 #' - The model is naive as the likelihood distribution is not truncated.
+#' - Unlike the `AR1` model, the discretisation of predictions is not implemented
 #' - For more details see the [vignette](https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html).
 #'
 #' @section Parameters:

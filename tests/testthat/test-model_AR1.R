@@ -13,11 +13,11 @@ model <- EczemaModel("AR1", max_score = max_score)
 wrong_priors <- list(
   1,
   list(sigma = c(0, 1), sigma = c(0, 1)),
-  list(sigma = c("0", "0.1"), alpha = c(1, 1), y_inf = c(0.5, 0.25)),
-  list(sigma = 0.1, alpha = c(1, 1), y_inf = c(0.5, 0.25)),
-  list(sigma = c(0, -0.1), alpha = c(1, 1), y_inf = c(0.5, 0.25)),
-  list(sigma = c(0, 0.1), alpha = -c(1, 1), y_inf = c(0.5, 0.25)),
-  list(sigma = c(0, 0.1), y_inf = c(0.5, -0.25))
+  list(sigma = c("0", "0.1")),
+  list(sigma = 0.1),
+  list(sigma = c(0, -0.1)),
+  list(slope = -c(1, 1)),
+  list(y_inf = c(0.5, -0.25))
 )
 
 test_that("AR1 constructor catches errors in prior", {

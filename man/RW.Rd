@@ -17,6 +17,7 @@ Random walk model
 \details{
 \itemize{
 \item Details of the model are available in the \href{#}{paper}.
+\item The model takes as input a continuous score defined between 0 and \code{max_score}.
 \item The model is naive as the likelihood is non-truncated and not discretised (when \code{discrete = TRUE}).
 As a result, sampling from the prior predictive distribution can be challenging if the score is near the bounds
 and the variance is sufficiently large.
