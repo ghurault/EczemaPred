@@ -2,43 +2,25 @@
 % Please edit documentation in R/model_class.R, R/parameters.R
 \name{list_parameters}
 \alias{list_parameters}
-\alias{list_parameters.character}
 \alias{list_parameters.BinRW}
 \alias{list_parameters.OrderedRW}
 \alias{list_parameters.BinMC}
-\alias{list_parameters.RW}
-\alias{list_parameters.Smoothing}
-\alias{list_parameters.AR1}
-\alias{list_parameters.MixedAR1}
-\alias{list_parameters.MC}
 \title{List available parameters}
 \usage{
 list_parameters(model, ...)
-
-\method{list_parameters}{character}(model, ...)
 
 \method{list_parameters}{BinRW}(model, main = TRUE, ...)
 
 \method{list_parameters}{OrderedRW}(model, main = TRUE, ...)
 
 \method{list_parameters}{BinMC}(model, main = TRUE, ...)
-
-\method{list_parameters}{RW}(model, ...)
-
-\method{list_parameters}{Smoothing}(model, ...)
-
-\method{list_parameters}{AR1}(model, ...)
-
-\method{list_parameters}{MixedAR1}(model, ...)
-
-\method{list_parameters}{MC}(model, ...)
 }
 \arguments{
 \item{model}{Object}
 
 \item{...}{Arguments to pass to other methods}
 
-\item{main}{Whether to output the main parameters only.}
+\item{main}{Whether to output the main parameters only (when applicable).}
 }
 \value{
 Named list of parameters names, grouped into broad categories:
@@ -65,13 +47,9 @@ Other parameters are available across models:
 }
 }
 \examples{
-list_parameters("BinRW")
+list_parameters("RW")
+list_parameters(EczemaModel("RW", max_score = 100))
 list_parameters(EczemaModel("BinRW", max_score = 100))
 list_parameters(EczemaModel("OrderedRW", max_score = 100))
 list_parameters(EczemaModel("BinMC", max_score = 100))
-list_parameters(EczemaModel("RW", max_score = 100))
-list_parameters(EczemaModel("Smoothing", max_score = 100))
-list_parameters(EczemaModel("AR1", max_score = 100))
-list_parameters(EczemaModel("MixedAR1", max_score = 100))
-list_parameters(EczemaModel("MC", K = 5))
 }

@@ -11,7 +11,7 @@ for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing", "AR1", "M
     } else {
       model <- EczemaModel(model_name,
                            max_score = ms[i],
-                           discrete = !(model_name %in% c("RW") && ms[i] > 50))
+                           discrete = !(model_name %in% c("RW", "Smoothing", "AR1") && ms[i] > 50))
     }
 
     test_that(paste0("We can construct a ", model_name, " object"), {
@@ -40,10 +40,10 @@ for (model_name in c("BinRW", "OrderedRW", "BinMC", "RW", "Smoothing", "AR1", "M
       if (model_name %in% c("BinRW", "OrderedRW", "BinMC", "MC")) {
         expect_true(model$discrete)
       }
-      if (model_name %in% c("Smoothing", "AR1", "MixedAR1")) {
+      if (model_name %in% c("MixedAR1")) {
         expect_false(model$discrete)
       }
-      if (model_name %in% c("RW")) {
+      if (model_name %in% c("RW", "Smoothing", "AR1")) {
         expect_equal(model$discrete, !(ms[i] > 50))
       }
     })

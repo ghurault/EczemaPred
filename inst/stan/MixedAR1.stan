@@ -14,8 +14,8 @@ data {
 #include /include/data_lgtd_continuous.stan
 
   real prior_sigma[2];
-  real prior_mu_logit_alpha[2];
-  real prior_sigma_logit_alpha[2];
+  real prior_mu_logit_slope[2];
+  real prior_sigma_logit_slope[2];
   real prior_mu_inf[2];
   real prior_sigma_inf[2];
 
@@ -33,9 +33,9 @@ parameters {
   real<lower = 0> sigma; // Standard deviation
 
   // Population autocorrelation parameters
-  real mu_logit_alpha; // Logit mean
-  real<lower = 0> sigma_logit_alpha; // Logit std
-  real eta_alpha[N_pt]; // Error term
+  real mu_logit_slope; // Logit mean
+  real<lower = 0> sigma_logit_slope; // Logit std
+  real eta_slope[N_pt]; // Error term
 
   // Population autoregression mean
   real mu_inf; // Population mean
@@ -44,32 +44,32 @@ parameters {
 }
 
 transformed parameters {
-  real alpha[N_pt];
+  real slope[N_pt];
   real y_inf[N_pt];
-  real b[N_pt];
+  real intercept[N_pt];
 #include /include/tparameters_missing.stan // Concatenate missing and observed values in y
 
   for (k in 1:N_pt) {
-    alpha[k] = inv_logit(mu_logit_alpha + sigma_logit_alpha * eta_alpha[k]);
+    slope[k] = inv_logit(mu_logit_slope + sigma_logit_slope * eta_slope[k]);
     y_inf[k] = mu_inf + sigma_inf * eta_inf[k];
-    b[k] = y_inf[k] * (1 - alpha[k]);
+    intercept[k] = y_inf[k] * (1 - slope[k]);
   }
 
 }
 
 model {
-  eta_alpha ~ std_normal();
+  eta_slope ~ std_normal();
   eta_inf ~ std_normal();
 
   sigma / M ~ normal(prior_sigma[1], prior_sigma[2]);
-  mu_logit_alpha ~ normal(prior_mu_logit_alpha[1], prior_mu_logit_alpha[2]);
-  sigma_logit_alpha ~ normal(prior_sigma_logit_alpha[1], prior_sigma_logit_alpha[2]);
+  mu_logit_slope ~ normal(prior_mu_logit_slope[1], prior_mu_logit_slope[2]);
+  sigma_logit_slope ~ normal(prior_sigma_logit_slope[1], prior_sigma_logit_slope[2]);
   mu_inf / M ~ normal(prior_mu_inf[1], prior_mu_inf[2]);
   sigma_inf / M ~ normal(prior_sigma_inf[1], prior_sigma_inf[2]);
 
   for (k in 1:N_pt) {
     // Naive random walk (not truncated); vectorised for efficiency
-    to_vector(y[(id_ts[k, 1] + 1):id_ts[k, 2]]) ~ normal(alpha[k] * to_vector(y[id_ts[k, 1]:(id_ts[k, 2] - 1)]) + b[k], sigma);
+    to_vector(y[(id_ts[k, 1] + 1):id_ts[k, 2]]) ~ normal(slope[k] * to_vector(y[id_ts[k, 1]:(id_ts[k, 2] - 1)]) + intercept[k], sigma);
   }
 
 }
@@ -82,7 +82,7 @@ generated quantities {
   for (k in 1:N_pt) {
     y_rep[id_ts[k, 1]] = y[id_ts[k, 1]];
     for (t in id_ts[k, 1]:(id_ts[k, 2] - 1)) {
-      y_rep[t + 1] = truncated_normal_rng(M, alpha[k] * y[t] + b[k], sigma);
+      y_rep[t + 1] = truncated_normal_rng(M, slope[k] * y[t] + intercept[k], sigma);
     }
   }
   y_pred = y_rep[idx_test];
@@ -92,7 +92,7 @@ generated quantities {
       // cf. autoregressive model doesn't work for t=1, assume uniform distribution
       lpd[i] = -log(M);
     } else {
-      lpd[i] = truncated_normal_lpdf(y_test[i] | M, alpha[k_test[i]] * y[idx_test[i] - 1] + b[k_test[i]], sigma);
+      lpd[i] = truncated_normal_lpdf(y_test[i] | M, slope[k_test[i]] * y[idx_test[i] - 1] + intercept[k_test[i]], sigma);
     }
   }
 

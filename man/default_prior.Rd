@@ -3,40 +3,16 @@
 \name{default_prior}
 \alias{default_prior}
 \alias{default_prior.character}
-\alias{default_prior.BinRW}
-\alias{default_prior.OrderedRW}
-\alias{default_prior.BinMC}
-\alias{default_prior.RW}
-\alias{default_prior.Smoothing}
-\alias{default_prior.AR1}
-\alias{default_prior.MixedAR1}
-\alias{default_prior.MC}
 \title{Default prior}
 \usage{
 default_prior(model, ...)
 
 \method{default_prior}{character}(model, max_score = 1, K = 2, ...)
-
-\method{default_prior}{BinRW}(model, ...)
-
-\method{default_prior}{OrderedRW}(model, ...)
-
-\method{default_prior}{BinMC}(model, ...)
-
-\method{default_prior}{RW}(model, ...)
-
-\method{default_prior}{Smoothing}(model, ...)
-
-\method{default_prior}{AR1}(model, ...)
-
-\method{default_prior}{MixedAR1}(model, ...)
-
-\method{default_prior}{MC}(model, ...)
 }
 \arguments{
 \item{model}{Object}
 
-\item{...}{Arguments to pass to \code{\link[=default_prior]{default_prior()}} as an EczemaPred object}
+\item{...}{Arguments to pass to other methods}
 
 \item{max_score}{Maximum value that the score can take}
 
@@ -49,14 +25,14 @@ For more details, see the generic of the model class.
 \description{
 Default prior
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{character}: The function creates an EczemaModel object and call the corresponding method.
+}}
+
 \examples{
-default_prior("BinRW")
 default_prior(EczemaModel("BinRW", max_score = 10))
-default_prior(EczemaModel("OrderedRW", max_score = 10))
-default_prior(EczemaModel("BinMC", max_score = 100))
-default_prior(EczemaModel("RW", max_score = 100))
-default_prior(EczemaModel("Smoothing", max_score = 100))
-default_prior(EczemaModel("AR1", max_score = 100))
-default_prior(EczemaModel("MixedAR1", max_score = 100))
 default_prior(EczemaModel("MC", K = 10))
+default_prior("BinRW")
+
 }

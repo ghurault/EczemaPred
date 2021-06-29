@@ -11,7 +11,16 @@
 #' @param prior Named list of the model's priors.
 #' It uses the default priors (see [default_prior()]) if `NULL` and for the parameters that are not provided.
 #'
-#' @return An object (list) of class `model_name` and EczemaModel
+#' @return An object (list) of class `model_name` and EczemaModel, with elements:
+#' - `model_name`: Name of the model
+#' - `stanmodel`: Name of the Stan model.
+#' Used internally to locate the compiled code.
+#' It can also be used to store the filepath of the Stan code.
+#' - `discrete`: Whether the model is discrete or not.
+#' - `max_score`: Maximum value that the score can take (when applicable)
+#' - `K`: Number of categories (when applicable)
+#' - `prior`: List of parameters' priors
+#'
 #' @export
 #'
 #' @examples
@@ -26,12 +35,15 @@ EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC", "RW", "Smo
 
   model_spec <- list(name = model_name,
                      stanmodel = model_name)
+  if (model_name %in% c("RW", "Smoothing", "AR1")) {
+    model_spec$stanmodel <- "SmoothingAR1"
+  }
 
   if (model_name %in% c("BinRW", "OrderedRW", "BinMC", "MC")) {
     discrete <- TRUE
-  } else if (model_name %in% c("Smoothing", "AR1", "MixedAR1")) {
+  } else if (model_name %in% c("MixedAR1")) {
     discrete <- FALSE
-  } else if (model_name %in% c("RW")) {
+  } else {
     stopifnot(is_scalar(discrete),
               is.logical(discrete))
   }
@@ -123,6 +135,10 @@ replace_prior <- function(x, prior = NULL) {
 #' For more details, see the generic of the model class.
 #'
 #' @export
+#'
+#' @examples
+#' default_prior(EczemaModel("BinRW", max_score = 10))
+#' default_prior(EczemaModel("MC", K = 10))
 default_prior <- function(model, ...) {
   UseMethod("default_prior")
 }
@@ -148,12 +164,19 @@ validate_prior <- function(model, ...) {
 #' Used internally in the `print.EczemaModel` method.
 #'
 #' @param model Object
-#' @param digits Number of significant digits to print
 #' @param ... Arguments to pass to other methods
 #'
 #' @return None
 #'
+#' @details `print_prior` usually calls `print_distribution` with the additional argument `digits`
+#' (except for the base method for `EczemaModel` object).
+#'
 #' @export
+#'
+#' @examples
+#' model <- EczemaModel("BinRW", max_score = 10)
+#' print_prior(model)
+#' print_prior(model, digits = 5)
 print_prior <- function(model, ...) {
   UseMethod("print_prior")
 }
@@ -161,7 +184,7 @@ print_prior <- function(model, ...) {
 #' List available parameters
 #'
 #' @param model Object
-#' @param main Whether to output the main parameters only.
+#' @param main Whether to output the main parameters only (when applicable).
 #' @param ... Arguments to pass to other methods
 #'
 #' @return Named list of parameters names, grouped into broad categories:
@@ -182,6 +205,10 @@ print_prior <- function(model, ...) {
 #' (matrix with dimensions `N_test * (max_score  + 1)`).
 #'
 #' @export
+#'
+#' @examples
+#' list_parameters("RW")
+#' list_parameters(EczemaModel("RW", max_score = 100))
 list_parameters <- function(model, ...) {
   UseMethod("list_parameters")
 }
@@ -198,7 +225,6 @@ list_parameters <- function(model, ...) {
 #' @return List to serve as input to the Stan sampler.
 #' The list is usually incomplete needs to be optional parameters, such as:
 #' - `run` (binary, for main and MC models, indicating whether to evaluate the likelihood)
-#' - `discrete` (binary, for RW model, indicating whether the predictions should be discretised)
 #'
 #' @details
 #' - `prepare_data_lgtd` is helps build `prepare_standata.EczemaModel` and is kept for compatibility reasons.
@@ -283,13 +309,11 @@ print.EczemaModel <- function(x, digits = 2, ...) {
 
 }
 
-#' @rdname print_prior
 #' @export
 print_prior.EczemaModel <- function(model, ...) {
   print(model$prior)
 }
 
-#' @rdname validate_prior
 #' @export
 validate_prior.EczemaModel <- function(model, ...) {
   message("Using the validate_prior method for EczemaModel object")

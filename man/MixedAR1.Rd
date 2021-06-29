@@ -14,7 +14,9 @@ Mixed effect autoregressive model (order 1)
 \details{
 \itemize{
 \item Details of the model are available in the \href{#}{paper}.
-\item The model is naive as it is trained with a non-truncated.
+The model takes as input a continuous score defined between 0 and \code{max_score}.
+\item The model is naive as the likelihood distribution is not truncated.
+\item Unlike the \code{AR1} model, the discretisation of predictions is not implemented
 \item For more details see the \href{https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html}{vignette}.
 }
 }
@@ -23,8 +25,8 @@ Mixed effect autoregressive model (order 1)
 \subsection{Population parameters:}{
 \itemize{
 \item \code{sigma}: Standard deviation of the autoregression
-\item \code{mu_logit_alpha}: Population mean of the logit of \code{alpha}
-\item \code{sigma_logit_alpha}: Population standard deviation of the logit of \code{alpha}
+\item \code{mu_logit_slope}: Population mean of the logit of \code{slope}
+\item \code{sigma_logit_slope}: Population standard deviation of the logit of \code{slope}
 \item \code{mu_inf}: Population mean of \code{y_inf}
 \item \code{sigma_inf}: Population standard deviation of \code{y_inf}
 }
@@ -32,9 +34,9 @@ Mixed effect autoregressive model (order 1)
 
 \subsection{Patient-dependent parameters:}{
 \itemize{
-\item \code{alpha}: Autocorrelation parameter
+\item \code{slope}: Autocorrelation parameter
 \item \code{y_inf}: Autoregression mean
-\item \code{b}: Intercept
+\item \code{intercept}: Intercept
 }
 }
 
@@ -49,18 +51,18 @@ See \code{list_parameters(model = "MixedAR1")} for more details.
 
 \section{Priors}{
 
-The priors are passed as a named list with elements \code{sigma}, \code{mu_logit_alpha}, \code{sigma_logit_alpha}, \code{mu_inf}, \code{sigma_inf}
+The priors are passed as a named list with elements \code{sigma}, \code{mu_logit_slope}, \code{sigma_logit_slope}, \code{mu_inf}, \code{sigma_inf}
 specifying priors for the corresponding parameters.
 Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 > 0, such as:
 \itemize{
 \item \verb{sigma / max_score ~ normal+(x1, x2)}.
-\item \code{mu_logit_alpha ~ normal(x1, x2)}.
-\item \verb{sigma_logit_alpha ~ normal+(x1, x2)}.
+\item \code{mu_logit_slope ~ normal(x1, x2)}.
+\item \verb{sigma_logit_slope ~ normal+(x1, x2)}.
 \item \code{mu_inf / max_score ~ normal(x1, x2)}.
 \item \verb{sigma_inf / max_score ~ normal+(x1, x2)}.
 }
 
-NB: For \code{sigma}, \code{sigma_logit_alpha} and \code{sigma_inf}, usually x1=0 to define a half-normal distribution
+NB: For \code{sigma}, \code{sigma_logit_slope} and \code{sigma_inf}, usually x1=0 to define a half-normal distribution
 since the parameter is constrained to be positive.
 }
 
@@ -68,8 +70,8 @@ since the parameter is constrained to be positive.
 
 \itemize{
 \item The default prior for \code{sigma} translates to a width of the predictive distribution to be at most \code{max_score}.
-\item The default priors for \code{mu_logit_alpha} and \code{sigma_logit_alpha} have "reasonable" ranges and
-translate to a prior on \code{alpha} that is approximately uniform.
+\item The default priors for \code{mu_logit_slope} and \code{sigma_logit_slope} have "reasonable" ranges and
+translate to a prior on \code{slope} that is approximately uniform.
 \item The default prior for \code{mu_inf} spans the entire range of the score.
 \item The default prior for \code{sigma_inf} translates to a range in the distribution of \code{y_inf} to be at most \code{max_score}.
 }

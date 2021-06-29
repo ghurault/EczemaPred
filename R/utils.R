@@ -44,13 +44,18 @@ add_prior <- function(data_stan, prior, prefix = "prior_") {
 
 #' Get compiled model
 #'
-#' @param model Stan model name
+#' @param stanmodel Stan model name.
+#' NB: this may differ from the name of the model
 #'
 #' @return Compiled model (object to pass to `rstan::sampling`)
 #' @export
-get_compiled_model <- function(model) {
-  stopifnot(model %in% names(stanmodels))
-  return(stanmodels[[model]])
+get_compiled_model <- function(stanmodel) {
+  stopifnot(is_scalar(stanmodel),
+            is.character(stanmodel))
+  if (!(stanmodel %in% names(stanmodels))) {
+    stop("stanmodel should be one of ", paste(stanmodels, collapse = ", "))
+  }
+  return(stanmodels[[stanmodel]])
 }
 
 # Samples to list ---------------------------------------------------------

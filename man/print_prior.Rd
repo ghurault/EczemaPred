@@ -2,47 +2,39 @@
 % Please edit documentation in R/model_class.R, R/model_prior.R
 \name{print_prior}
 \alias{print_prior}
-\alias{print_prior.EczemaModel}
-\alias{print_prior.BinRW}
-\alias{print_prior.OrderedRW}
-\alias{print_prior.BinMC}
-\alias{print_prior.RW}
-\alias{print_prior.Smoothing}
-\alias{print_prior.AR1}
-\alias{print_prior.MixedAR1}
-\alias{print_prior.MC}
+\alias{print_distribution}
 \title{Print prior distribution}
 \usage{
 print_prior(model, ...)
 
-\method{print_prior}{EczemaModel}(model, ...)
-
-\method{print_prior}{BinRW}(model, digits = 2, ...)
-
-\method{print_prior}{OrderedRW}(model, digits = 2, ...)
-
-\method{print_prior}{BinMC}(model, digits = 2, ...)
-
-\method{print_prior}{RW}(model, digits = 2, ...)
-
-\method{print_prior}{Smoothing}(model, digits = 2, ...)
-
-\method{print_prior}{AR1}(model, digits = 2, ...)
-
-\method{print_prior}{MixedAR1}(model, digits = 2, ...)
-
-\method{print_prior}{MC}(model, digits = 2, ...)
+print_distribution(parameter_name, distribution_name, arguments, digits = 2)
 }
 \arguments{
 \item{model}{Object}
 
 \item{...}{Arguments to pass to other methods}
 
-\item{digits}{Number of significant digits to print}
+\item{parameter_name}{Name of the parameter}
+
+\item{distribution_name}{Name of the distribution}
+
+\item{arguments}{Arguments of the distribution (numeric vector)}
+
+\item{digits}{Number of significant digits to print (cf. \code{\link[base:Round]{base::signif()}})}
 }
 \value{
 None
 }
 \description{
 Used internally in the \code{print.EczemaModel} method.
+}
+\details{
+\code{print_prior} usually calls \code{print_distribution} with the additional argument \code{digits}
+(except for the base method for \code{EczemaModel} object).
+}
+\examples{
+model <- EczemaModel("BinRW", max_score = 10)
+print_prior(model)
+print_prior(model, digits = 5)
+print_distribution("x", "normal", c(0, 1))
 }

@@ -150,7 +150,6 @@ prepare_data_lgtd <- function(train, test = NULL, max_score, discrete) {
 
 }
 
-#' @rdname prepare_standata
 #' @export
 prepare_standata.EczemaModel <- function(model, train, test = NULL, ...) {
   prepare_data_lgtd(train = train,
@@ -158,6 +157,48 @@ prepare_standata.EczemaModel <- function(model, train, test = NULL, ...) {
                     max_score = model$max_score,
                     discrete = model$discrete) %>%
     add_prior(model$prior)
+}
+
+#' @export
+prepare_standata.RW <- function(model, train, test = NULL, ...) {
+  NextMethod() %>%
+    c(list(discrete = as.numeric(model$discrete),
+           alpha_known = 1,
+           alpha_data = array(1),
+           intercept_known = 1,
+           intercept_data = array(0),
+           slope_known = 1,
+           slope_data = array(1))) %>%
+    add_prior(list(tau = numeric(0),
+                   y_inf = numeric(0),
+                   slope = numeric(0)))
+}
+
+#' @export
+prepare_standata.Smoothing <- function(model, train, test = NULL, ...) {
+  NextMethod() %>%
+    c(list(discrete = as.numeric(model$discrete),
+           alpha_known = 0,
+           alpha_data = numeric(0),
+           intercept_known = 1,
+           intercept_data = array(0),
+           slope_known = 1,
+           slope_data = array(1))) %>%
+    add_prior(list(y_inf = numeric(0),
+                   slope = numeric(0)))
+}
+
+#' @export
+prepare_standata.AR1 <- function(model, train, test = NULL, ...) {
+  NextMethod() %>%
+    c(list(discrete = as.numeric(model$discrete),
+           alpha_known = 1,
+           alpha_data = array(1),
+           intercept_known = 0,
+           intercept_data = numeric(0),
+           slope_known = 0,
+           slope_data = numeric(0))) %>%
+    add_prior(list(tau = numeric(0)))
 }
 
 # Prepare data for Markov Chain model -------------------------------------
@@ -184,7 +225,6 @@ stopifnot_MC_dataframe <- function(df, K) {
 
 }
 
-#' @rdname prepare_standata
 #' @export
 prepare_standata.MC <- function(model, train, test = NULL, ...) {
 
