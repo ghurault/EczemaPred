@@ -72,10 +72,18 @@ par <- list(
   extract_parameters(fit, pars = list_parameters("BinMC")[c("Population", "PatientTime")], id = id)
 )
 
+par2 <- list(
+  extract_parameters(fit, id = id),
+  extract_parameters(fit)
+)
+
 test_that("extract_parameters works", {
   for (i in 1:length(par)) {
     expect_s3_class(par[[i]], "data.frame")
     expect_true(all(c("Patient", "Time", "Index", "Mean") %in% colnames(par[[i]])))
+  }
+  for (i in 1:length(par2)) {
+    expect_s3_class(par[[i]], "data.frame")
   }
 })
 

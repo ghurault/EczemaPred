@@ -9,9 +9,12 @@ extract_parameters(fit, pars = NULL, id = NULL, ...)
 \arguments{
 \item{fit}{Stanfit object}
 
-\item{pars}{Named list of parameters to extract. See \code{\link[=list_parameters]{list_parameters()}}.}
+\item{pars}{Named list of parameters to extract. See \code{\link[=list_parameters]{list_parameters()}}.
+If \code{NULL}, it extracts all parameters of the model.}
 
-\item{id}{Dataframe associating Index to (Patient, Time) pairs. See \code{\link[=get_index]{get_index()}}.}
+\item{id}{Dataframe associating Index to (Patient, Time) pairs.
+See \code{\link[=get_index]{get_index()}}.
+\code{id} is not used when \code{pars = NULL} or \code{pars} does not contain an element \code{PatientTime}.}
 
 \item{...}{Arguments to pass to \code{\link[HuraultMisc:summary_statistics]{HuraultMisc::summary_statistics()}}.}
 }
@@ -21,4 +24,13 @@ See details in \code{\link[HuraultMisc:summary_statistics]{HuraultMisc::summary_
 }
 \description{
 Extract parameters posterior summary statistics
+}
+\examples{
+\dontrun{
+model <- EczemaModel("BinRW", max_score = 100)
+id <- get_index2(rpois(10, 20))
+train <- id \%>\% mutate(Score = rbinom(nrow(.), 100, .5))
+fit <- EczemaFit(model, train)
+extract_parameters(fit, pars = list_parameters("BinRW"), id = id)
+}
 }

@@ -138,7 +138,10 @@ list_parameters.MC <- function(model, ...) {
 #'
 #' @param fit Stanfit object
 #' @param pars Named list of parameters to extract. See [list_parameters()].
-#' @param id Dataframe associating Index to (Patient, Time) pairs. See [get_index()].
+#' If `NULL`, it extracts all parameters of the model.
+#' @param id Dataframe associating Index to (Patient, Time) pairs.
+#' See [get_index()].
+#' `id` is not used when `pars = NULL` or `pars` does not contain an element `PatientTime`.
 #' @param ... Arguments to pass to [HuraultMisc::summary_statistics()].
 #'
 #' @return Tibble dataframe containing posterior summary statistics.
@@ -147,39 +150,55 @@ list_parameters.MC <- function(model, ...) {
 #' @export
 #' @import dplyr
 #' @importFrom HuraultMisc is_stanfit
+#'
+#' @examples
+#' \dontrun{
+#' model <- EczemaModel("BinRW", max_score = 100)
+#' id <- get_index2(rpois(10, 20))
+#' train <- id %>% mutate(Score = rbinom(nrow(.), 100, .5))
+#' fit <- EczemaFit(model, train)
+#' extract_parameters(fit, pars = list_parameters("BinRW"), id = id)
+#' }
 extract_parameters <- function(fit, pars = NULL, id = NULL, ...) {
 
-  stopifnot(is_stanfit(fit),
-            is.list(pars),
-            all(is.character(unlist(pars))))
+  stopifnot(is_stanfit(fit))
 
-  par <- HuraultMisc::summary_statistics(fit, pars = unlist(pars), ...)
+  if (is.null(pars)) {
+    par <- HuraultMisc::summary_statistics(fit, ...)
+  } else {
 
-  if ("Patient" %in% names(pars)) {
-    par <- bind_rows(
-      filter(par, !(.data$Variable %in% pars$Patient)),
-      par %>%
-        filter(.data$Variable %in% pars$Patient) %>%
-        mutate(Patient = .data$Index)
-    )
+    stopifnot(is.list(pars),
+              all(is.character(unlist(pars))))
+
+    par <- HuraultMisc::summary_statistics(fit, pars = unlist(pars), ...)
+
+    if ("Patient" %in% names(pars)) {
+      par <- bind_rows(
+        filter(par, !(.data$Variable %in% pars$Patient)),
+        par %>%
+          filter(.data$Variable %in% pars$Patient) %>%
+          mutate(Patient = .data$Index)
+      )
+    }
+
+    if ("PatientTime" %in% names(pars) && !is.null(id)) {
+      stopifnot(is.data.frame(id),
+                all(c("Index", "Patient", "Time") %in% colnames(id)))
+
+      par <- bind_rows(
+        filter(par, !(.data$Variable %in% pars$PatientTime)),
+        par %>%
+          filter(.data$Variable %in% pars$PatientTime) %>%
+          mutate(Patient = NULL) %>%
+          left_join(id, by = "Index")
+      )
+    }
+
+    par <- par %>%
+      # mutate(Variable = factor(Variable, levels = unlist(pars))) %>%
+      arrange(.data$Variable, .data$Index)
+
   }
-
-  if ("PatientTime" %in% names(pars) && !is.null(id)) {
-    stopifnot(is.data.frame(id),
-              all(c("Index", "Patient", "Time") %in% colnames(id)))
-
-    par <- bind_rows(
-      filter(par, !(.data$Variable %in% pars$PatientTime)),
-      par %>%
-        filter(.data$Variable %in% pars$PatientTime) %>%
-        mutate(Patient = NULL) %>%
-        left_join(id, by = "Index")
-    )
-  }
-
-  par <- par %>%
-    # mutate(Variable = factor(Variable, levels = unlist(pars))) %>%
-    arrange(.data$Variable, .data$Index)
 
   return(par)
 }
