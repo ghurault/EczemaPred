@@ -201,7 +201,7 @@ add_uniform_pred <- function(test, max_score, discrete = TRUE, include_samples =
             is_scalar(include_samples),
             is.logical(include_samples))
   stopifnot_valid_score(test[["Score"]], max_score = max_score, discrete = discrete)
-  if (include_samples) {
+  if (include_samples && !is.null(n_samples)) {
     stopifnot(is_scalar_wholenumber(n_samples),
               n_samples > 0)
   }
