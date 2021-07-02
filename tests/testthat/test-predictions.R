@@ -69,7 +69,7 @@ test_that("add_uniform_pred returns samples when prompted", {
   for (x in list(perf3, perf4)) {
     expect_true(all(c("Samples") %in% colnames(x)))
     expect_true(is.list(x[["Samples"]]))
-    expect_true(all(sapply(x[["Samples"]], length) == 50))
+    expect_true(all(vapply(x[["Samples"]], length, numeric(1)) == 50))
   }
 
 })
@@ -106,7 +106,7 @@ test_that("add_historical_pred returns samples when prompted", {
     expect_true(all(c("Samples") %in% colnames(perf)))
     expect_true(is.list(perf[["Samples"]]))
     if (!is.null(ns)) {
-      expect_true(all(sapply(perf[["Samples"]], length) == ns))
+      expect_true(all(vapply(perf[["Samples"]], length, numeric(1)) == ns))
     }
     expect_true(all(perf[["Samples"]][[1]] %in% l$Training[["Score"]]))
   }

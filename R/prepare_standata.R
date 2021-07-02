@@ -58,7 +58,7 @@ stopifnot_valid_score <- function(x, max_score = NA, discrete) {
     if (discrete) {
       stopifnot(all(x %in% c(0:max_score)))
     } else {
-      stopifnot(all(sapply(x, function(x) {dplyr::between(x, 0, max_score)})))
+      stopifnot(all(vapply(x, function(x) {dplyr::between(x, 0, max_score)}, logical(1))))
     }
   }
 

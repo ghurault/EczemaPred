@@ -24,8 +24,9 @@ plot_latent_OrderedRW <- function(fit, id, patient_id) {
 
   # Extract mean latent score and cutpoints
   id1 <- filter(id, .data$Patient == patient_id)
-  df <- mutate(id1, Mean = rstan::extract(fit, pars = paste0("y_lat[", id1[["Index"]], "]")) %>%
-                 sapply(mean))
+  df <- id1 %>%
+    mutate(Mean = rstan::extract(fit, pars = paste0("y_lat[", id1[["Index"]], "]")) %>%
+             vapply(mean, numeric(1)))
   ct <- rstan::extract(fit, pars = "ct")[[1]] %>%
     apply(2, mean)
   sigma_meas <- rstan::extract(fit, pars = "sigma_meas")[[1]] %>%

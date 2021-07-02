@@ -83,8 +83,8 @@ test_that("EczemaFit returns a stanfit object", {
 test_that("estimate of population parameters from EczemaFit is accurate", {
 
   post <- rstan::extract(fit, pars = param$Population)
-  post_mean <- sapply(post, mean)
-  post_sd <- sapply(post, sd)
+  post_mean <- vapply(post, mean, numeric(1))
+  post_sd <- vapply(post, sd, numeric(1))
   truth <- c(sigma, mu_logit_slope, sigma_logit_slope, mu_inf, sigma_inf)
 
   expect_true(all(abs(post_mean - truth) / post_sd < 2.5))

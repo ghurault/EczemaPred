@@ -135,7 +135,9 @@ get_fc_training_iteration <- function(it_test) {
 add_discrete_uniform_pred <- function(test, max_score, include_samples, n_samples) {
 
   p0 <- rep(1 / (max_score + 1), max_score + 1)
-  RPS_dict <- sapply(0:max_score, function(x) {HuraultMisc::compute_RPS(p0, x + 1)})
+  RPS_dict <- vapply(0:max_score,
+                     function(x) {HuraultMisc::compute_RPS(p0, x + 1)},
+                     numeric(1))
 
   out <- test %>%
     mutate(lpd = -log(max_score + 1),
@@ -274,7 +276,9 @@ add_historical_pred <- function(test,
     }
     p0 <- factor(p0, levels = 0:max_score)
     p0 <- as.numeric(table(p0) / length(p0))
-    RPS_dict <- sapply(0:max_score, function(x) {HuraultMisc::compute_RPS(p0, x + 1)})
+    RPS_dict <- vapply(0:max_score,
+                       function(x) {HuraultMisc::compute_RPS(p0, x + 1)},
+                       numeric(1))
 
     out <- test %>%
       mutate(lpd = log(p0[.data$Score + 1]),

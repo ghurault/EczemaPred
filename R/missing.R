@@ -17,7 +17,7 @@
 generate_MC2_sequence <- function(N, p01 = .5, p10 = .5, t0 = NULL) {
 
   stopifnot(is.numeric(c(N, p01, p10)),
-            all(sapply(list(N, p01, p10), function(x) {length(x) == 1})),
+            all(vapply(list(N, p01, p10), function(x) {length(x) == 1}, logical(1))),
             N == round(N),
             p01 >= 0 & p01 <= 1,
             p10 >= 0 & p10 <= 1)

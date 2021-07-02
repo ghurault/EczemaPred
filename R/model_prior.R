@@ -52,9 +52,9 @@ validate_prior.BinRW <- function(model, ...) {
   stopifnot(
     is.list(prior),
     all(c("sigma", "mu_logit_y0", "sigma_logit_y0") %in% names(prior)),
-    all(sapply(prior, is.numeric)),
-    all(sapply(prior, function(x) {length(x) == 2})),
-    all(sapply(prior, function(x) {x[2] > 0}))
+    all(vapply(prior, is.numeric, logical(1))),
+    all(vapply(prior, function(x) {length(x) == 2}, logical(1))),
+    all(vapply(prior, function(x) {x[2] > 0}, logical(1)))
   )
 }
 
@@ -118,9 +118,9 @@ validate_prior.BinMC <- function(model, ...) {
   stopifnot(
     is.list(prior),
     all(c("sigma", "mu_logit_p10", "sigma_logit_p10", "logit_tss1_0") %in% names(prior)),
-    all(sapply(prior, is.numeric)),
-    all(sapply(prior, function(x) {length(x) == 2})),
-    all(sapply(prior, function(x) {x[2] > 0}))
+    all(vapply(prior, is.numeric, logical(1))),
+    all(vapply(prior, function(x) {length(x) == 2}, logical(1))),
+    all(vapply(prior, function(x) {x[2] > 0}, logical(1)))
   )
 }
 
@@ -174,8 +174,8 @@ validate_prior.Smoothing <- function(model, ...) {
   stopifnot(
     is.list(prior),
     all(c("sigma", "tau") %in% names(prior)),
-    all(sapply(prior, is.numeric)),
-    all(sapply(prior, function(x) {length(x) == 2})),
+    all(vapply(prior, is.numeric, logical(1))),
+    all(vapply(prior, function(x) {length(x) == 2}, logical(1))),
     prior$sigma[2] > 0,
     prior$tau[2] > 0
   )
@@ -203,8 +203,8 @@ validate_prior.AR1 <- function(model, ...) {
   stopifnot(
     is.list(prior),
     all(c("sigma", "slope", "y_inf") %in% names(prior)),
-    all(sapply(prior, is.numeric)),
-    all(sapply(prior, function(x) {length(x) == 2})),
+    all(vapply(prior, is.numeric, logical(1))),
+    all(vapply(prior, function(x) {length(x) == 2}, logical(1))),
     prior$sigma[2] > 0,
     prior$y_inf[2] > 0,
     all(prior$slope > 0)
@@ -236,9 +236,9 @@ validate_prior.MixedAR1 <- function(model, ...) {
     is.list(prior),
     all(c("sigma", "mu_logit_slope", "sigma_logit_slope",
           "mu_inf", "sigma_inf") %in% names(prior)),
-    all(sapply(prior, is.numeric)),
-    all(sapply(prior, function(x) {length(x) == 2})),
-    all(sapply(prior, function(x) {x[2] > 0}))
+    all(vapply(prior, is.numeric, logical(1))),
+    all(vapply(prior, function(x) {length(x) == 2}, logical(1))),
+    all(vapply(prior, function(x) {x[2] > 0}, logical(1)))
   )
 }
 
