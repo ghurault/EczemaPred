@@ -47,12 +47,18 @@ transformed parameters {
   real slope[N_pt];
   real y_inf[N_pt];
   real intercept[N_pt];
+  real linpred[N]; // Linear predictor
 #include /include/tparameters_missing.stan // Concatenate missing and observed values in y
 
   for (k in 1:N_pt) {
     slope[k] = inv_logit(mu_logit_slope + sigma_logit_slope * eta_slope[k]);
     y_inf[k] = mu_inf + sigma_inf * eta_inf[k];
     intercept[k] = y_inf[k] * (1 - slope[k]);
+    linpred[id_ts[k, 1]] = y[id_ts[k, 1]]; // Not used
+    for (t in (id_ts[k, 1] + 1):id_ts[k, 2]){
+      linpred[t] = slope[k] * y[t - 1] + intercept[k];
+    }
+
   }
 
 }
@@ -69,7 +75,7 @@ model {
 
   for (k in 1:N_pt) {
     // Naive random walk (not truncated); vectorised for efficiency
-    to_vector(y[(id_ts[k, 1] + 1):id_ts[k, 2]]) ~ normal(slope[k] * to_vector(y[id_ts[k, 1]:(id_ts[k, 2] - 1)]) + intercept[k], sigma);
+    to_vector(y[(id_ts[k, 1] + 1):id_ts[k, 2]]) ~ normal(to_vector(linpred[(id_ts[k, 1] + 1):id_ts[k, 2]]), sigma);
   }
 
 }
@@ -82,7 +88,7 @@ generated quantities {
   for (k in 1:N_pt) {
     y_rep[id_ts[k, 1]] = y[id_ts[k, 1]];
     for (t in id_ts[k, 1]:(id_ts[k, 2] - 1)) {
-      y_rep[t + 1] = truncated_normal_rng(M, slope[k] * y[t] + intercept[k], sigma);
+      y_rep[t + 1] = truncated_normal_rng(M, linpred[t + 1], sigma);
     }
   }
   y_pred = y_rep[idx_test];
@@ -92,7 +98,7 @@ generated quantities {
       // cf. autoregressive model doesn't work for t=1, assume uniform distribution
       lpd[i] = -log(M);
     } else {
-      lpd[i] = truncated_normal_lpdf(y_test[i] | M, slope[k_test[i]] * y[idx_test[i] - 1] + intercept[k_test[i]], sigma);
+      lpd[i] = truncated_normal_lpdf(y_test[i] | M, linpred[idx_test[i]], sigma);
     }
   }
 
