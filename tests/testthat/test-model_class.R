@@ -2,7 +2,7 @@
 main_models <- c("BinRW", "OrderedRW", "BinMC")
 ref_models <- c("RW", "Smoothing", "AR1", "MixedAR1")
 
-for (model_name in c(main_models, ref_models)) {
+for (model_name in c(main_models, ref_models, "MC")) {
 
   ms <- c(10, 100)
   ks <- c(5, 10)
