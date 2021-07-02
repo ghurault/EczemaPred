@@ -1,8 +1,7 @@
-// "Naive" AR1 model for continuous values in [0, M]
-// The model is naive as it uses a non-truncated distribution
-// Patient-dependent autocorrelation and intercept
-// However, predictions are truncated for proper evaluation
-// This inconsistency could cause error in prior predictive and faka data checks
+// Mixed AR1 model for values in [0, M], with Patient-dependent autocorrelation and intercept.
+// The model is naive as it uses a non-truncated distribution.
+// Predictions can be continuous or discretised (rounded) if the outcome is continous or discrete, respectively, for proper evaluation.
+// This inconsistency could cause error in prior predictive and faka data checks.
 
 functions {
 #include /include/bin_search.stan
@@ -22,6 +21,7 @@ data {
   real<lower = 0, upper = M> y_obs[N_obs]; // Observation (should be discrete when discrete = 1 but constraint not enforced)
   real<lower = 0, upper = M> y_test[N_test]; // True value (rounded for discrete=1)
 
+  // Priors
   real prior_sigma[2];
   real prior_mu_logit_slope[2];
   real prior_sigma_logit_slope[2];
@@ -91,7 +91,7 @@ model {
   sigma_inf / M ~ normal(prior_sigma_inf[1], prior_sigma_inf[2]);
 
   for (k in 1:N_pt) {
-    // Naive random walk (not truncated or discretised); vectorised for efficiency
+    // NB: Likelihood not truncated (or discretised); vectorised for efficiency
     to_vector(y[(id_ts[k, 1] + 1):id_ts[k, 2]]) ~ normal(to_vector(linpred[(id_ts[k, 1] + 1):id_ts[k, 2]]), sigma);
   }
 
@@ -105,6 +105,9 @@ generated quantities {
 
   for (k in 1:N_pt) {
     y_rep[id_ts[k, 1]] = y[id_ts[k, 1]];
+    if (discrete) {
+      y_rep[id_ts[k, 1]] = round(y_rep[id_ts[k, 1]]);
+    }
     for (t in id_ts[k, 1]:(id_ts[k, 2] - 1)) {
       if (discrete) {
         y_rep[t + 1] = discrete_normal_rng(M, linpred[t + 1], sigma);
