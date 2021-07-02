@@ -332,7 +332,8 @@ NULL
 
 #' Mixed effect autoregressive model (order 1)
 #'
-#' @param max_score Maximum value that the score can take
+#' @param max_score Maximum value that the score can take.
+#' Note that even if `discrete=FALSE`, `max_score` must be an integer.
 #' @param discrete Whether to use a discrete normal distribution.
 #' This will be used to check whether the data is discrete or not, and for rounding predictions (cf. testing).
 #' @param prior Named list of the model's priors. If `NULL`, uses the default prior for the model (see [default_prior()]).

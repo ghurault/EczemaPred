@@ -55,8 +55,10 @@ for (model_name in c(main_models, ref_models, "MC")) {
     test_that(paste0("Incorrect max_score when constructing ", model_name, "throws an error"), {
       wrong_maxscore <- list(NULL,
                              0,
-                             c(10, 10),
-                             10.1)
+                             c(10, 10))
+      if (model_name %in% c(main_models, "MixedAR1")) {
+        wrong_maxscore <- c(wrong_maxscore, list(10.1))
+      }
       for (wms in wrong_maxscore) {
         expect_error(EczemaModel(model_name, max_score = wms))
       }

@@ -109,13 +109,17 @@ stopifnot_lgtd_test <- function(test, train, max_score, discrete) {
 #' @param discrete Whether to use a discrete normal distribution (only relevant for testing)
 #'
 #' @export
-#' @importFrom HuraultMisc is_scalar_wholenumber
+#' @importFrom HuraultMisc is_scalar_wholenumber is_wholenumber
 prepare_data_lgtd <- function(train, test = NULL, max_score, discrete) {
 
-  stopifnot(is_scalar_wholenumber(max_score),
+  stopifnot(is_scalar(max_score),
+            is.numeric(max_score),
             max_score > 0,
             is_scalar(discrete),
             is.logical(discrete))
+  if (discrete) {
+    stopifnot(is_wholenumber(max_score))
+  }
   stopifnot_lgtd_train(train, max_score, discrete)
 
   data_stan <- list(

@@ -51,10 +51,16 @@ EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC", "RW", "Smo
     if (is.null(max_score)) {
       stop("max_score must be supplied for ", model_name)
     } else {
-      # NB: max_score must be a wholenumber even if discrete=FALSE
-      stopifnot(is_scalar_wholenumber(max_score),
-                max_score > 0,
-                max_score > 1 || model_name != "OrderedRW")
+      stopifnot(is_scalar(max_score),
+                is.numeric(max_score),
+                max_score > 0)
+      if (model_spec$discrete || model_name == "MixedAR1") {
+        # max_score as a real not implemented for MixedAR1
+        stopifnot(is_wholenumber(max_score))
+      }
+      if (model_name == "OrderedRW") {
+        stopifnot(max_score > 1)
+      }
       model_spec$max_score <- max_score
     }
   }

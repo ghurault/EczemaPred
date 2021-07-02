@@ -4,7 +4,8 @@
 \alias{MixedAR1}
 \title{Mixed effect autoregressive model (order 1)}
 \arguments{
-\item{max_score}{Maximum value that the score can take}
+\item{max_score}{Maximum value that the score can take.
+Note that even if \code{discrete=FALSE}, \code{max_score} must be an integer.}
 
 \item{discrete}{Whether to use a discrete normal distribution.
 This will be used to check whether the data is discrete or not, and for rounding predictions (cf. testing).}
