@@ -6,6 +6,9 @@
 \arguments{
 \item{max_score}{Maximum value that the score can take}
 
+\item{discrete}{Whether to use a discrete normal distribution.
+This will be used to check whether the data is discrete or not, and for rounding predictions (cf. testing).}
+
 \item{prior}{Named list of the model's priors. If \code{NULL}, uses the default prior for the model (see \code{\link[=default_prior]{default_prior()}}).}
 }
 \description{
@@ -15,7 +18,7 @@ Mixed effect autoregressive model (order 1)
 \itemize{
 \item Details of the model are available in the \href{#}{paper}.
 The model takes as input a continuous score defined between 0 and \code{max_score}.
-\item The model is naive as the likelihood distribution is not truncated.
+\item The model is naive as the likelihood is non-truncated and not discretised (when \code{discrete = TRUE}).
 \item Unlike the \code{AR1} model, the discretisation of predictions is not implemented
 \item For more details see the \href{https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html}{vignette}.
 }

@@ -41,8 +41,6 @@ EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC", "RW", "Smo
 
   if (model_name %in% c("BinRW", "OrderedRW", "BinMC", "MC")) {
     discrete <- TRUE
-  } else if (model_name %in% c("MixedAR1")) {
-    discrete <- FALSE
   } else {
     stopifnot(is_scalar(discrete),
               is.logical(discrete))
