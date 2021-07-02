@@ -207,6 +207,7 @@ prepare_standata.MixedAR1 <- function(model, train, test = NULL, ...) {
     c(list(discrete = as.numeric(model$discrete)))
 }
 
+#' @export
 prepare_standata.OrderedRW <- function(model, train, test = NULL, ...) {
   # By default, logistic distribution with unknown delta
   NextMethod() %>%
