@@ -157,10 +157,10 @@ test_that("EczemaFit returns a stanfit object", {
 
 test_that("estimates from EczemaFit are accurate", {
   p_smp <- rstan::extract(fit, pars = c("p[1,2]", "p[2,1]"))
-  p_mean <- sapply(p_smp, mean)
-  p_se <- sapply(p_smp, function(x) {sd(x) / sqrt(x)})
+  p_mean <- vapply(p_smp, mean, numeric(1))
+  p_sd <- vapply(p_smp, sd, numeric(1))
 
-  expect_true(all(abs(p_mean - c(p01, p10)) < 2.5 * p_se))
+  expect_true(all(abs(p_mean - c(p01, p10)) < 2 * p_sd))
 })
 
 # Test plot_transition_MC -------------------------------------------------
