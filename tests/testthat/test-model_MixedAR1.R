@@ -46,26 +46,14 @@ y_inf <- rnorm(N_patient, mu_inf, sigma_inf)
 
 intercept <- y_inf * (1 - slope)
 
-df <- lapply(1:N_patient,
-             function(i) {
-
-               err <- rnorm(t_max[i] - 1, 0, sigma)
-               y <- rep(NA, t_max[i])
-               y[1] <- y0[i]
-               for (t in 2:t_max[i]) {
-                 y[t] = slope[i] * y[t - 1] + intercept[i] + err[t - 1]
-               }
-
-               out <- data.frame(Patient = i,
-                                 Time = 1:t_max[i],
-                                 Score = y) %>%
-                 mutate(OutsideRange = (Score < 0 | Score > max_score),
-                        OutsideRange = cumsum(OutsideRange)) %>%
-                 filter(OutsideRange == 0)
-
-               return(out)
-             }) %>%
-  bind_rows()
+df <- generate_fakedata(N_pt = N_patient,
+                        t_max = t_max,
+                        max_score = max_score,
+                        params = list(alpha = 1,
+                                      intercept = intercept,
+                                      slope = slope,
+                                      y0 = y0,
+                                      sigma = sigma))
 
 fit <- EczemaFit(model, train = df, chains = 1, refresh = 0)
 

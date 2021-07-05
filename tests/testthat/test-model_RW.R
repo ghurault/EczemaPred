@@ -26,18 +26,20 @@ test_that("RW constructor catches errors in prior", {
 
 # Test fitting -------------------------------------------------------------
 
+df <- generate_fakedata(N_pt = N_patient,
+                        t_max = t_max,
+                        max_score = max_score,
+                        params = list(alpha = 1,
+                                      intercept = rep(0, N_patient),
+                                      slope = rep(1, N_patient),
+                                      y0 = y0,
+                                      sigma = sigma))
+
+# Add missing values
 df <- lapply(1:N_patient,
              function(i) {
-               # Generate random walk
-               # Truncate time-series if outside range
-               # Generate missing values
-
-               data.frame(Patient = i,
-                          Time = 1:t_max[i],
-                          Score = y0[i] + cumsum(c(0, rnorm(t_max[i] - 1, 0, sigma)))) %>%
-                 mutate(OutsideRange = (Score < 0 | Score > max_score),
-                        OutsideRange = cumsum(OutsideRange)) %>%
-                 filter(OutsideRange == 0) %>%
+               df %>%
+                 filter(Patient == i) %>%
                  mutate(Missing = generate_missing(n())) %>%
                  filter(!Missing)
              }) %>%
