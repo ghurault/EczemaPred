@@ -29,13 +29,6 @@ test_that("MixedAR1 constructor catches errors in prior", {
   }
 })
 
-# Test sample_prior ---------------------------------------------
-
-test_that("sample_prior returns a stanfit object", {
-  fit0 <- sample_prior(model, chains = 1, iter = 50, refresh = 0)
-  expect_true(is_stanfit(fit0))
-})
-
 # Test fitting ------------------------------------------------------
 
 # Generate fake data manually for speed

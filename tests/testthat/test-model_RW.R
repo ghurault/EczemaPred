@@ -58,10 +58,3 @@ test_that("estimate of sigma from EczemaFit is accurate", {
   expect_lt(abs(sigma - sigma_mean), 2.5 * sigma_sd)
 
 })
-
-# Test sample_prior ----------------------------------------------------
-
-test_that("sample_prior returns a stanfit object", {
-  fit_prior <- sample_prior(model, chains = 1, iter = 50, refresh = 0)
-  expect_true(is_stanfit(fit_prior))
-})
