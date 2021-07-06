@@ -4,7 +4,12 @@ options(warn = -1)
 N_patient <- 10
 t_max <- rpois(N_patient, 25)
 max_score <- 100
-param <- c("sigma", "alpha", "y_inf")
+slope <- 0.8
+intercept <- 2
+y_inf <- intercept / (1 - slope)
+sigma <- 2
+y0 <- round(rbeta(N_patient, 5, 5) * max_score)
+param <- c("sigma", "intercept", "slope")
 
 model <- EczemaModel("AR1", max_score = max_score)
 
@@ -26,15 +31,9 @@ test_that("AR1 constructor catches errors in prior", {
   }
 })
 
-# Test sample_prior ---------------------------------------------
+# Test extract_simulations ------------------------------------------------
 
 fit0 <- sample_prior(model, N_patient = N_patient, t_max = t_max, chains = 1, refresh = 0)
-
-test_that("sample_prior returns a stanfit object", {
-  expect_true(is_stanfit(fit0))
-})
-
-# Test extract_simulations ------------------------------------------------
 
 l <- extract_simulations(fit = fit0,
                          id = get_index2(t_max),
@@ -58,19 +57,25 @@ test_that("extract_simulations catches errors in inputs", {
 
 # Test fitting ------------------------------------------------------
 
-fit <- EczemaFit(model, train = l$Data, test = NULL, chains = 1, refresh = 0)
+test_that("estimates of AR1 by EczemaFit are accurate", {
+  skip_on_cran()
+  # skip_on_ci()
 
-test_that("EczemaFit returns a stanfit object", {
-  expect_true(is_stanfit(fit))
-})
+  df <- generate_fakedata(N_pt = N_patient,
+                          t_max = t_max,
+                          max_score = max_score,
+                          params = list(alpha = 1,
+                                        intercept = rep(intercept, N_patient),
+                                        slope = rep(slope, N_patient),
+                                        y0 = y0,
+                                        sigma = sigma))
 
-test_that("estimates from EczemaFit are accurate", {
-  skip_on_ci()
+  fit <- EczemaFit(model, train = df, test = NULL, chains = 1, refresh = 0)
 
-  par <- HuraultMisc::summary_statistics(fit, pars = param) %>%
-    left_join(l$Parameters, by = c("Variable" = "Parameter", "Index")) %>%
-    rename(True = Value) %>%
-    mutate(Coverage90 = (True > `5%` & True < `95%`),
-           NormError = abs(Mean - True) / sd)
-  expect_lt(max(par[["NormError"]], na.rm = TRUE), 3.0)
+  post <- rstan::extract(fit, pars = c("sigma", "slope", "intercept"))
+  post_mean <- vapply(post, mean, numeric(1))
+  post_sd <- vapply(post, sd, numeric(1))
+
+  expect_true(all(abs(c(sigma, slope, intercept) - post_mean) / post_sd < 2.5))
+
 })
