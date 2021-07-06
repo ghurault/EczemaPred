@@ -73,7 +73,7 @@ get_index2 <- function(t_max) {
 #' - Data: dataframe with columns Patient, Time, Index, and Score corresponding to simulations
 #' - Parameters: dataframe containing parameters used to generate the data (cf. [HuraultMisc::extract_draws()])
 #'
-#' @details This function is not desgined to use with the Markov Chain model (MC).
+#' @details This function is not designed to use with the Markov Chain model (MC).
 #'
 #' @import dplyr
 #' @export

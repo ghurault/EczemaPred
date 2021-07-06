@@ -21,7 +21,7 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 
 In this example, I will show how to use the Binomial random walk model (BinRW), notably how to generate data from the prior predictive distribution, how to fit the model to data and how to analyse the results.
 
-This vignette could also be used as a demonstration for the other discrete longitudinals models, i.e. the Binomial Markov Chain (BinMC) and the ordered logistic random walk model (OrderedRW), which have a similar architecture.
+This vignette could also be used as a demonstration for the other discrete longitudinal models, i.e. the Binomial Markov Chain (BinMC) and the ordered logistic random walk model (OrderedRW), which have a similar architecture.
 
 ```{r setup, warning=FALSE}
 library(EczemaPred)
