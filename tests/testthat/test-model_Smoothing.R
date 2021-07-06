@@ -1,22 +1,6 @@
 set.seed(2021)
 options(warn = -1)
 
-# Test incorrect priors ---------------------------------------------------
-
-wrong_priors <- list(
-  1,
-  list(sigma = c("0", "1"), tau = c(0, 1)),
-  list(sigma = 1, tau = c(0, 1)),
-  list(sigma = c(0, -1), tau = c(0, 1)),
-  list(sigma = c(0, 1), tau = c(0, -1))
-)
-
-test_that("Smoothing constructor catches errors in prior", {
-  for (i in 1:length(wrong_priors)) {
-    expect_error(EczemaModel("Smoothing", max_score = 100, prior = wrong_priors[[i]]))
-  }
-})
-
 # Test fitting ------------------------------------------------------
 
 test_that("estimates of Smoothing parameters by EczemaFit are accurate", {

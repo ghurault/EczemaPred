@@ -1,29 +1,6 @@
 set.seed(2021)
 options(warn = -1)
 
-# Test incorrect priors ---------------------------------------------------
-
-max_score <- 100
-
-dprior <- EczemaModel("MixedAR1", max_score = max_score)$prior
-
-wrong_priors <- list(
-  1,
-  replace(dprior, which(names(dprior) == "sigma"), as.character(dprior$sigma)),
-  replace(dprior, which(names(dprior) == "sigma"), 1),
-  replace(dprior, which(names(dprior) == "sigma"), c(0, -1)),
-  replace(dprior, which(names(dprior) == "mu_logit_slope"), c(0, -1)),
-  replace(dprior, which(names(dprior) == "sigma_logit_slope"), c(0, -1)),
-  replace(dprior, which(names(dprior) == "mu_inf"), c(0, -1)),
-  replace(dprior, which(names(dprior) == "sigma_inf"), c(0, -1))
-)
-
-test_that("MixedAR1 constructor catches errors in prior", {
-  for (i in 1:length(wrong_priors)) {
-    expect_error(EczemaModel("MixedAR1", max_score = max_score, prior = wrong_priors[[i]]))
-  }
-})
-
 # Test fitting ------------------------------------------------------
 
 test_that("estimates of MixedAR1 by EczemaFit are accurate", {

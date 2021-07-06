@@ -9,21 +9,6 @@ sigma <- 2
 
 model <- EczemaModel("RW", max_score = max_score, discrete = FALSE)
 
-# Test incorrect priors ---------------------------------------------------
-
-wrong_priors <- list(
-  1,
-  list(sigma = c(0, 1), sigma = c(0, 1)),
-  list(sigma = 1),
-  list(sigma = c("0", "1"))
-)
-
-test_that("RW constructor catches errors in prior", {
-  for (i in 1:length(wrong_priors)) {
-    expect_error(EczemaModel("RW", max_score = max_score, discrete = FALSE, prior = wrong_priors[[i]]))
-  }
-})
-
 # Test fitting -------------------------------------------------------------
 
 df <- generate_fakedata(N_pt = N_patient,

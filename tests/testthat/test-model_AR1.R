@@ -13,24 +13,6 @@ param <- c("sigma", "intercept", "slope")
 
 model <- EczemaModel("AR1", max_score = max_score)
 
-# Test incorrect priors ---------------------------------------------------
-
-wrong_priors <- list(
-  1,
-  list(sigma = c(0, 1), sigma = c(0, 1)),
-  list(sigma = c("0", "0.1")),
-  list(sigma = 0.1),
-  list(sigma = c(0, -0.1)),
-  list(slope = -c(1, 1)),
-  list(y_inf = c(0.5, -0.25))
-)
-
-test_that("AR1 constructor catches errors in prior", {
-  for (i in 1:length(wrong_priors)) {
-    expect_error(EczemaModel("AR1", max_score = max_score, prior = wrong_priors[[i]]))
-  }
-})
-
 # Test extract_simulations ------------------------------------------------
 
 fit0 <- sample_prior(model, N_patient = N_patient, t_max = t_max, chains = 1, refresh = 0)

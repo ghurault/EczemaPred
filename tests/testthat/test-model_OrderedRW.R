@@ -8,27 +8,6 @@ max_score <- 5
 
 model <- EczemaModel("OrderedRW", max_score = max_score)
 
-# Test incorrect priors ---------------------------------------------------
-
-dprior <- model$prior
-
-wrong_priors <- list(
-  1:4,
-  list(delta = as.character(dprior$delta)),
-  list(delta = rep(-1, max_score - 1)),
-  list(sigma_meas = 1),
-  list(sigma_meas = c(0, -1)),
-  list(sigma_lat = c(0, -1)),
-  list(mu_y0 = c(0, -1)),
-  list(mu_y0 = c(0, -1))
-)
-
-test_that("OrderedRW constructor catches errors in prior", {
-  for (i in 1:length(wrong_priors)) {
-    expect_error(EczemaModel("OrderedRW", max_score = max_score, prior = wrong_priors[[i]]))
-  }
-})
-
 # Test sample_prior ---------------------------------------------
 
 fit0 <- sample_prior(model, N_patient = N_patient, t_max = t_max, chains = 1, refresh = 0)
