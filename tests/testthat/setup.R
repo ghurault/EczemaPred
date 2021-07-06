@@ -37,7 +37,14 @@ if (FALSE) {
     bind_rows()
 }
 
-RW_df <- RW_df %>% mutate(Iteration = get_fc_iteration(Time, 2))
-RW_split <- split_fc_dataset(RW_df, 25)
+# Split so that test parameters are like patient parameters
+tmp <- RW_df %>%
+  group_by(Patient) %>%
+  mutate(Label = case_when(Time == max(Time) ~ "Testing",
+                           TRUE ~ "Training")) %>%
+  ungroup()
+RW_split <- list(Training = tmp %>% filter(Label == "Training") %>% select(-Label),
+                 Testing = tmp %>% filter(Label == "Testing") %>% select(-Label))
+rm(tmp)
 
 RW_fit <- EczemaFit(RW_model, train = RW_split$Training, test = RW_split$Testing, chains = 1, iter = 1000, refresh = 0)
