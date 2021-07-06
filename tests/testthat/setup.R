@@ -48,3 +48,33 @@ RW_split <- list(Training = tmp %>% filter(Label == "Training") %>% select(-Labe
 rm(tmp)
 
 RW_fit <- EczemaFit(RW_model, train = RW_split$Training, test = RW_split$Testing, chains = 1, iter = 1000, refresh = 0)
+
+# MC ----------------------------------------------------------------------
+
+MC_setup <- list(
+  N = 400,
+  K = 2,
+  prob_mis = 0.2
+)
+
+MC_params <- list(
+  p01 = 0.2,
+  p10 = 0.4
+)
+
+MC_df <- data.frame(t0 = 1:MC_setup$N,
+                    y0 = generate_MC2_sequence(N = MC_setup$N, p01 = MC_params$p01, p10 = MC_params$p10) + 1) %>%
+  filter(!generate_missing(MC_setup$N, type = "random", p_mis = MC_setup$prob_mis)) %>%
+  mutate(y1 = lead(y0),
+         dt = lead(t0) - t0)
+
+tmp <- MC_df %>%
+  mutate(Label = case_when(t0 <= 0.9 * MC_setup$N ~ "Training",
+                           TRUE ~ "Testing")) %>%
+  drop_na()
+MC_split <- list(Training = tmp %>% filter(Label == "Training") %>% select(-Label),
+                 Testing = tmp %>% filter(Label == "Testing") %>% select(-Label))
+rm(tmp)
+
+MC_model <- EczemaModel("MC", K = MC_setup$K)
+MC_fit <- EczemaFit(MC_model, train = MC_split$Training, test = MC_split$Testing, chains = 1, refresh = 0)

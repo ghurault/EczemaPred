@@ -130,42 +130,23 @@ test_that("estimates from sample_prior_MC are accurate", {
   expect_true(all(abs(c(p_mean) - 1 / K1) < c(p_se) * 2.5)) # cf. default prior is symmetric
 })
 
-# Test fit_MC -------------------------------------------------------------
-
-K2 <- 2
-N <- 300
-p01 <- 0.2
-p10 <- 0.4
-prob_mis <- 0.2
-df2 <- data.frame(t0 = 1:N,
-                  y0 = generate_MC2_sequence(N = N, p01 = p01, p10 = p10) + 1) %>%
-  filter(!generate_missing(N, type = "random", p_mis = prob_mis)) %>%
-  mutate(y1 = lead(y0),
-         dt = lead(t0) - t0,
-         Label = case_when(t0 <= 0.9 * N ~ "Training",
-                           TRUE ~ "Testing")) %>%
-  drop_na()
-train2 <- df2 %>% filter(Label == "Training")
-test2 <- df2 %>% filter(Label == "Testing")
-
-model <- EczemaModel("MC", K = K2)
-fit <- EczemaFit(model, train = train2, test = test2, chains = 1, refresh = 0)
+# Test fitting -------------------------------------------------------------
 
 test_that("EczemaFit returns a stanfit object", {
-  expect_true(is_stanfit(fit))
+  expect_true(is_stanfit(MC_fit))
 })
 
 test_that("estimates from EczemaFit are accurate", {
-  p_smp <- rstan::extract(fit, pars = c("p[1,2]", "p[2,1]"))
+  p_smp <- rstan::extract(MC_fit, pars = c("p[1,2]", "p[2,1]"))
   p_mean <- vapply(p_smp, mean, numeric(1))
   p_sd <- vapply(p_smp, sd, numeric(1))
 
-  expect_true(all(abs(p_mean - c(p01, p10)) < 2 * p_sd))
+  expect_true(all(abs(p_mean - unlist(MC_params[c("p01", "p10")])) < 2 * p_sd))
 })
 
 # Test plot_transition_MC -------------------------------------------------
 
 test_that("plot_transition_MC returns a ggplot object", {
   expect_s3_class(plot_transition_MC(fit_prior), "ggplot")
-  expect_s3_class(plot_transition_MC(fit), "ggplot")
+  expect_s3_class(plot_transition_MC(MC_fit), "ggplot")
 })
