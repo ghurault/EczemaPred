@@ -96,11 +96,19 @@ for (model_name in c(main_models, ref_models, "MC")) {
       expect_equal(model$prior, prior)
     })
 
+    test_that("Incorrect K when constructing MC model", {
+      wrong_K <- list(NULL, 1, -1, c(5, 5), "2")
+      for (k in seq_along(wrong_K)) {
+        expect_error(EczemaModel("MC", K = wrong_K[[i]]))
+      }
+    })
+
   }
 
 }
 
 # Test inference methods --------------------------------------------------
+# Similar tests for MC are located in test-model_MC.R
 
 ms <- 10
 
@@ -115,9 +123,6 @@ df <- lapply(1:N_pt,
   bind_rows()
 train <- df %>% filter(Time <= 20)
 test <- df %>% filter(Time > 20)
-
-# NB: replace this fake data later by something from reference models
-# NB: add "MC" later by using saved data implemented later in setup
 
 cond <- expand_grid(Model = c(main_models, ref_models),
                   Discrete = c(TRUE, FALSE)) %>%
