@@ -1,5 +1,4 @@
 # Plot posterior predictive trajectory for longitudinal models
-# NB: tests are located in test-model_BinRW.R
 
 # Documentation -----------------------------------------------------------
 

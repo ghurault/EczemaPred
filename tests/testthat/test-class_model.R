@@ -1,6 +1,11 @@
+# Initialisation ----------------------------------------------------------
+
+options(warn = -1)
 
 main_models <- c("BinRW", "OrderedRW", "BinMC")
 ref_models <- c("RW", "Smoothing", "AR1", "MixedAR1")
+
+# Test EczemaModel --------------------------------------------------------------------
 
 for (model_name in c(main_models, ref_models, "MC")) {
 
@@ -81,5 +86,62 @@ for (model_name in c(main_models, ref_models, "MC")) {
     })
 
   }
+
+  if (model_name == "MC") {
+
+    test_that("We can change priors in MC", {
+      K <- 5
+      prior <- list(p = matrix(2, nrow = K, ncol = K))
+      model <- EczemaModel("MC", K = K, prior = prior)
+      expect_equal(model$prior, prior)
+    })
+
+    test_that("Incorrect K when constructing MC model", {
+      wrong_K <- list(NULL, 1, -1, c(5, 5), "2")
+      for (k in seq_along(wrong_K)) {
+        expect_error(EczemaModel("MC", K = wrong_K[[i]]))
+      }
+    })
+
+  }
+
+}
+
+# Test inference methods --------------------------------------------------
+# Similar tests for MC are located in test-model_MC.R
+
+ms <- 10
+
+N_pt <- 10
+t_max <- rpois(N_pt, 20)
+df <- lapply(1:N_pt,
+             function(i) {
+               data.frame(Patient = i,
+                          Time = 1:t_max[i],
+                          Score = rbinom(t_max[i], ms, .5))
+             }) %>%
+  bind_rows()
+train <- df %>% filter(Time <= 20)
+test <- df %>% filter(Time > 20)
+
+cond <- expand_grid(Model = c(main_models, ref_models),
+                  Discrete = c(TRUE, FALSE)) %>%
+  filter(Discrete | Model %in% ref_models)
+
+for (i in 1:nrow(cond)) {
+
+  model <- EczemaModel(cond$Model[i], max_score = ms, discrete = cond$Discrete[i])
+
+  test_that("sample_prior returns a stanfit object", {
+    fit0 <- sample_prior(model, chains = 1, iter = 2, refresh = 0)
+    expect_true(is_stanfit(fit0))
+  })
+
+  test_that("EczemaFit returns a stanfit object", {
+    fit1 <- EczemaFit(model, train = df, chains = 1, iter = 2, refresh = 0)
+    fit2 <- EczemaFit(model, train = train, test = test, chains = 1, iter = 2, refresh = 0)
+    expect_true(is_stanfit(fit1))
+    expect_true(is_stanfit(fit2))
+  })
 
 }
