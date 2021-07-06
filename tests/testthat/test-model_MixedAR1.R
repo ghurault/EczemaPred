@@ -1,16 +1,11 @@
 set.seed(2021)
 options(warn = -1)
 
-N_patient <- 30
-t_max <- rpois(N_patient, 25)
-max_score <- 100
-param <- list_parameters("MixedAR1")
-
-model <- EczemaModel("MixedAR1", max_score = max_score)
-
 # Test incorrect priors ---------------------------------------------------
 
-dprior <- model$prior
+max_score <- 100
+
+dprior <- EczemaModel("MixedAR1", max_score = max_score)$prior
 
 wrong_priors <- list(
   1,
@@ -31,63 +26,67 @@ test_that("MixedAR1 constructor catches errors in prior", {
 
 # Test fitting ------------------------------------------------------
 
-# Generate fake data manually for speed
+test_that("estimates of MixedAR1 by EczemaFit are accurate", {
 
-y0 <- rbeta(N_patient, 5, 5) * max_score
-sigma <- 2
+  skip_on_cran()
+  # skip_on_ci()
 
-mu_logit_slope <- 1
-sigma_logit_slope <- 1
-slope <- HuraultMisc::inv_logit(rnorm(N_patient, mu_logit_slope, sigma_logit_slope))
+  N_patient <- 30
+  t_max <- rpois(N_patient, 25)
+  max_score <- 100
+  param <- list_parameters("MixedAR1")
 
-mu_inf <- 0.1 * max_score
-sigma_inf <- 0.05 * max_score
-y_inf <- rnorm(N_patient, mu_inf, sigma_inf)
+  model <- EczemaModel("MixedAR1", max_score = max_score)
 
-intercept <- y_inf * (1 - slope)
+  y0 <- rbeta(N_patient, 5, 5) * max_score
+  sigma <- 2
 
-df <- generate_fakedata(N_pt = N_patient,
-                        t_max = t_max,
-                        max_score = max_score,
-                        params = list(alpha = 1,
-                                      intercept = intercept,
-                                      slope = slope,
-                                      y0 = y0,
-                                      sigma = sigma))
+  mu_logit_slope <- 1
+  sigma_logit_slope <- 1
+  slope <- HuraultMisc::inv_logit(rnorm(N_patient, mu_logit_slope, sigma_logit_slope))
 
-fit <- EczemaFit(model, train = df, chains = 1, refresh = 0)
+  mu_inf <- 0.1 * max_score
+  sigma_inf <- 0.05 * max_score
+  y_inf <- rnorm(N_patient, mu_inf, sigma_inf)
 
-test_that("EczemaFit returns a stanfit object", {
-  expect_true(is_stanfit(fit))
-})
+  intercept <- y_inf * (1 - slope)
 
-test_that("estimate of population parameters from EczemaFit is accurate", {
+  df <- generate_fakedata(N_pt = N_patient,
+                          t_max = t_max,
+                          max_score = max_score,
+                          params = list(alpha = 1,
+                                        intercept = intercept,
+                                        slope = slope,
+                                        y0 = y0,
+                                        sigma = sigma))
 
-  post <- rstan::extract(fit, pars = param$Population)
-  post_mean <- vapply(post, mean, numeric(1))
-  post_sd <- vapply(post, sd, numeric(1))
-  truth <- c(sigma, mu_logit_slope, sigma_logit_slope, mu_inf, sigma_inf)
+  fit <- EczemaFit(model, train = df, chains = 1, refresh = 0)
 
-  expect_true(all(abs(post_mean - truth) / post_sd < 2.5))
+  expect_true(is_stanfit(fit)) # need it otherwise empty test
 
-})
+  test_that("estimate of population parameters from EczemaFit is accurate", {
+    post <- rstan::extract(fit, pars = param$Population)
+    post_mean <- vapply(post, mean, numeric(1))
+    post_sd <- vapply(post, sd, numeric(1))
+    truth <- c(sigma, mu_logit_slope, sigma_logit_slope, mu_inf, sigma_inf)
 
-test_that("estimates of slope from EczemaFit are accurate", {
-  skip_on_ci()
+    expect_true(all(abs(post_mean - truth) / post_sd < 2.5))
+  })
 
-  post_slope <- rstan::extract(fit, pars = "slope")[[1]]
-  slope_mean <- apply(post_slope, 2, mean)
-  slope_sd <- apply(post_slope, 2, sd)
+  test_that("estimates of slope from EczemaFit are accurate", {
+    post_slope <- rstan::extract(fit, pars = "slope")[[1]]
+    slope_mean <- apply(post_slope, 2, mean)
+    slope_sd <- apply(post_slope, 2, sd)
 
-  expect_true(all(abs(slope_mean - slope) / slope_sd < 2.5))
-})
+    expect_true(all(abs(slope_mean - slope) / slope_sd < 2.5))
+  })
 
-test_that("estimates of intercept from EczemaFit are accurate", {
-  skip_on_ci()
+  test_that("estimates of intercept from EczemaFit are accurate", {
+    post_intercept <- rstan::extract(fit, pars = "intercept")[[1]]
+    intercept_mean <- apply(post_intercept, 2, mean)
+    intercept_sd <- apply(post_intercept, 2, sd)
 
-  post_intercept <- rstan::extract(fit, pars = "intercept")[[1]]
-  intercept_mean <- apply(post_intercept, 2, mean)
-  intercept_sd <- apply(post_intercept, 2, sd)
+    expect_true(all(abs(intercept_mean - intercept) / intercept_sd < 2.5))
+  })
 
-  expect_true(all(abs(intercept_mean - intercept) / intercept_sd < 2.5))
 })
