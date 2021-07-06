@@ -1,31 +1,7 @@
 set.seed(2021)
 options(warn = -1)
 
-# Helpers -----------------------------------------------------------------
-
-make_wrong_prior <- function(K) {
-  # Make a list of incorrect prior inputs
-
-  list(
-    matrix(1, nrow = K, ncol = K),
-    list(matrix(1, nrow = K, ncol = K)),
-    list(p = as.data.frame(matrix(1, nrow = K, ncol = K))),
-    list(p = 1),
-    list(p = matrix(-1, nrow = K, ncol = K))
-  )
-
-}
-
 # Test priors ---------------------------------------------------
-
-test_that("MC constructor catches errors in prior", {
-  for (K in 2:5) {
-    wrong_priors <- make_wrong_prior(K)
-    for (i in 1:length(wrong_priors)) {
-      expect_error(EczemaModel("BinRW", K = K, prior = wrong_priors[[i]]))
-    }
-  }
-})
 
 test_that("MC constructor accepts other prior", {
   K <- 5

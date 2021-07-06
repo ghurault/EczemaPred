@@ -142,5 +142,23 @@ test_that("OrderedRW constructor catches errors in prior", {
 
 # MC ----------------------------------------------------------------------
 
-# TO DO
+wrong_prior_MC <- function(K) {
+  # Make a list of incorrect prior inputs
 
+  list(
+    matrix(1, nrow = K, ncol = K),
+    list(p = as.data.frame(matrix(1, nrow = K, ncol = K))),
+    list(p = 1),
+    list(p = matrix(-1, nrow = K, ncol = K))
+  )
+
+}
+
+test_that("MC constructor catches errors in prior", {
+  for (K in c(2, 5, 10)) {
+    wrong_priors <- wrong_prior_MC(K)
+    for (i in 1:length(wrong_priors)) {
+      expect_error(EczemaModel("MC", K = K, prior = wrong_priors[[i]]))
+    }
+  }
+})
