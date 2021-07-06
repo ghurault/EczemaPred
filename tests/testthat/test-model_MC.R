@@ -1,15 +1,6 @@
 set.seed(2021)
 options(warn = -1)
 
-# Test priors ---------------------------------------------------
-
-test_that("MC constructor accepts other prior", {
-  K <- 5
-  prior <- list(p = matrix(2, nrow = K, ncol = K))
-  model <- EczemaModel("MC", K = K, prior = prior)
-  expect_equal(model$prior, prior)
-})
-
 # Test sample_prior ----------------------------------------------------
 
 K1 <- 3

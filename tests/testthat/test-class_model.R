@@ -87,6 +87,17 @@ for (model_name in c(main_models, ref_models, "MC")) {
 
   }
 
+  if (model_name == "MC") {
+
+    test_that("We can change priors in MC", {
+      K <- 5
+      prior <- list(p = matrix(2, nrow = K, ncol = K))
+      model <- EczemaModel("MC", K = K, prior = prior)
+      expect_equal(model$prior, prior)
+    })
+
+  }
+
 }
 
 # Test inference methods --------------------------------------------------
