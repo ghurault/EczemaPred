@@ -9,10 +9,11 @@ Authors@R:
            comment = c(ORCID = "0000-0002-1052-3564"))
 Description: A collection of models to serve as building blocks for predicting eczema severity.
 License: GPL (>= 3)
+Language: en-GB
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Biarch: true
 Depends: 
     R (>= 3.4.0)
@@ -38,7 +39,8 @@ LinkingTo:
     rstan (>= 2.18.1),
     StanHeaders (>= 2.18.0)
 SystemRequirements: GNU make
-Suggests: 
+Suggests:
+    spelling, 
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
