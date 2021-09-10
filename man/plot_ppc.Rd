@@ -34,7 +34,7 @@ plot_ppc_traj_fanchart(obj, train, test, patient_id, max_score = NA, ...)
 \item{obj}{Stanfit object or matrix of replications, with rows corresponding to samples and
 columns corresponding to variables (there should be \code{nrow(id)} columns)}
 
-\item{id}{Dataframe linking index in obj to (Patient, Time) pairs, cf. output from \code{\link[=get_index]{get_index()}}}
+\item{id}{Dataframe linking index in \code{obj} to (\code{Patient}, \code{Time}) pairs, cf. output from \code{\link[=get_index]{get_index()}}}
 
 \item{patient_id}{Patient ID}
 

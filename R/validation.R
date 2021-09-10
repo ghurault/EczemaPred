@@ -17,16 +17,16 @@
 #'
 #' @param t Vector of timepoints
 #' @param horizon Updating horizon
-#' @param df Dataframe with columns Patient, Time, Horizon, Iteration.
-#' Only the colums Time is required for `detail_fc_training`.
+#' @param df Dataframe with columns `Patient`, `Time`, `Horizon`, `Iteration.`
+#' Only the columns Time is required for `detail_fc_training`.
 #' @param it Iteration number
 #' @param it_test Vector of testing iteration numbers
 #'
 #' @return
 #' - `get_fc_iteration` returns a vector corresponding to iteration numbers
-#' - `split_fc_dataset` returns a named list of dataframes ("Training" and "Testing")
+#' - `split_fc_dataset` returns a named list of dataframes (`Training` and `Testing`)
 #' - `get_fc_training_iteration` returns a vector of unique training iteration number
-#' - `detail_fc_training` returns a dataframe with columns: Iteration, N, Proportion, LastTime
+#' - `detail_fc_training` returns a dataframe with columns: `Iteration`, `N`, `Proportion`, `LastTime`
 #'
 #' @details
 #' Time=t is in Iteration=i means that:
@@ -311,14 +311,14 @@ add_historical_pred <- function(test,
 #' Append lpd, (C)RPS and predictive samples to (test) dataframe
 #'
 #' @param df Dataframe.
-#' For `add_metrics`, when `discrete = FALSE`, it must contain a column "Score".
+#' When `discrete = FALSE`, it must contain a column "Score".
 #' @param fit Stanfit object
 #' @param discrete Whether to estimate a discrete or continuous forecast.
 #' For a discrete forecast, the RPS will be computed and the CRPS for a continuous forecast.
 #' @param include_samples Whether to return samples from the historical forecast in the output
 #' @param n_samples If `include_samples=TRUE`, how many samples to return. Default (=NULL) to all samples.
 #'
-#' @return Dataframe `df` appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"
+#' @return Dataframe `df` appended by the columns "lpd", "RPS" (or CRPS if `discrete=FALSE`) and optionally "Samples"
 #'
 #' @seealso [add_metrics1_d()] and [add_metrics1_c()]
 #'

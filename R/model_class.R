@@ -15,7 +15,7 @@
 #' - `model_name`: Name of the model
 #' - `stanmodel`: Name of the Stan model.
 #' Used internally to locate the compiled code.
-#' It can also be used to store the filepath of the Stan code.
+#' It can also be used to store the Stan code filepath.
 #' - `discrete`: Whether the model is discrete or not.
 #' - `max_score`: Maximum value that the score can take (when applicable)
 #' - `K`: Number of categories (when applicable)
@@ -192,11 +192,11 @@ print_prior <- function(model, ...) {
 #' @param ... Arguments to pass to other methods
 #'
 #' @return Named list of parameters names, grouped into broad categories:
-#' - Population: population parameters (i.e. patient- and time-independent)
-#' - Patient: patient-dependent parameters
-#' - PatientTime: patient- and time-dependent parameters (e.g. latent scores)
-#' - Test: parameters related to the test set
-#' - Misc: other parameters
+#' - `Population`: population parameters (i.e. patient- and time-independent)
+#' - `Patient`: patient-dependent parameters
+#' - `PatientTime`: patient- and time-dependent parameters (e.g. latent scores)
+#' - `Test`: parameters related to the test set
+#' - `Misc`: other parameters
 #'
 #' @details
 #' See [MC], [BinRW], [BinMC], [OrderedRW], [RW], [Smoothing], [AR1] and [MixedAR1] for details about the model-specific parameters.

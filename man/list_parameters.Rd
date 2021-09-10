@@ -22,11 +22,11 @@ list_parameters(model, ...)
 \value{
 Named list of parameters names, grouped into broad categories:
 \itemize{
-\item Population: population parameters (i.e. patient- and time-independent)
-\item Patient: patient-dependent parameters
-\item PatientTime: patient- and time-dependent parameters (e.g. latent scores)
-\item Test: parameters related to the test set
-\item Misc: other parameters
+\item \code{Population}: population parameters (i.e. patient- and time-independent)
+\item \code{Patient}: patient-dependent parameters
+\item \code{PatientTime}: patient- and time-dependent parameters (e.g. latent scores)
+\item \code{Test}: parameters related to the test set
+\item \code{Misc}: other parameters
 }
 }
 \description{

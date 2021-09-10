@@ -44,13 +44,13 @@ generate_MC2_sequence <- function(N, p01 = .5, p10 = .5, t0 = NULL) {
 #' Generate missing values in a times-series
 #'
 #' First and last values are nor missing.
-#' Missing indices can be generated at random (Binomial distribution) or using a Markov Chain (if consecutives missing values are deemed more likely).
+#' Missing indices can be generated at random (Binomial distribution) or using a Markov Chain (if consecutive missing values are deemed more likely).
 #' The markov chain is parametrised in terms of the steady state probability of a value being missing and the probability that the next value is observed when the current value is also observed.
 #'
 #' @param N Length of the time-series
 #' @param type Method to generate the missing values. One of "random" or "markovchain"
-#' @param p_mis Probability of a given value to be missing (steady state probability for type == "markovchain")
-#' @param p_obs_obs Probability of the next value being observed when the current is observed (for type == "markovchain")
+#' @param p_mis Probability of a given value to be missing (steady state probability for `type = "markovchain"`)
+#' @param p_obs_obs Probability of the next value being observed when the current is observed (for `type = "markovchain"`)
 #'
 #' @return Logical vector of length N
 #' @export

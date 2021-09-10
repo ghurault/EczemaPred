@@ -11,7 +11,7 @@
 #'
 #' @param obj Stanfit object or matrix of replications, with rows corresponding to samples and
 #' columns corresponding to variables (there should be `nrow(id)` columns)
-#' @param id Dataframe linking index in obj to (Patient, Time) pairs, cf. output from [get_index()]
+#' @param id Dataframe linking index in `obj` to (`Patient`, `Time`) pairs, cf. output from [get_index()]
 #' @param train Training dataset used to obtain the fit
 #' @param test Testing dataset used to obtain the fit (can be NULL)
 #' @param patient_id Patient ID
@@ -32,7 +32,6 @@
 #'
 #' @name plot_ppc
 NULL
-
 
 # Helper functions --------------------------------------------------------
 

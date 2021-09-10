@@ -49,7 +49,7 @@ extract_RPS <- function(fit) {
 #' for example to add a uniform distribution to the vector of samples to avoid problems at the tail of the distribution.
 #' If `NULL`, the empirical pmf is not changed.
 #' Default to the uniform distribution (i.e. `support`) for [add_metrics2_d()] and `NULL` for [add_metrics2_c()].
-#' @param bw Bandwith, for calculating lpd, see [scoringRules::logs_sample()].
+#' @param bw Bandwidth, for calculating lpd, see [scoringRules::logs_sample()].
 #' Useful to set the "resolution" of the distribution.
 #'
 #' @return Dataframe `df` appended by the columns "lpd", "RPS" (or "CRPS" for [add_metrics1_c()] and [add_metrics2_d()]).

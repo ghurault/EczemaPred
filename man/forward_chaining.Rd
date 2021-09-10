@@ -21,8 +21,8 @@ get_fc_training_iteration(it_test)
 
 \item{horizon}{Updating horizon}
 
-\item{df}{Dataframe with columns Patient, Time, Horizon, Iteration.
-Only the colums Time is required for \code{detail_fc_training}.}
+\item{df}{Dataframe with columns \code{Patient}, \code{Time}, \code{Horizon}, \code{Iteration.}
+Only the columns Time is required for \code{detail_fc_training}.}
 
 \item{it}{Iteration number}
 
@@ -31,9 +31,9 @@ Only the colums Time is required for \code{detail_fc_training}.}
 \value{
 \itemize{
 \item \code{get_fc_iteration} returns a vector corresponding to iteration numbers
-\item \code{split_fc_dataset} returns a named list of dataframes ("Training" and "Testing")
+\item \code{split_fc_dataset} returns a named list of dataframes (\code{Training} and \code{Testing})
 \item \code{get_fc_training_iteration} returns a vector of unique training iteration number
-\item \code{detail_fc_training} returns a dataframe with columns: Iteration, N, Proportion, LastTime
+\item \code{detail_fc_training} returns a dataframe with columns: \code{Iteration}, \code{N}, \code{Proportion}, \code{LastTime}
 }
 }
 \description{

@@ -155,7 +155,7 @@ NULL
 #' ## Observation-dependent (patient- and time-dependent) parameters:
 #'
 #' - `p01`: Probability of transitioning from state 0 to state 1
-#' - `lambda`: Mobility of the Markov Chain (eigen value of the transition matrix)
+#' - `lambda`: Mobility of the Markov Chain (eigenvalue of the transition matrix)
 #' - `ss1`: Steady state probability of state 1
 #' - `y_lat`: Latent score (probability)
 #'

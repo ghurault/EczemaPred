@@ -9,5 +9,5 @@
 A collection of models to serve as building blocks for predicting eczema severity.
 }
 \references{
-Stan Development Team (2020). RStan: the R interface to Stan. R package version 2.21.2. https://mc-stan.org
+\href{https://mc-stan.org}{Stan Development Team (2020). RStan: the R interface to Stan.} R package version 2.21.2.
 }
