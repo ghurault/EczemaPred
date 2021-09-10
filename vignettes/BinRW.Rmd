@@ -25,6 +25,7 @@ This vignette could also be used as a demonstration for the other discrete longi
 
 ```{r setup, warning=FALSE}
 library(EczemaPred)
+library(HuraultMisc)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
