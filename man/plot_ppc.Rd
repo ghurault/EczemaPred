@@ -23,7 +23,8 @@ plot_post_traj_fanchart(
   patient_id,
   max_score = NA,
   interval = c("eti", "hdi"),
-  CI_level = seq(0.1, 0.9, 0.1)
+  CI_level = seq(0.1, 0.9, 0.1),
+  ...
 )
 
 plot_ppc_traj_pmf(obj, train, test, patient_id, max_score = NA, ...)
@@ -32,33 +33,34 @@ plot_ppc_traj_fanchart(obj, train, test, patient_id, max_score = NA, ...)
 }
 \arguments{
 \item{obj}{Stanfit object or matrix of replications, with rows corresponding to samples and
-columns corresponding to variables (there should be \code{nrow(id)} columns)}
+columns corresponding to variables (there should be \code{nrow(id)} columns).}
 
-\item{id}{Dataframe linking index in \code{obj} to (\code{Patient}, \code{Time}) pairs, cf. output from \code{\link[=get_index]{get_index()}}}
+\item{id}{Dataframe linking index in \code{obj} to (\code{Patient}, \code{Time}) pairs, cf. output from \code{\link[=get_index]{get_index()}}.}
 
-\item{patient_id}{Patient ID}
+\item{patient_id}{Patient ID.}
 
 \item{max_score}{(Optional) Maximum value that the score can take.
 In \verb{plot_*_traj_pmf} this will set \code{support} if it is not supplied.
 In \verb{plot_*_traj_fanchart} this will set the y axis range.
 In \verb{plot_ppc_traj_*} this will check the content of \code{train} and \code{test}.}
 
-\item{support}{Values that the discrete distribution can take
+\item{support}{Values that the discrete distribution can take.
 Can be NULL, in that case the support of the pmf is estimated from the data (cf. \code{\link[HuraultMisc:extract_distribution]{HuraultMisc::extract_distribution()}}).}
 
 \item{max_scale}{Maximum value that the legend display.
-If NA, this chosen automatically}
+If NA, this chosen automatically.}
 
 \item{interval}{Type of confidence of interval to display, one of "eti" for equal-tailed intervals and
 "hdi" for highest density interval.}
 
-\item{CI_level}{Vector of confidence level to plot for the fanchart}
+\item{CI_level}{Vector of confidence level to plot for the fanchart.}
 
-\item{train}{Training dataset used to obtain the fit}
+\item{...}{arguments to pass to \verb{plot_post_traj_*}.
+For \code{plot_post_traj_fanchart()}, arguments to pass to \code{\link[=add_fanchart]{add_fanchart()}}.}
 
-\item{test}{Testing dataset used to obtain the fit (can be NULL)}
+\item{train}{Training dataset used to obtain the fit.}
 
-\item{...}{arguments to pass to \verb{plot_post_traj_*}}
+\item{test}{Testing dataset used to obtain the fit (can be \code{NULL}).}
 }
 \value{
 Ggplot

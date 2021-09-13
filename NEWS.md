@@ -1,3 +1,8 @@
+# Development version
+
+- Add `add_fanchart()`
+- 
+
 # EczemaPred 0.3.0
 
 - Allow discrete input to `MixedAR1`

@@ -10,23 +10,24 @@
 #' - `plot_ppc_traj_*` overlays the observed trajectory to the posterior predictive trajectory
 #'
 #' @param obj Stanfit object or matrix of replications, with rows corresponding to samples and
-#' columns corresponding to variables (there should be `nrow(id)` columns)
-#' @param id Dataframe linking index in `obj` to (`Patient`, `Time`) pairs, cf. output from [get_index()]
-#' @param train Training dataset used to obtain the fit
-#' @param test Testing dataset used to obtain the fit (can be NULL)
-#' @param patient_id Patient ID
+#' columns corresponding to variables (there should be `nrow(id)` columns).
+#' @param id Dataframe linking index in `obj` to (`Patient`, `Time`) pairs, cf. output from [get_index()].
+#' @param train Training dataset used to obtain the fit.
+#' @param test Testing dataset used to obtain the fit (can be `NULL`).
+#' @param patient_id Patient ID.
 #' @param max_score (Optional) Maximum value that the score can take.
 #' In `plot_*_traj_pmf` this will set `support` if it is not supplied.
 #' In `plot_*_traj_fanchart` this will set the y axis range.
 #' In `plot_ppc_traj_*` this will check the content of `train` and `test`.
-#' @param support Values that the discrete distribution can take
+#' @param support Values that the discrete distribution can take.
 #' Can be NULL, in that case the support of the pmf is estimated from the data (cf. [HuraultMisc::extract_distribution()]).
 #' @param max_scale Maximum value that the legend display.
-#' If NA, this chosen automatically
+#' If NA, this chosen automatically.
 #' @param interval Type of confidence of interval to display, one of "eti" for equal-tailed intervals and
 #' "hdi" for highest density interval.
-#' @param CI_level Vector of confidence level to plot for the fanchart
-#' @param ... arguments to pass to `plot_post_traj_*`
+#' @param CI_level Vector of confidence level to plot for the fanchart.
+#' @param ... arguments to pass to `plot_post_traj_*`.
+#' For `plot_post_traj_fanchart()`, arguments to pass to [add_fanchart()].
 #'
 #' @return Ggplot
 #'
@@ -107,95 +108,6 @@ process_df_ppc <- function(train, test, max_score = NA, patient_id, discrete) {
 }
 
 # Plotting helpers --------------------------------------------------------
-
-#' Add fanchart to ggplot
-#'
-#' The fanchart is obtained by overlaying [ggplot2::geom_ribbon()] of different widths (corresponding to different levels).
-#' NB: this function is not a geom.
-#'
-#' @section Alternative:
-#' A similar result can be obtained using the [ggdist::geom_lineribbon()] with the difference that the `ggdist` function also plots a point estimate (and is a proper geom).
-#'
-#' @param df Data with columns `x`, `ymin`, `ymax` and `fill`
-#' @param x Name of the `x` aesthetic
-#' @param ymin Name of the `ymin` aesthetic
-#' @param ymax Name of the `ymax` aesthetic
-#' @param fill Name of the `fill` aesthetic
-#' @param legend_fill Whether the legend should be displayed as `continuous` or as `discrete` categories
-#' @param labs_fill Name to give to the legend
-#' @param palette Colour palette to use.
-#' The default is the single-hue blue palette from `RColorBrewer::brewer.pal(n = 6, "Blues")`.
-#'
-#' @return List to be added to a ggplot
-#'
-#' @import ggplot2 dplyr
-#'
-#' @noRd
-#'
-#' @examples
-#'
-#' library(dplyr)
-#'
-#' tmp <- tibble(Time = 0:10,
-#'               y = Time^1.5) %>%
-#'   expand_grid(Level = seq(0.1, 0.9, 0.2)) %>%
-#'   mutate(Width = qnorm(0.5 + Level / 2, sd = 2),
-#'          Lower = y - Width,
-#'          Upper = y + Width)
-#' ggplot() + add_fanchart(tmp)
-#'
-add_fanchart <- function(df,
-                         x = "Time",
-                         ymin = "Lower",
-                         ymax = "Upper",
-                         fill = "Level",
-                         legend_fill = c("continuous", "discrete"),
-                         labs_fill = ifelse(legend_fill == "continuous", "Confidence level", "Probability"),
-                         palette = c("#EFF3FF", "#C6DBEF", "#9ECAE1", "#6BAED6", "#3182BD", "#08519C")) {
-
-  legend_fill <- match.arg(legend_fill)
-  stopifnot(all(c(x, ymin, ymax, fill) %in% colnames(df)),
-            is_scalar(labs_fill),
-            is.character(labs_fill),
-            is.vector(palette, mode = "character"))
-
-  if (legend_fill == "continuous") {
-    palette <- rev(c("#FFFFFF", palette)) # add white for gradient
-  }
-
-  lvl <- sort(unique(df[[fill]]), decreasing = TRUE)
-
-  stopifnot(legend_fill == "continuous" || length(lvl) <= length(palette))
-
-  # Overlaying ribbons (cf. fill cannot be an aesthetic with a ribbon)
-  out <- lapply(seq_along(lvl),
-                function(i) {
-                  tmp <- filter(df, .data$Level == lvl[i])
-                  if (legend_fill == "continuous") {
-                    geom_ribbon(data = tmp,
-                                aes_(x = as.name(x), ymin = as.name(ymin), ymax = as.name(ymax), fill = as.name(fill)))
-                  } else {
-                    geom_ribbon(data = tmp,
-                                aes_(x = as.name(x), ymin = as.name(ymin), ymax = as.name(ymax), fill = as.character(lvl[i])))
-                  }
-
-                })
-
-  out <- c(out,
-           ifelse(legend_fill == "continuous",
-                  list(scale_fill_gradientn(colours = palette, limits = c(0, 1), breaks = c(.1, .5, .9))),
-                  list(scale_fill_manual(values = setNames(palette[seq_along(lvl)], lvl))))
-  )
-
-  out <- c(out,
-           list(
-             labs(fill = labs_fill),
-             theme_classic(base_size = 15)
-           ))
-
-  return(out)
-
-}
 
 #' Plot posterior predictive trajectory as a pmf
 #'
@@ -315,7 +227,8 @@ plot_post_traj_fanchart <- function(obj,
                                     patient_id,
                                     max_score = NA,
                                     interval = c("eti", "hdi"),
-                                    CI_level = seq(0.1, 0.9, 0.1)) {
+                                    CI_level = seq(0.1, 0.9, 0.1),
+                                    ...) {
 
   stopifnot(is_scalar(max_score))
   if (!is.na(max_score)) {
@@ -334,7 +247,7 @@ plot_post_traj_fanchart <- function(obj,
                       CI_level = CI_level)
 
   p <- ggplot() +
-    add_fanchart(ssi) +
+    add_fanchart(df = ssi, ...) +
     coord_cartesian(ylim = c(0, max_score), expand = FALSE)
 
   return(p)

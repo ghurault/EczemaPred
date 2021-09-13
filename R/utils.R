@@ -94,3 +94,96 @@ samples_to_list <- function(object, par_name = "", n_samples = NULL) {
   return(out)
 
 }
+
+# Fanchart ----------------------------------------------------------------
+
+#' Add fanchart to ggplot
+#'
+#' The fanchart is obtained by overlaying [ggplot2::geom_ribbon()] of different widths (corresponding to different levels).
+#' NB: this function is not a geom.
+#'
+#' @section Alternative:
+#' A similar result can be obtained using the [ggdist::geom_lineribbon()] with the difference that the `ggdist` function also plots a point estimate (and is a proper geom).
+#' To avoid plotting the point estimate, `size` can be set to 0 and `y = .lower` for example.
+#'
+#' @param df Data with columns `x`, `ymin`, `ymax` and `fill`
+#' @param x Name of the `x` aesthetic
+#' @param ymin Name of the `ymin` aesthetic
+#' @param ymax Name of the `ymax` aesthetic
+#' @param fill Name of the `fill` aesthetic
+#' @param legend_fill Whether the legend should be displayed as `continuous` or as `discrete` categories
+#' @param labs_fill Name to give to the legend
+#' @param palette Colour palette to use.
+#' The default is the single-hue blue palette from `RColorBrewer::brewer.pal(n = 6, "Blues")`.
+#'
+#' @return List to be added to a ggplot
+#'
+#' @import ggplot2 dplyr
+#' @export
+#'
+#' @examples
+#'
+#' library(dplyr)
+#' library(tidyr)
+#' library(ggplot2)
+#'
+#' tmp <- tibble(Time = 0:10,
+#'               y = Time^1.5) %>%
+#'   expand_grid(Level = seq(0.1, 0.9, 0.2)) %>%
+#'   mutate(Width = qnorm(0.5 + Level / 2, sd = 2),
+#'          Lower = y - Width,
+#'          Upper = y + Width)
+#' ggplot() + add_fanchart(tmp)
+#'
+add_fanchart <- function(df,
+                         x = "Time",
+                         ymin = "Lower",
+                         ymax = "Upper",
+                         fill = "Level",
+                         legend_fill = c("continuous", "discrete"),
+                         labs_fill = ifelse(legend_fill == "continuous", "Confidence level", "Probability"),
+                         palette = c("#EFF3FF", "#C6DBEF", "#9ECAE1", "#6BAED6", "#3182BD", "#08519C")) {
+
+  legend_fill <- match.arg(legend_fill)
+  stopifnot(all(c(x, ymin, ymax, fill) %in% colnames(df)),
+            is_scalar(labs_fill),
+            is.character(labs_fill),
+            is.vector(palette, mode = "character"))
+
+  if (legend_fill == "continuous") {
+    palette <- rev(c("#FFFFFF", palette)) # add white for gradient
+  }
+
+  lvl <- sort(unique(df[[fill]]), decreasing = TRUE)
+
+  stopifnot(legend_fill == "continuous" || length(lvl) <= length(palette))
+
+  # Overlaying ribbons (cf. fill cannot be an aesthetic with a ribbon)
+  out <- lapply(seq_along(lvl),
+                function(i) {
+                  tmp <- filter(df, .data$Level == lvl[i])
+                  if (legend_fill == "continuous") {
+                    geom_ribbon(data = tmp,
+                                aes_(x = as.name(x), ymin = as.name(ymin), ymax = as.name(ymax), fill = as.name(fill)))
+                  } else {
+                    geom_ribbon(data = tmp,
+                                aes_(x = as.name(x), ymin = as.name(ymin), ymax = as.name(ymax), fill = as.character(lvl[i])))
+                  }
+
+                })
+
+  out <- c(out,
+           ifelse(legend_fill == "continuous",
+                  list(scale_fill_gradientn(colours = palette, limits = c(0, 1), breaks = c(.1, .5, .9))),
+                  list(scale_fill_manual(values = stats::setNames(palette[seq_along(lvl)], lvl))))
+  )
+
+  out <- c(out,
+           list(
+             labs(fill = labs_fill),
+             theme_classic(base_size = 15)
+           ))
+
+  return(out)
+
+}
