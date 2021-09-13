@@ -106,11 +106,11 @@ samples_to_list <- function(object, par_name = "", n_samples = NULL) {
 #' A similar result can be obtained using the [ggdist::geom_lineribbon()] with the difference that the `ggdist` function also plots a point estimate (and is a proper geom).
 #' To avoid plotting the point estimate, `size` can be set to 0 and `y = .lower` for example.
 #'
-#' @param df Data with columns `x`, `ymin`, `ymax` and `fill`
-#' @param x Name of the `x` aesthetic
-#' @param ymin Name of the `ymin` aesthetic
-#' @param ymax Name of the `ymax` aesthetic
-#' @param fill Name of the `fill` aesthetic
+#' @param df Data with columns `aes_x`, `aes_ymin`, `aes_ymax` and `aes_fill`
+#' @param aes_x Name of the `x` aesthetic
+#' @param aes_ymin Name of the `ymin` aesthetic
+#' @param aes_ymax Name of the `ymax` aesthetic
+#' @param aes_fill Name of the `fill` aesthetic
 #' @param legend_fill Whether the legend should be displayed as `continuous` or as `discrete` categories
 #' @param labs_fill Name to give to the legend
 #' @param palette Colour palette to use.
@@ -136,16 +136,16 @@ samples_to_list <- function(object, par_name = "", n_samples = NULL) {
 #' ggplot() + add_fanchart(tmp)
 #'
 add_fanchart <- function(df,
-                         x = "Time",
-                         ymin = "Lower",
-                         ymax = "Upper",
-                         fill = "Level",
+                         aes_x = "Time",
+                         aes_ymin = "Lower",
+                         aes_ymax = "Upper",
+                         aes_fill = "Level",
                          legend_fill = c("continuous", "discrete"),
                          labs_fill = ifelse(legend_fill == "continuous", "Confidence level", "Probability"),
                          palette = c("#EFF3FF", "#C6DBEF", "#9ECAE1", "#6BAED6", "#3182BD", "#08519C")) {
 
   legend_fill <- match.arg(legend_fill)
-  stopifnot(all(c(x, ymin, ymax, fill) %in% colnames(df)),
+  stopifnot(all(c(aes_x, aes_ymin, aes_ymax, aes_fill) %in% colnames(df)),
             is_scalar(labs_fill),
             is.character(labs_fill),
             is.vector(palette, mode = "character"))
@@ -154,7 +154,7 @@ add_fanchart <- function(df,
     palette <- rev(c("#FFFFFF", palette)) # add white for gradient
   }
 
-  lvl <- sort(unique(df[[fill]]), decreasing = TRUE)
+  lvl <- sort(unique(df[[aes_fill]]), decreasing = TRUE)
 
   stopifnot(legend_fill == "continuous" || length(lvl) <= length(palette))
 
@@ -164,10 +164,10 @@ add_fanchart <- function(df,
                   tmp <- filter(df, .data$Level == lvl[i])
                   if (legend_fill == "continuous") {
                     geom_ribbon(data = tmp,
-                                aes_(x = as.name(x), ymin = as.name(ymin), ymax = as.name(ymax), fill = as.name(fill)))
+                                aes_(x = as.name(aes_x), ymin = as.name(aes_ymin), ymax = as.name(aes_ymax), fill = as.name(aes_fill)))
                   } else {
                     geom_ribbon(data = tmp,
-                                aes_(x = as.name(x), ymin = as.name(ymin), ymax = as.name(ymax), fill = as.character(lvl[i])))
+                                aes_(x = as.name(aes_x), ymin = as.name(aes_ymin), ymax = as.name(aes_ymax), fill = as.character(lvl[i])))
                   }
 
                 })

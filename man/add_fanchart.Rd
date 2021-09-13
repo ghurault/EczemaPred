@@ -6,25 +6,25 @@
 \usage{
 add_fanchart(
   df,
-  x = "Time",
-  ymin = "Lower",
-  ymax = "Upper",
-  fill = "Level",
+  aes_x = "Time",
+  aes_ymin = "Lower",
+  aes_ymax = "Upper",
+  aes_fill = "Level",
   legend_fill = c("continuous", "discrete"),
   labs_fill = ifelse(legend_fill == "continuous", "Confidence level", "Probability"),
   palette = c("#EFF3FF", "#C6DBEF", "#9ECAE1", "#6BAED6", "#3182BD", "#08519C")
 )
 }
 \arguments{
-\item{df}{Data with columns \code{x}, \code{ymin}, \code{ymax} and \code{fill}}
+\item{df}{Data with columns \code{aes_x}, \code{aes_ymin}, \code{aes_ymax} and \code{aes_fill}}
 
-\item{x}{Name of the \code{x} aesthetic}
+\item{aes_x}{Name of the \code{x} aesthetic}
 
-\item{ymin}{Name of the \code{ymin} aesthetic}
+\item{aes_ymin}{Name of the \code{ymin} aesthetic}
 
-\item{ymax}{Name of the \code{ymax} aesthetic}
+\item{aes_ymax}{Name of the \code{ymax} aesthetic}
 
-\item{fill}{Name of the \code{fill} aesthetic}
+\item{aes_fill}{Name of the \code{fill} aesthetic}
 
 \item{legend_fill}{Whether the legend should be displayed as \code{continuous} or as \code{discrete} categories}
 
@@ -43,6 +43,7 @@ NB: this function is not a geom.
 \section{Alternative}{
 
 A similar result can be obtained using the \code{\link[ggdist:geom_lineribbon]{ggdist::geom_lineribbon()}} with the difference that the \code{ggdist} function also plots a point estimate (and is a proper geom).
+To avoid plotting the point estimate, \code{size} can be set to 0 and \code{y = .lower} for example.
 }
 
 \examples{
