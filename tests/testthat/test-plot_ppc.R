@@ -38,11 +38,10 @@ test_that("plot_*_traj_pmf works when test is NULL", {
 })
 
 test_that("add_trajectory works when missing values in df", {
-  RW_split2$Training %>%
+  tmp <- RW_split2$Training %>%
     mutate(Label = "Training") %>%
-    slice_sample(prop = 0.5) %>%
-    add_trajectory(df = .) %>%
-    expect_s3_class(., "ggplot")
+    slice_sample(prop = 0.5)
+  expect_s3_class(ggplot() + add_trajectory(tmp), "ggplot")
 })
 
 # Test plot_ppc_traj_* ----------------------------------------------------

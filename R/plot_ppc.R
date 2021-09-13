@@ -33,7 +33,7 @@
 #' @name plot_ppc
 NULL
 
-# Helper functions --------------------------------------------------------
+# Processing helpers --------------------------------------------------------
 
 #' Helper function to extract patient replications distribution
 #'
@@ -74,44 +74,6 @@ extract_yrep <- function(obj, id, patient_id, ...) {
     select(-.data$Index, -.data$Variable)
 
   return(out)
-
-}
-
-#' Plot posterior predictive trajectory as a pmf
-#'
-#' Not exported
-#'
-#' @param ssd Dataframe summarising the distribution as a probability mass function
-#' (output from [HuraultMisc::extract_distribution()] with type discrete).
-#' @param max_scale See [plot_ppc]
-#' @param palette Colour palette (character vector).
-#' Default is a single-hue blue palette: `c("#FFFFFF", RColorBrewer::brewer.pal(n = 6, "Blues"))`.
-#'
-#' @return Ggplot
-#' @noRd
-plot_pmf <- function(ssd,
-                     max_scale = NA,
-                     palette = c("#FFFFFF", "#EFF3FF", "#C6DBEF", "#9ECAE1", "#6BAED6", "#3182BD", "#08519C")) {
-
-  stopifnot(is_scalar(max_scale))
-  if (!is.na(max_scale)) {
-    stopifnot(is.numeric(max_scale),
-              dplyr::between(max_scale, max(ssd[["Probability"]]), 1))
-  }
-
-  # Plot
-  p <- ggplot() +
-    geom_tile(data = ssd,
-              aes_string(x = "Time", y = "Value", fill = "Probability")) +
-    scale_fill_gradientn(colours = palette, limits = c(0, max_scale)) +
-    scale_x_continuous(expand = c(0, 0)) +
-    scale_y_continuous(expand = c(0, 0))
-
-  p <- p +
-    labs(y = "Score") +
-    theme_classic(base_size = 15)
-
-  return(p)
 
 }
 
@@ -235,17 +197,57 @@ add_fanchart <- function(df,
 
 }
 
-#' Add trajectory to existing ggplot
+#' Plot posterior predictive trajectory as a pmf
 #'
 #' Not exported
 #'
-#' @param p Ggplot
-#' @param df Dataframe
+#' @param ssd Dataframe summarising the distribution as a probability mass function
+#' (output from [HuraultMisc::extract_distribution()] with type discrete).
+#' @param max_scale See [plot_ppc]
+#' @param palette Colour palette (character vector).
+#' Default is a single-hue blue palette: `c("#FFFFFF", RColorBrewer::brewer.pal(n = 6, "Blues"))`.
 #'
 #' @return Ggplot
+#' @noRd
+plot_pmf <- function(ssd,
+                     max_scale = NA,
+                     palette = c("#FFFFFF", "#EFF3FF", "#C6DBEF", "#9ECAE1", "#6BAED6", "#3182BD", "#08519C")) {
+
+  stopifnot(is_scalar(max_scale))
+  if (!is.na(max_scale)) {
+    stopifnot(is.numeric(max_scale),
+              dplyr::between(max_scale, max(ssd[["Probability"]]), 1))
+  }
+
+  # Plot
+  p <- ggplot() +
+    geom_tile(data = ssd,
+              aes_string(x = "Time", y = "Value", fill = "Probability")) +
+    scale_fill_gradientn(colours = palette, limits = c(0, max_scale)) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0))
+
+  p <- p +
+    labs(y = "Score") +
+    theme_classic(base_size = 15)
+
+  return(p)
+
+}
+
+#' Add trajectory to existing ggplot
+#'
+#' - The trajectory is broken to "show" missing values
+#' - Training and testing sets are coloured differently
+#'
+#' Not exported
+#'
+#' @param df Dataframe with columns `Label` (`Training` or `Testing`), `Time`, `Score`
+#'
+#' @return List to pass to a ggplot
 #' @import ggplot2 dplyr
 #' @noRd
-add_trajectory <- function(p = ggplot(), df) {
+add_trajectory <- function(df) {
 
   last_train_time <- df %>%
     filter(.data$Label == "Training") %>%
@@ -263,16 +265,14 @@ add_trajectory <- function(p = ggplot(), df) {
     mutate(Label = factor(.data$Label, levels = c("Training", "Testing"))) %>%
     arrange(.data$Time)
 
-  p <- p +
-    geom_path(data = df, aes_string(x = "Time", y = "Score", colour = "Label"), size = 1) +
-    geom_point(data = df, aes_string(x = "Time", y = "Score", colour = "Label"), size = 1) + # cf. isolated missing values
-    scale_colour_manual(values = c("#000000", "#E69F00"))
+  out <- list(
+    geom_path(data = df, aes_string(x = "Time", y = "Score", colour = "Label"), size = 1),
+    geom_point(data = df, aes_string(x = "Time", y = "Score", colour = "Label"), size = 1), # cf. isolated missing values
+    scale_colour_manual(values = c("#000000", "#E69F00")),
+    labs(y = "Score", colour = "")
+  )
 
-  p <- p +
-    labs(y = "Score", colour = "") +
-    theme_classic(base_size = 15)
-
-  return(p)
+  return(out)
 
 }
 
@@ -352,14 +352,15 @@ plot_ppc_traj_pmf <- function(obj,
                               max_score = NA,
                               ...) {
 
+  df <- process_df_ppc(train = train, test = test, patient_id = patient_id, max_score = max_score, discrete = TRUE)
+
   p <- plot_post_traj_pmf(obj = obj,
                           id = get_index(train = train, test = test),
                           patient_id = patient_id,
                           max_score = max_score,
-                          ...)
-  df <- process_df_ppc(train = train, test = test, patient_id = patient_id, max_score = max_score, discrete = TRUE)
-  p <- add_trajectory(p,
-                      filter(df, .data$Patient == patient_id))
+                          ...) +
+    add_trajectory(filter(df, .data$Patient == patient_id)) +
+    theme_classic(base_size = 15)
 
   return(p)
 }
@@ -373,14 +374,15 @@ plot_ppc_traj_fanchart <- function(obj,
                                    max_score = NA,
                                    ...) {
 
+  df <- process_df_ppc(train = train, test = test, patient_id = patient_id, max_score = max_score, discrete = FALSE)
+
   p <- plot_post_traj_fanchart(obj = obj,
                                id = get_index(train = train, test = test),
                                patient_id = patient_id,
                                max_score = max_score,
-                               ...)
-  df <- process_df_ppc(train = train, test = test, patient_id = patient_id, max_score = max_score, discrete = FALSE)
-  p <- add_trajectory(p,
-                      filter(df, .data$Patient == patient_id))
+                               ...) +
+    add_trajectory(filter(df, .data$Patient == patient_id)) +
+    theme_classic(base_size = 15)
 
   return(p)
 }
