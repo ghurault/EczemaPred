@@ -50,7 +50,8 @@ plot_latent_OrderedRW <- function(fit, id, patient_id) {
                 }) %>%
     bind_rows()
 
-  p <- plot_fanchart(ssi) +
+  p <- ggplot() +
+    add_fanchart(ssi) +
     geom_hline(yintercept = ct) +
     geom_label(data = data.frame(Label = paste0("y = ", 0:max_score), x = 1, y = midpoint),
                aes_string(x = "x", y = "y", label = "Label"), hjust = 0) +
