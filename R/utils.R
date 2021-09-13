@@ -145,7 +145,8 @@ add_fanchart <- function(df,
                          palette = c("#EFF3FF", "#C6DBEF", "#9ECAE1", "#6BAED6", "#3182BD", "#08519C")) {
 
   legend_fill <- match.arg(legend_fill)
-  stopifnot(all(c(aes_x, aes_ymin, aes_ymax, aes_fill) %in% colnames(df)),
+  stopifnot(is.data.frame(df),
+            all(c(aes_x, aes_ymin, aes_ymax, aes_fill) %in% colnames(df)),
             is_scalar(labs_fill),
             is.character(labs_fill),
             is.vector(palette, mode = "character"))
@@ -183,6 +184,65 @@ add_fanchart <- function(df,
              labs(fill = labs_fill),
              theme_classic(base_size = 15)
            ))
+
+  return(out)
+
+}
+
+# Plot broken "pointline" -------------------------------------------------
+
+#' Add broken pointline to ggplot
+#'
+#' @param df Data with columns `aes_x` and `aes_y`.
+#' @param aes_x Name of the `x` aesthetic.
+#' @param aes_y Name of the `y` aesthetic.
+#' @param size Size of the line and the points.
+#' @param ... Other aesthetics to pass to [ggplot2::aes_()].
+#' Valid aesthetics are the aesthetics for [ggplot2::geom_path()] and [ggplot2::geom_point()] (except `size` that is fixed).
+#' NB: if we want the colour to change with `Group` we would need to add `colour = as.name(Group)`.
+#'
+#' @return List to add to ggplot.
+#'
+#' @import ggplot2 dplyr
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' library(ggplot2)
+#'
+#' df1 <- tibble(x = 1:100, y = cumsum(rnorm(100))) %>%
+#'   slice_sample(prop = .8) %>%
+#'   arrange(x)
+#'
+#' ggplot() +
+#'   add_broken_pointline(df1) +
+#'   theme_bw(base_size = 15)
+#'
+#' df2 <- mutate(df1, Group = case_when(x < 60 ~ "A", TRUE ~ "B"))
+#'
+#' ggplot() +
+#'   add_broken_pointline(df2, colour = as.name("Group")) +
+#'   scale_colour_discrete(na.translate = FALSE) +
+#'   theme_bw(base_size = 15)
+#'
+add_broken_pointline <- function(df, aes_x = "x", aes_y = "y", size = 1, ...) {
+
+  stopifnot(is.data.frame(df),
+            all(c(aes_x, aes_y) %in% colnames(df)))
+
+  # Add missing values to have a broken line
+  x_mis <- setdiff(1:max(df[[aes_x]], na.rm = TRUE), df[[aes_x]])
+  if (length(x_mis) > 0) {
+    df <- tibble(x = x_mis) %>%
+      rename(stats::setNames("x", aes_x)) %>%
+      bind_rows(df) %>%
+      arrange(across(all_of(aes_x)))
+  }
+
+  out <- list(
+    geom_path(data = df, aes_(x = as.name(aes_x), y = as.name(aes_y), ...), size = size),
+    geom_point(data = df, aes_(x = as.name(aes_x), y = as.name(aes_y), ...), size = size) # cf. isolated missing values
+  )
 
   return(out)
 

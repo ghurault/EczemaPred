@@ -165,24 +165,16 @@ add_trajectory <- function(df) {
     filter(.data$Label == "Training") %>%
     summarise(max(.data$Time)) %>%
     pull()
-  # Add missing values to have a broken line
-  t_mis <- setdiff(1:max(df[["Time"]], na.rm = TRUE), df[["Time"]])
-  if (length(t_mis) > 0) {
-    df <- data.frame(Time = sort(t_mis)) %>%
-      mutate(Label = case_when(.data$Time <= last_train_time ~ "Training",
-                               TRUE ~ "Testing")) %>%
-      bind_rows(df)
-  }
   df <- df %>%
-    mutate(Label = factor(.data$Label, levels = c("Training", "Testing"))) %>%
-    arrange(.data$Time)
+    mutate(Label = case_when(.data$Time <= last_train_time ~ "Training",
+                             TRUE ~ "Testing"),
+           Label = factor(.data$Label, levels = c("Training", "Testing")))
 
-  out <- list(
-    geom_path(data = df, aes_string(x = "Time", y = "Score", colour = "Label"), size = 1),
-    geom_point(data = df, aes_string(x = "Time", y = "Score", colour = "Label"), size = 1), # cf. isolated missing values
-    scale_colour_manual(values = c("#000000", "#E69F00")),
-    labs(y = "Score", colour = "")
-  )
+  out <- c(add_broken_pointline(df, aes_x = "Time", aes_y = "Score", colour = as.name("Label")),
+           list(scale_colour_manual(values = c("#000000", "#E69F00"), na.translate = FALSE),
+                labs(y = "Score", colour = "")))
+
+  # NA appearing in legend?
 
   return(out)
 

@@ -1,6 +1,6 @@
 # Development version
 
-- Add `add_fanchart()`
+- Add plotting helpers `add_fanchart()` and `add_broken_pointline()`
 - 
 
 # EczemaPred 0.3.0
