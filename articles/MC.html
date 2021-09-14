@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -148,20 +148,16 @@
 <span class="va">model2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/EczemaModel.html">EczemaModel</a></span><span class="op">(</span><span class="st">"MC"</span>, K <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">K</span>, prior <span class="op">=</span> <span class="fu">prior_RBF_MC</span><span class="op">(</span><span class="va">params</span><span class="op">$</span><span class="va">K</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">fit_prior2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_prior.html">sample_prior</a></span><span class="op">(</span><span class="va">model2</span>, data <span class="op">=</span> <span class="va">df0</span>, chains <span class="op">=</span> <span class="fl">1</span>, refresh <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
-<span class="co">#&gt; Warning: There were 877 divergent transitions after warmup. See</span>
+<span class="co">#&gt; Warning: There were 863 divergent transitions after warmup. See</span>
 <span class="co">#&gt; http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</span>
 <span class="co">#&gt; to find out why this is a problem and how to eliminate them.</span>
 <span class="co">#&gt; Warning: Examine the pairs() plot to diagnose sampling problems</span>
-<span class="co">#&gt; Warning: The largest R-hat is 1.09, indicating chains have not mixed.</span>
-<span class="co">#&gt; Running the chains for more iterations may help. See</span>
-<span class="co">#&gt; http://mc-stan.org/misc/warnings.html#r-hat</span>
 <span class="co">#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.</span>
 <span class="co">#&gt; Running the chains for more iterations may help. See</span>
 <span class="co">#&gt; http://mc-stan.org/misc/warnings.html#bulk-ess</span>
 <span class="co">#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.</span>
 <span class="co">#&gt; Running the chains for more iterations may help. See</span>
 <span class="co">#&gt; http://mc-stan.org/misc/warnings.html#tail-ess</span>
-
 <span class="fu"><a href="../reference/plot_transition_MC.html">plot_transition_MC</a></span><span class="op">(</span><span class="va">fit_prior2</span><span class="op">)</span></code></pre></div>
 <p><img src="MC_files/figure-html/new-prior-1.png" width="700"></p>
 <p>This prior as the same information value (same number of pseudo-count) as the prior above, but favours neighbouring transitions.</p>
@@ -201,8 +197,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
 <p><img src="MC_files/figure-html/add-missing-1.png" width="700"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">t</span> <span class="op">%in%</span> <span class="va">t_mis</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">t</span> <span class="op">%in%</span> <span class="va">t_mis</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="fake-data-check" class="section level2">
 <h2 class="hasAnchor">
@@ -235,7 +230,6 @@
 <span class="co">#&gt; Tree depth:</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Energy:</span>
-
 <span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html">pairs</a></span><span class="op">(</span><span class="va">fit</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"p[1,"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">params</span><span class="op">$</span><span class="va">K</span>, <span class="st">"]"</span><span class="op">)</span><span class="op">)</span> <span class="co"># transitions probabilities from state 1</span></code></pre></div>
 <p><img src="MC_files/figure-html/check-fit-1.png" width="700"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -296,11 +290,11 @@
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lpd"</span>, <span class="st">"RPS"</span><span class="op">)</span>, names_to <span class="op">=</span> <span class="st">"Metric"</span>, values_to <span class="op">=</span> <span class="st">"Value"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Metric</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>Mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Value</span><span class="op">)</span>, SD <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">Value</span><span class="op">)</span>, SE <span class="op">=</span> <span class="va">SD</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 2 x 4</span>
+<span class="co">#&gt; # A tibble: 2 × 4</span>
 <span class="co">#&gt;   Metric   Mean    SD     SE</span>
 <span class="co">#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 lpd    -1.36  0.808 0.202 </span>
-<span class="co">#&gt; 2 RPS     0.170 0.123 0.0308</span></code></pre></div>
+<span class="co">#&gt; 1 lpd    -1.53  0.634 0.158 </span>
+<span class="co">#&gt; 2 RPS     0.175 0.101 0.0253</span></code></pre></div>
 </div>
 </div>
   </div>

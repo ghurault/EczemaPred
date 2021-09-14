@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -135,13 +135,7 @@
 
     <pre class="usage"><span class='fu'>prepare_standata</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>train</span>, <span class='va'>test</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>prepare_data_lgtd</span><span class='op'>(</span><span class='va'>train</span>, test <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>max_score</span>, <span class='va'>discrete</span><span class='op'>)</span>
-
-<span class='co'># S3 method for EczemaModel</span>
-<span class='fu'>prepare_standata</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>train</span>, test <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='co'># S3 method for MC</span>
-<span class='fu'>prepare_standata</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>train</span>, test <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+<span class='fu'>prepare_data_lgtd</span><span class='op'>(</span><span class='va'>train</span>, test <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>max_score</span>, <span class='va'>discrete</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -177,7 +171,6 @@
     <p>List to serve as input to the Stan sampler.
 The list is usually incomplete needs to be optional parameters, such as:</p><ul>
 <li><p><code>run</code> (binary, for main and MC models, indicating whether to evaluate the likelihood)</p></li>
-<li><p><code>discrete</code> (binary, for RW model, indicating whether the predictions should be discretised)</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>

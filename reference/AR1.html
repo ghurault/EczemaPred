@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -142,6 +142,11 @@
       <td><p>Maximum value that the score can take</p></td>
     </tr>
     <tr>
+      <th>discrete</th>
+      <td><p>Whether to use a discrete normal distribution.
+This will be used to check whether the data is discrete or not, and for rounding predictions (cf. testing).</p></td>
+    </tr>
+    <tr>
       <th>prior</th>
       <td><p>Named list of the model's priors. If <code>NULL</code>, uses the default prior for the model (see <code><a href='default_prior.html'>default_prior()</a></code>).</p></td>
     </tr>
@@ -152,7 +157,10 @@
     
 <ul>
 <li><p>Details of the model are available in the <a href='#'>paper</a>.</p></li>
-<li><p>The model is naive as it is trained with a non-truncated distribution</p></li>
+<li><p>The model takes as input a continuous score defined between 0 and <code>max_score</code>.</p></li>
+<li><p>The model is naive as the likelihood is non-truncated and not discretised (when <code>discrete = TRUE</code>).
+As a result, sampling from the prior predictive distribution can be challenging if the score is near the bounds
+and the variance is sufficiently large.</p></li>
 <li><p>For more details see the <a href='https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html'>vignette</a>.</p></li>
 </ul>
 
@@ -167,8 +175,8 @@
 
 <ul>
 <li><p><code>sigma</code>: Standard deviation of the autoregression</p></li>
-<li><p><code>alpha</code>: Autocorrelation parameter</p></li>
-<li><p><code>b</code>: Intercept</p></li>
+<li><p><code>slope</code>: Autocorrelation parameter</p></li>
+<li><p><code>intercept</code>: Intercept</p></li>
 <li><p><code>y_inf</code>: Autoregression mean</p></li>
 <li><p><code>y_mis</code>: Missing values</p></li>
 </ul>
@@ -178,17 +186,17 @@
 
     
 
-<p>The priors are passed as a named list with elements <code>sigma</code>, <code>y_inf</code> and <code>alpha</code>
+<p>The priors are passed as a named list with elements <code>sigma</code>, <code>y_inf</code> and <code>slope</code>
 specifying priors for the corresponding parameters.
 Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 &gt; 0, such as:</p><ul>
 <li><p><code>sigma / max_score ~ normal+(x1, x2)</code>.</p></li>
 <li><p><code>y_inf / max_score ~ normal(x1, x2)</code>.</p></li>
-<li><p><code>alpha ~ beta(x1, x2)</code>.</p></li>
+<li><p><code>slope ~ beta(x1, x2)</code>.</p></li>
 </ul>
 
 <p>NB: For <code>sigma</code>, usually x1=0 to define a half-normal distribution
 since the parameter is constrained to be positive.
-NB: For <code>alpha</code>, both <code>x1</code> and <code>x2</code> must be positive.</p>
+NB: For <code>slope</code>, both <code>x1</code> and <code>x2</code> must be positive.</p>
     <h2 class="hasAnchor" id="default-priors"><a class="anchor" href="#default-priors"></a>Default priors</h2>
 
     
@@ -196,7 +204,7 @@ NB: For <code>alpha</code>, both <code>x1</code> and <code>x2</code> must be pos
 <ul>
 <li><p>The default prior for <code>sigma</code> translates to a width of the predictive distribution to be at most <code>max_score</code>.</p></li>
 <li><p>The default prior for <code>y_inf</code> covers the full range of the score.</p></li>
-<li><p>The default prior for <code>alpha</code> is uniform in 0-1.</p></li>
+<li><p>The default prior for <code>slope</code> is uniform in 0-1.</p></li>
 </ul>
 
 
@@ -206,7 +214,7 @@ NB: For <code>alpha</code>, both <code>x1</code> and <code>x2</code> must be pos
 #&gt; max_score = 100 
 #&gt; Prior: 
 #&gt; - sigma / max_score ~ normal+(0,0.1)
-#&gt; - alpha ~ beta(1,1)
+#&gt; - slope ~ beta(1,1)
 #&gt; - y_inf / max_score ~ normal(0.5,0.25)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

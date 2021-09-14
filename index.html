@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -92,6 +92,8 @@
 <p>The package requires RStan and C++ toolchain, which can be installed by following these <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">instructions</a>.</p>
 <p>Then, the package can be installed by typing the following commands in R:</p>
 <pre><code>devtools::install_github("ghurault/EczemaPred")</code></pre>
+<p>Or to install a specific version, for example the initial release (v0.1.0):</p>
+<pre><code>devtools::install_github("ghurault/EczemaPred@v0.1.0")</code></pre>
 <p>The package can take a few minutes to install as the models needs to be compiled (but no compilation will be required when using the package). Many warnings may be displayed during compilation but they can be safely ignored.</p>
 <p>NB: EczemaPred requires <a href="https://github.com/ghurault/HuraultMisc">HuraultMisc</a>, my personal function library, to work.</p>
 </div>

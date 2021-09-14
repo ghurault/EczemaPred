@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -151,8 +151,10 @@
 
     
 <ul>
-<li><p>Details of the model are available in the <a href='#'>paper</a>.</p></li>
-<li><p>The model is naive as it is trained with a non-truncated.</p></li>
+<li><p>Details of the model are available in the <a href='#'>paper</a>.
+The model takes as input a continuous score defined between 0 and <code>max_score</code>.</p></li>
+<li><p>The model is naive as the likelihood distribution is not truncated.</p></li>
+<li><p>Unlike the <code>AR1</code> model, the discretisation of predictions is not implemented</p></li>
 <li><p>For more details see the <a href='https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html'>vignette</a>.</p></li>
 </ul>
 
@@ -164,8 +166,8 @@
 
 <ul>
 <li><p><code>sigma</code>: Standard deviation of the autoregression</p></li>
-<li><p><code>mu_logit_alpha</code>: Population mean of the logit of <code>alpha</code></p></li>
-<li><p><code>sigma_logit_alpha</code>: Population standard deviation of the logit of <code>alpha</code></p></li>
+<li><p><code>mu_logit_slope</code>: Population mean of the logit of <code>slope</code></p></li>
+<li><p><code>sigma_logit_slope</code>: Population standard deviation of the logit of <code>slope</code></p></li>
 <li><p><code>mu_inf</code>: Population mean of <code>y_inf</code></p></li>
 <li><p><code>sigma_inf</code>: Population standard deviation of <code>y_inf</code></p></li>
 </ul>
@@ -174,9 +176,9 @@
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Patient-dependent parameters:</h3>
 
 <ul>
-<li><p><code>alpha</code>: Autocorrelation parameter</p></li>
+<li><p><code>slope</code>: Autocorrelation parameter</p></li>
 <li><p><code>y_inf</code>: Autoregression mean</p></li>
-<li><p><code>b</code>: Intercept</p></li>
+<li><p><code>intercept</code>: Intercept</p></li>
 </ul>
 
 
@@ -192,17 +194,17 @@
 
     
 
-<p>The priors are passed as a named list with elements <code>sigma</code>, <code>mu_logit_alpha</code>, <code>sigma_logit_alpha</code>, <code>mu_inf</code>, <code>sigma_inf</code>
+<p>The priors are passed as a named list with elements <code>sigma</code>, <code>mu_logit_slope</code>, <code>sigma_logit_slope</code>, <code>mu_inf</code>, <code>sigma_inf</code>
 specifying priors for the corresponding parameters.
 Each element of the list should be a vector of length 2, containing values for x1 and x2, x2 &gt; 0, such as:</p><ul>
 <li><p><code>sigma / max_score ~ normal+(x1, x2)</code>.</p></li>
-<li><p><code>mu_logit_alpha ~ normal(x1, x2)</code>.</p></li>
-<li><p><code>sigma_logit_alpha ~ normal+(x1, x2)</code>.</p></li>
+<li><p><code>mu_logit_slope ~ normal(x1, x2)</code>.</p></li>
+<li><p><code>sigma_logit_slope ~ normal+(x1, x2)</code>.</p></li>
 <li><p><code>mu_inf / max_score ~ normal(x1, x2)</code>.</p></li>
 <li><p><code>sigma_inf / max_score ~ normal+(x1, x2)</code>.</p></li>
 </ul>
 
-<p>NB: For <code>sigma</code>, <code>sigma_logit_alpha</code> and <code>sigma_inf</code>, usually x1=0 to define a half-normal distribution
+<p>NB: For <code>sigma</code>, <code>sigma_logit_slope</code> and <code>sigma_inf</code>, usually x1=0 to define a half-normal distribution
 since the parameter is constrained to be positive.</p>
     <h2 class="hasAnchor" id="default-priors"><a class="anchor" href="#default-priors"></a>Default priors</h2>
 
@@ -210,8 +212,8 @@ since the parameter is constrained to be positive.</p>
 
 <ul>
 <li><p>The default prior for <code>sigma</code> translates to a width of the predictive distribution to be at most <code>max_score</code>.</p></li>
-<li><p>The default priors for <code>mu_logit_alpha</code> and <code>sigma_logit_alpha</code> have "reasonable" ranges and
-translate to a prior on <code>alpha</code> that is approximately uniform.</p></li>
+<li><p>The default priors for <code>mu_logit_slope</code> and <code>sigma_logit_slope</code> have "reasonable" ranges and
+translate to a prior on <code>slope</code> that is approximately uniform.</p></li>
 <li><p>The default prior for <code>mu_inf</code> spans the entire range of the score.</p></li>
 <li><p>The default prior for <code>sigma_inf</code> translates to a range in the distribution of <code>y_inf</code> to be at most <code>max_score</code>.</p></li>
 </ul>
@@ -223,8 +225,8 @@ translate to a prior on <code>alpha</code> that is approximately uniform.</p></l
 #&gt; max_score = 100 
 #&gt; Prior: 
 #&gt; - sigma / max_score ~ normal+(0,0.1)
-#&gt; - mu_logit_alpha ~ normal(0,1)
-#&gt; - sigma_logit_alpha ~ normal+(0,1.5)
+#&gt; - mu_logit_slope ~ normal(0,1)
+#&gt; - sigma_logit_slope ~ normal+(0,1.5)
 #&gt; - mu_inf / max_score ~ normal(0.5,0.25)
 #&gt; - sigma_inf / max_score ~ normal+(0.5,0.25)</div></pre>
   </div>

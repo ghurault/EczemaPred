@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -135,9 +135,6 @@
 
     <pre class="usage"><span class='fu'>list_parameters</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='co'># S3 method for character</span>
-<span class='fu'>list_parameters</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>...</span><span class='op'>)</span>
-
 <span class='co'># S3 method for BinRW</span>
 <span class='fu'>list_parameters</span><span class='op'>(</span><span class='va'>model</span>, main <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
@@ -145,22 +142,7 @@
 <span class='fu'>list_parameters</span><span class='op'>(</span><span class='va'>model</span>, main <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for BinMC</span>
-<span class='fu'>list_parameters</span><span class='op'>(</span><span class='va'>model</span>, main <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='co'># S3 method for RW</span>
-<span class='fu'>list_parameters</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='co'># S3 method for Smoothing</span>
-<span class='fu'>list_parameters</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='co'># S3 method for AR1</span>
-<span class='fu'>list_parameters</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='co'># S3 method for MixedAR1</span>
-<span class='fu'>list_parameters</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='co'># S3 method for MC</span>
-<span class='fu'>list_parameters</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+<span class='fu'>list_parameters</span><span class='op'>(</span><span class='va'>model</span>, main <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -175,7 +157,7 @@
     </tr>
     <tr>
       <th>main</th>
-      <td><p>Whether to output the main parameters only.</p></td>
+      <td><p>Whether to output the main parameters only (when applicable).</p></td>
     </tr>
     </table>
 
@@ -202,18 +184,30 @@ Other parameters are available across models:</p><ul>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>list_parameters</span><span class='op'>(</span><span class='st'>"BinRW"</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'>list_parameters</span><span class='op'>(</span><span class='st'>"RW"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $Population
-#&gt; [1] "sigma"          "mu_logit_y0"    "sigma_logit_y0"
-#&gt; 
-#&gt; $Patient
-#&gt; [1] "logit_y0"
+#&gt; [1] "sigma"
 #&gt; 
 #&gt; $PatientTime
-#&gt; [1] "y_lat" "y_rep"
+#&gt; [1] "y_rep"
 #&gt; 
 #&gt; $Test
 #&gt; [1] "y_pred"  "lpd"     "cum_err"
+#&gt; 
+#&gt; $Misc
+#&gt; [1] "y_mis"
+#&gt; </div><div class='input'><span class='fu'>list_parameters</span><span class='op'>(</span><span class='fu'><a href='EczemaModel.html'>EczemaModel</a></span><span class='op'>(</span><span class='st'>"RW"</span>, max_score <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $Population
+#&gt; [1] "sigma"
+#&gt; 
+#&gt; $PatientTime
+#&gt; [1] "y_rep"
+#&gt; 
+#&gt; $Test
+#&gt; [1] "y_pred"  "lpd"     "cum_err"
+#&gt; 
+#&gt; $Misc
+#&gt; [1] "y_mis"
 #&gt; </div><div class='input'><span class='fu'>list_parameters</span><span class='op'>(</span><span class='fu'><a href='EczemaModel.html'>EczemaModel</a></span><span class='op'>(</span><span class='st'>"BinRW"</span>, max_score <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $Population
 #&gt; [1] "sigma"          "mu_logit_y0"    "sigma_logit_y0"
@@ -247,67 +241,6 @@ Other parameters are available across models:</p><ul>
 #&gt; 
 #&gt; $PatientTime
 #&gt; [1] "p01"    "lambda" "ss1"    "y_lat"  "y_rep" 
-#&gt; 
-#&gt; $Test
-#&gt; [1] "y_pred"  "lpd"     "cum_err"
-#&gt; </div><div class='input'><span class='fu'>list_parameters</span><span class='op'>(</span><span class='fu'><a href='EczemaModel.html'>EczemaModel</a></span><span class='op'>(</span><span class='st'>"RW"</span>, max_score <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $Population
-#&gt; [1] "sigma"
-#&gt; 
-#&gt; $PatientTime
-#&gt; [1] "y_rep"
-#&gt; 
-#&gt; $Test
-#&gt; [1] "y_pred"  "lpd"     "cum_err"
-#&gt; 
-#&gt; $Misc
-#&gt; [1] "y_mis"
-#&gt; </div><div class='input'><span class='fu'>list_parameters</span><span class='op'>(</span><span class='fu'><a href='EczemaModel.html'>EczemaModel</a></span><span class='op'>(</span><span class='st'>"Smoothing"</span>, max_score <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $Population
-#&gt; [1] "sigma" "tau"   "alpha"
-#&gt; 
-#&gt; $PatientTime
-#&gt; [1] "L"     "y_rep"
-#&gt; 
-#&gt; $Test
-#&gt; [1] "y_pred" "lpd"   
-#&gt; 
-#&gt; $Misc
-#&gt; [1] "y_mis"
-#&gt; </div><div class='input'><span class='fu'>list_parameters</span><span class='op'>(</span><span class='fu'><a href='EczemaModel.html'>EczemaModel</a></span><span class='op'>(</span><span class='st'>"AR1"</span>, max_score <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $Population
-#&gt; [1] "sigma" "alpha" "b"     "y_inf"
-#&gt; 
-#&gt; $PatientTime
-#&gt; [1] "y_rep"
-#&gt; 
-#&gt; $Test
-#&gt; [1] "y_pred" "lpd"   
-#&gt; 
-#&gt; $Misc
-#&gt; [1] "y_mis"
-#&gt; </div><div class='input'><span class='fu'>list_parameters</span><span class='op'>(</span><span class='fu'><a href='EczemaModel.html'>EczemaModel</a></span><span class='op'>(</span><span class='st'>"MixedAR1"</span>, max_score <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $Population
-#&gt; [1] "sigma"             "mu_logit_alpha"    "sigma_logit_alpha"
-#&gt; [4] "mu_inf"            "sigma_inf"        
-#&gt; 
-#&gt; $Patient
-#&gt; [1] "alpha" "y_inf" "b"    
-#&gt; 
-#&gt; $PatientTime
-#&gt; [1] "y_rep"
-#&gt; 
-#&gt; $Test
-#&gt; [1] "y_pred" "lpd"   
-#&gt; 
-#&gt; $Misc
-#&gt; [1] "y_mis"
-#&gt; </div><div class='input'><span class='fu'>list_parameters</span><span class='op'>(</span><span class='fu'><a href='EczemaModel.html'>EczemaModel</a></span><span class='op'>(</span><span class='st'>"MC"</span>, K <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $Population
-#&gt; [1] "p"
-#&gt; 
-#&gt; $Observation
-#&gt; [1] "y_rep"
 #&gt; 
 #&gt; $Test
 #&gt; [1] "y_pred"  "lpd"     "cum_err"
