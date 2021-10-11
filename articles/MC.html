@@ -158,6 +158,7 @@
 <span class="co">#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.</span>
 <span class="co">#&gt; Running the chains for more iterations may help. See</span>
 <span class="co">#&gt; http://mc-stan.org/misc/warnings.html#tail-ess</span>
+
 <span class="fu"><a href="../reference/plot_transition_MC.html">plot_transition_MC</a></span><span class="op">(</span><span class="va">fit_prior2</span><span class="op">)</span></code></pre></div>
 <p><img src="MC_files/figure-html/new-prior-1.png" width="700"></p>
 <p>This prior as the same information value (same number of pseudo-count) as the prior above, but favours neighbouring transitions.</p>
@@ -184,7 +185,7 @@
 <p>The parameters used to generate this sequence can be extracted with:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">true_param</span> <span class="op">&lt;-</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html">extract</a></span><span class="op">(</span><span class="va">fit_prior1</span>, pars <span class="op">=</span> <span class="st">"p"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/extract_draws.html">extract_draws</a></span><span class="op">(</span><span class="va">draw</span><span class="op">)</span></code></pre></div>
+  <span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://ghurault.github.io/HuraultMisc//reference/extract_draws.html">extract_draws</a></span><span class="op">(</span><span class="va">draw</span><span class="op">)</span></code></pre></div>
 <p>In practice, some values are often missing. We can generate missing values with the following:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">t_mis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="../reference/generate_missing.html">generate_missing</a></span><span class="op">(</span><span class="va">params</span><span class="op">$</span><span class="va">t_max</span>, type <span class="op">=</span> <span class="st">"random"</span>, p_mis <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span>
@@ -197,7 +198,8 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
 <p><img src="MC_files/figure-html/add-missing-1.png" width="700"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">t</span> <span class="op">%in%</span> <span class="va">t_mis</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R">
+<span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">t</span> <span class="op">%in%</span> <span class="va">t_mis</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="fake-data-check" class="section level2">
 <h2 class="hasAnchor">
@@ -230,6 +232,7 @@
 <span class="co">#&gt; Tree depth:</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Energy:</span>
+
 <span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html">pairs</a></span><span class="op">(</span><span class="va">fit</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"p[1,"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">params</span><span class="op">$</span><span class="va">K</span>, <span class="st">"]"</span><span class="op">)</span><span class="op">)</span> <span class="co"># transitions probabilities from state 1</span></code></pre></div>
 <p><img src="MC_files/figure-html/check-fit-1.png" width="700"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -241,13 +244,13 @@
 <a href="#posterior-estimates" class="anchor"></a>Posterior estimates</h3>
 <p>Then, we visualise posterior estimates and compare them to their prior.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">par0</span> <span class="op">&lt;-</span> <span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/summary_statistics.html">summary_statistics</a></span><span class="op">(</span><span class="va">fit_prior1</span>, pars <span class="op">=</span> <span class="st">"p"</span><span class="op">)</span>
-<span class="va">par</span> <span class="op">&lt;-</span> <span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/summary_statistics.html">summary_statistics</a></span><span class="op">(</span><span class="va">fit</span>, pars <span class="op">=</span> <span class="st">"p"</span><span class="op">)</span>
-<span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/prior_posterior.html">plot_prior_posterior</a></span><span class="op">(</span><span class="va">par0</span>, <span class="va">par</span>, pars <span class="op">=</span> <span class="st">"p"</span>, match_exact <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">par0</span> <span class="op">&lt;-</span> <span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://ghurault.github.io/HuraultMisc//reference/summary_statistics.html">summary_statistics</a></span><span class="op">(</span><span class="va">fit_prior1</span>, pars <span class="op">=</span> <span class="st">"p"</span><span class="op">)</span>
+<span class="va">par</span> <span class="op">&lt;-</span> <span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://ghurault.github.io/HuraultMisc//reference/summary_statistics.html">summary_statistics</a></span><span class="op">(</span><span class="va">fit</span>, pars <span class="op">=</span> <span class="st">"p"</span><span class="op">)</span>
+<span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://ghurault.github.io/HuraultMisc//reference/prior_posterior.html">plot_prior_posterior</a></span><span class="op">(</span><span class="va">par0</span>, <span class="va">par</span>, pars <span class="op">=</span> <span class="st">"p"</span>, match_exact <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p><img src="MC_files/figure-html/plot-estimates-1.png" width="700"></p>
 <p>We can also quantify the influence of the prior on the posterior estimates by computing the posterior shrinkage and Mahalanobis distance between the mean posterior and the prior. The posterior shrinkage roughly quantifies how much the model is learning, and is defined for a parameter <span class="math inline">\(\theta\)</span> as <span class="math inline">\(1 - \frac{\operatorname{Var}(\theta_\text{post})}{\operatorname{Var}(\theta_\text{prior}}\)</span>. The distance between the prior and posterior can be used to assess whether the prior is informative or not, where a distance greater than 2 or 3 could be interpreted as a posterior that is not “included” in the prior.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/prior_posterior.html">plot_prior_influence</a></span><span class="op">(</span><span class="va">par0</span>, <span class="va">par</span>, pars <span class="op">=</span> <span class="st">"p"</span>, match_exact <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://ghurault.github.io/HuraultMisc//reference/prior_posterior.html">plot_prior_influence</a></span><span class="op">(</span><span class="va">par0</span>, <span class="va">par</span>, pars <span class="op">=</span> <span class="st">"p"</span>, match_exact <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p><img src="MC_files/figure-html/plot-prior-influence-1.png" width="700"></p>
 <p>We also visualise the expected transition matrix:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
@@ -259,7 +262,7 @@
 <a href="#can-we-recover-the-true-parameters" class="anchor"></a>Can we recover the true parameters?</h3>
 <p>We plot posterior estimates alongside the true parameters values that was used to generate the data.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/summary_statistics.html">summary_statistics</a></span><span class="op">(</span><span class="va">fit</span>, <span class="st">"p"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://ghurault.github.io/HuraultMisc//reference/summary_statistics.html">summary_statistics</a></span><span class="op">(</span><span class="va">fit</span>, <span class="st">"p"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span><span class="va">true_param</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Variable"</span> <span class="op">=</span> <span class="st">"Parameter"</span>, <span class="st">"Index"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>True <span class="op">=</span> <span class="va">Value</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Variable</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
@@ -273,7 +276,7 @@
 <p><img src="MC_files/figure-html/check-computation-1.png" width="700"></p>
 <p>We can also quantify the “accuracy” of posterior estimates by computing the coverage probability of the parameters in the model, that is the proportion of parameters for which the x% credible interval includes the true value. For instance, we would expect that approximately 50% of the parameters have their 50% credible interval including the true value.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/coverage.html">plot_coverage</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span><span class="op">(</span><span class="va">cbind</span>, <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html">extract</a></span><span class="op">(</span><span class="va">fit</span>, pars <span class="op">=</span> <span class="va">true_param</span><span class="op">[[</span><span class="st">"Parameter"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,
+<code class="sourceCode R"><span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://ghurault.github.io/HuraultMisc//reference/coverage.html">plot_coverage</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span><span class="op">(</span><span class="va">cbind</span>, <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html">extract</a></span><span class="op">(</span><span class="va">fit</span>, pars <span class="op">=</span> <span class="va">true_param</span><span class="op">[[</span><span class="st">"Parameter"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,
                            <span class="va">true_param</span><span class="op">[[</span><span class="st">"Value"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></code></pre></div>
 <p><img src="MC_files/figure-html/plot-coverage-1.png" width="700"></p>
 </div>
