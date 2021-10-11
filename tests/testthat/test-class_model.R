@@ -78,7 +78,8 @@ for (model_name in c(main_models, ref_models, "MC")) {
       names(new_prior) <- par_name
 
       model1 <- EczemaModel(model_name, max_score = 10, prior = new_prior)
-      model2 <- expect_warning(EczemaModel(model_name, max_score = 10, prior = list(parameter_not_in_model = new_prior[[1]])))
+      expect_warning(EczemaModel(model_name, max_score = 10, prior = list(parameter_not_in_model = new_prior[[1]])))
+      model2 <- EczemaModel(model_name, max_score = 10, prior = list(parameter_not_in_model = new_prior[[1]]))
 
       expect_equal(model1$prior[[par_name]], new_prior[[1]])
       expect_equal(model0$prior, model2$prior)
