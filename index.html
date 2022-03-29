@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,23 +33,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -80,69 +76,87 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="eczemapred" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#eczemapred" class="anchor"></a>EczemaPred</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="eczemapred">EczemaPred<a class="anchor" aria-label="anchor" href="#eczemapred"></a>
+</h1></div>
 <!-- badges: start -->
 
-<p>EczemaPred is a R package implementing models to serve as building blocks for predicting the evolution of eczema severity, and provides a set of generic functions to manipulate these models. The models are implemented in the probabilistic programming language <a href="https://mc-stan.org/">Stan</a>.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<p>The package requires RStan and C++ toolchain, which can be installed by following these <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">instructions</a>.</p>
+<p>EczemaPred is a R package implementing models to serve as building blocks for predicting the evolution of eczema severity, and provides a set of generic functions to manipulate these models. The models are implemented in the probabilistic programming language <a href="https://mc-stan.org/" class="external-link">Stan</a>.</p>
+<p>EczemaPred was first introduced in <a href="https://doi.org/10.1002/clt2.12140" class="external-link"><strong>Hurault et al. (2022), “EczemaPred: A computational framework for personalised prediction of eczema severity dynamics”</strong></a>, published in Clinical and Translational Allergy. The analysis code of this research article is available <a href="https://github.com/ghurault/EczemaPredPOSCORAD" class="external-link">here</a>.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>The package requires RStan and C++ toolchain, which can be installed by following these <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started" class="external-link">instructions</a>.</p>
 <p>Then, the package can be installed by typing the following commands in R:</p>
-<pre><code>devtools::install_github("ghurault/EczemaPred")</code></pre>
+<pre><code><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ghurault/EczemaPred"</span><span class="op">)</span></code></pre>
 <p>Or to install a specific version, for example the initial release (v0.1.0):</p>
-<pre><code>devtools::install_github("ghurault/EczemaPred@v0.1.0")</code></pre>
+<pre><code><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ghurault/EczemaPred@v0.1.0"</span><span class="op">)</span></code></pre>
 <p>The package can take a few minutes to install as the models needs to be compiled (but no compilation will be required when using the package). Many warnings may be displayed during compilation but they can be safely ignored.</p>
-<p>NB: EczemaPred requires <a href="https://github.com/ghurault/HuraultMisc">HuraultMisc</a>, my personal function library, to work.</p>
+<p>NB: EczemaPred requires <a href="https://github.com/ghurault/HuraultMisc" class="external-link">HuraultMisc</a>, my personal function library, to work.</p>
 </div>
-<div id="usage" class="section level2">
-<h2 class="hasAnchor">
-<a href="#usage" class="anchor"></a>Usage</h2>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
 <p>The package is loaded with:</p>
-<pre><code><a href="https://rdrr.io/r/base/library.html">library(EczemaPred)</a></code></pre>
-<p>If you are working on a local, multicore CPU with excess RAM, you may want to call <code><a href="https://rdrr.io/r/base/options.html">options(mc.cores = parallel::detectCores())</a></code> to run Stan on multiple cores on parallel.</p>
-<p>The list of functions and datasets is available on the <a href="https://ghurault.github.io/EczemaPred/">package website</a> or by typing <code><a href="https://rdrr.io/pkg/EczemaPred/man">help(package = "EczemaPred")</a></code>. Examples on how the package can be used are provided in <a href="https://ghurault.github.io/EczemaPred/articles/">vignettes</a> (long form documentation).</p>
-<p>Basic knowledge of Bayesian modelling with Stan and the package <a href="https://mc-stan.org/users/interfaces/rstan">rstan</a> is required to analyse models’ outputs. The Stan documentation is available <a href="https://mc-stan.org/users/documentation/">here</a>.</p>
+<pre><code><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">EczemaPred</span><span class="op">)</span></code></pre>
+<p>If you are working on a local, multicore CPU with excess RAM, you may want to call <code>options(mc.cores = parallel::detectCores())</code> to run Stan on multiple cores on parallel.</p>
+<p>The list of functions and datasets is available on the <a href="https://ghurault.github.io/EczemaPred/" class="external-link">package website</a> or by typing <code><a href="https://rdrr.io/pkg/EczemaPred/man" class="external-link">help(package = "EczemaPred")</a></code>. Examples on how the package can be used are provided in <a href="https://ghurault.github.io/EczemaPred/articles/" class="external-link">vignettes</a> (long form documentation).</p>
+<p>Basic knowledge of Bayesian modelling with Stan and the package <a href="https://mc-stan.org/users/interfaces/rstan" class="external-link">rstan</a> is required to analyse models’ outputs. The Stan documentation is available <a href="https://mc-stan.org/users/documentation/" class="external-link">here</a>.</p>
 <p>NB: While the purpose of the package is to abstract the implementation to the user, the R code and Stan code can be accessed in the <a href="R/">R/</a> and <a href="inst/stan">inst/stan</a> directories, respectively.</p>
+</div>
+<div class="section level2">
+<h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
+</h2>
+<p>The open source version of EczemaPred is licensed under the GPLv3 license, which can be seen in the <a href="LICENSE.html">LICENSE</a> file. A closed source version of EczemaPred is also available without the restrictions of the GPLv3 license with a software usage agreement from Imperial College London. For more information, please contact <a href="mailto:d.yin@imperial.ac.uk">Diana Yin</a>.</p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
 <li><small>GPL (&gt;= 3)</small></li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Guillem Hurault <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-1052-3564" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html#citation">Citing EczemaPred</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/ghurault/EczemaPred/actions"><img src="https://github.com/ghurault/EczemaPred/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://codecov.io/gh/ghurault/EczemaPred?branch=main"><img src="https://codecov.io/gh/ghurault/EczemaPred/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
-<li><a href="https://github.com/ghurault/EczemaPred/actions"><img src="https://github.com/ghurault/EczemaPred/workflows/pkgdown/badge.svg" alt="pkgdown"></a></li>
+<li>Guillem Hurault <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-1052-3564" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/ghurault/EczemaPred/actions" class="external-link"><img src="https://github.com/ghurault/EczemaPred/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://codecov.io/gh/ghurault/EczemaPred?branch=main" class="external-link"><img src="https://codecov.io/gh/ghurault/EczemaPred/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://github.com/ghurault/EczemaPred/actions" class="external-link"><img src="https://github.com/ghurault/EczemaPred/workflows/pkgdown/badge.svg" alt="pkgdown"></a></li>
+</ul>
 </div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Guillem Hurault.</p>
+  <p></p>
+<p>Developed by Guillem Hurault.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -150,6 +164,8 @@
 
   
 
+
+  
 
   </body>
 </html>

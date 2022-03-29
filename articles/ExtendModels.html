@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,23 +33,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -91,9 +87,9 @@
 
     
     
-<div id="introduction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h1>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>The EczemaPred package provides a collection of “simple” statistical models that addresses common challenges when working with observational eczema severity data:</p>
 <ul>
 <li>multiple time-series (longitudinal data) and potentially patient-dependent parameters</li>
@@ -106,13 +102,13 @@
 <p>Then, these models can be extended to investigate diverse research questions.</p>
 <p>This vignette describes how we use the package to modify the pre-processing when a model has been extended.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">EczemaPred</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">EczemaPred</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></code></pre></div>
 </div>
-<div id="overview" class="section level1">
-<h1 class="hasAnchor">
-<a href="#overview" class="anchor"></a>Overview</h1>
-<p>The package uses the S3 object oriented programming system in R to allow inheritance and polymorphism. For more details of the S3 OOP system, you can check <a href="https://adv-r.hadley.nz/s3.html">Hadley Wickham’s book</a>.</p>
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
+<p>The package uses the S3 object oriented programming system in R to allow inheritance and polymorphism. For more details of the S3 OOP system, you can check <a href="https://adv-r.hadley.nz/s3.html" class="external-link">Hadley Wickham’s book</a>.</p>
 <p>The package provides a set of generics that can be useful when extending a models:</p>
 <ul>
 <li>
@@ -131,14 +127,14 @@
 <code><a href="../reference/sample_prior.html">sample_prior()</a></code>: Sample prior predictive distribution of the model (default generic is only valid with models provided in the package)</li>
 </ul>
 </div>
-<div id="example" class="section level1">
-<h1 class="hasAnchor">
-<a href="#example" class="anchor"></a>Example</h1>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
 <p>For example, let’s assume we would like to include additional covariates in the <code>BinRW</code> model, such as the sex of the patient (variable <code>sex</code>, coded as binary, with coefficient <code>beta_sex</code>).</p>
-<div id="modifying-the-stan-code" class="section level2">
-<h2 class="hasAnchor">
-<a href="#modifying-the-stan-code" class="anchor"></a>Modifying the Stan code</h2>
-<p>In the original Stan model, available <a href="https://github.com/ghurault/EczemaPred/blob/main/inst/stan/BinRW.stan">here</a>, this would mean:</p>
+<div class="section level3">
+<h3 id="modifying-the-stan-code">Modifying the Stan code<a class="anchor" aria-label="anchor" href="#modifying-the-stan-code"></a>
+</h3>
+<p>In the original Stan model, available <a href="https://github.com/ghurault/EczemaPred/blob/main/inst/stan/BinRW.stan" class="external-link">here</a>, this would mean:</p>
 <ul>
 <li>Including <code>sex</code> in the data block: <code>int&lt;lower = 0, upper = 1&gt; sex[N_pt];</code>
 </li>
@@ -150,10 +146,10 @@
 </ul>
 <p>Let’s call this new model <code>BinRW2</code>.</p>
 </div>
-<div id="updating-the-pre-processing" class="section level2">
-<h2 class="hasAnchor">
-<a href="#updating-the-pre-processing" class="anchor"></a>Updating the pre-processing</h2>
-<p>One way to use the package infrastructure to minimise the amount of new code to write would be to create a new model class <code>BinRW2</code> that inherits from the class <code>BinRW</code>. We also write <code>BinRW2</code> methods for <code>default_prior</code>, <code>validate_prior</code> and <code>print_prior</code> which makes use of <code><a href="https://rdrr.io/r/base/UseMethod.html">NextMethod()</a></code> to call the metods for the parent class <code>BinRW</code>.</p>
+<div class="section level3">
+<h3 id="updating-the-pre-processing">Updating the pre-processing<a class="anchor" aria-label="anchor" href="#updating-the-pre-processing"></a>
+</h3>
+<p>One way to use the package infrastructure to minimise the amount of new code to write would be to create a new model class <code>BinRW2</code> that inherits from the class <code>BinRW</code>. We also write <code>BinRW2</code> methods for <code>default_prior</code>, <code>validate_prior</code> and <code>print_prior</code> which makes use of <code><a href="https://rdrr.io/r/base/UseMethod.html" class="external-link">NextMethod()</a></code> to call the metods for the parent class <code>BinRW</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">BinRW2</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">max_score</span>, <span class="va">prior</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span>
   
@@ -161,55 +157,55 @@
   
   <span class="va">model</span><span class="op">$</span><span class="va">name</span> <span class="op">&lt;-</span> <span class="st">"BinRW2"</span>
   <span class="va">model</span><span class="op">$</span><span class="va">stanmodel</span> <span class="op">&lt;-</span> <span class="st">"path_to_stancode"</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"BinRW2"</span>, <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BinRW2"</span>, <span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">)</span>
   
   <span class="va">model</span><span class="op">$</span><span class="va">prior</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/default_prior.html">default_prior</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span> <span class="co"># Overwrite BinRW prior</span>
   <span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/replace_prior.html">replace_prior</a></span><span class="op">(</span><span class="va">model</span>, prior <span class="op">=</span> <span class="va">prior</span><span class="op">)</span> <span class="co"># Overwrite BinRW2 default prior</span>
   <span class="fu"><a href="../reference/validate_prior.html">validate_prior</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span> <span class="co"># Check BinRW2 prior</span>
   
-  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span>
 
 <span class="op">}</span>
 
 <span class="va">default_prior.BinRW2</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">model</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>beta_sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,
-    <span class="kw"><a href="https://rdrr.io/r/base/UseMethod.html">NextMethod</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>beta_sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,
+    <span class="kw"><a href="https://rdrr.io/r/base/UseMethod.html" class="external-link">NextMethod</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span>
 
 <span class="va">validate_prior.BinRW2</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">model</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">prior</span> <span class="op">&lt;-</span> <span class="va">model</span><span class="op">$</span><span class="va">prior</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">is.list</a></span><span class="op">(</span><span class="va">prior</span><span class="op">)</span>,
-            <span class="st">"beta_sex"</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">prior</span><span class="op">)</span>,
-            <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">is.numeric</a></span><span class="op">(</span><span class="va">prior</span><span class="op">$</span><span class="va">beta_sex</span><span class="op">)</span>,
-            <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">prior</span><span class="op">$</span><span class="va">beta_sex</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">is.list</a></span><span class="op">(</span><span class="va">prior</span><span class="op">)</span>,
+            <span class="st">"beta_sex"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">prior</span><span class="op">)</span>,
+            <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">is.numeric</a></span><span class="op">(</span><span class="va">prior</span><span class="op">$</span><span class="va">beta_sex</span><span class="op">)</span>,
+            <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prior</span><span class="op">$</span><span class="va">beta_sex</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2</span>,
             <span class="va">prior</span><span class="op">$</span><span class="va">beta_sex</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/UseMethod.html">NextMethod</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/UseMethod.html" class="external-link">NextMethod</a></span><span class="op">(</span><span class="op">)</span>
 <span class="op">}</span>
 
 <span class="va">print_prior.BinRW2</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">model</span>, <span class="va">digits</span> <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="../reference/print_prior.html">print_distribution</a></span><span class="op">(</span><span class="st">"beta_sex"</span>, <span class="st">"normal"</span>, <span class="va">model</span><span class="op">$</span><span class="va">prior</span><span class="op">$</span><span class="va">beta_sex</span>, digits <span class="op">=</span> <span class="va">digits</span><span class="op">)</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/UseMethod.html">NextMethod</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/UseMethod.html" class="external-link">NextMethod</a></span><span class="op">(</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <p>Similarly we can write the method for <code>list_parameters</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">list_parameters.BinRW2</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">model</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">pars</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/UseMethod.html">NextMethod</a></span><span class="op">(</span><span class="op">)</span>
-  <span class="va">pars</span><span class="op">$</span><span class="va">Population</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">pars</span><span class="op">$</span><span class="va">Population</span>, <span class="st">"beta_sex"</span><span class="op">)</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">pars</span><span class="op">)</span>
+  <span class="va">pars</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/UseMethod.html" class="external-link">NextMethod</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="va">pars</span><span class="op">$</span><span class="va">Population</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pars</span><span class="op">$</span><span class="va">Population</span>, <span class="st">"beta_sex"</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">pars</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <p>And finally, we need to write a method for <code>prepare_standata</code>, where we only need to provide the <code>sex</code> data in addition to the data required for “BinRW”.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">prepare_standata.BinRW2</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">model</span>, <span class="va">train</span>, <span class="va">test</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">out</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/UseMethod.html">NextMethod</a></span><span class="op">(</span><span class="op">)</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="va">out</span><span class="op">$</span><span class="va">N_pt</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">sex</span><span class="op">)</span>,
-            <span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="va">sex</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-  <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">out</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>sex <span class="op">=</span> <span class="va">sex</span><span class="op">)</span><span class="op">)</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span>
+  <span class="va">out</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/UseMethod.html" class="external-link">NextMethod</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="va">out</span><span class="op">$</span><span class="va">N_pt</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">sex</span><span class="op">)</span>,
+            <span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">sex</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">out</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>sex <span class="op">=</span> <span class="va">sex</span><span class="op">)</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 </div>
-<div id="fitting-the-model" class="section level2">
-<h2 class="hasAnchor">
-<a href="#fitting-the-model" class="anchor"></a>Fitting the model</h2>
+<div class="section level3">
+<h3 id="fitting-the-model">Fitting the model<a class="anchor" aria-label="anchor" href="#fitting-the-model"></a>
+</h3>
 <p>Now that everything is in place, we can use the above generics to sample the prior predictive distribution of the model or fit to data like the EczemaPred models.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">max_score</span> <span class="op">&lt;-</span> <span class="fl">100</span>
@@ -235,33 +231,33 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $Test</span>
 <span class="co">#&gt; [1] "y_pred"  "lpd"     "cum_err"</span></code></pre></div>
-<p>To sample the prior predictive disribution, we need to generate an empty dataset to pass to <code>prepare_standata</code> and then call <code><a href="https://mc-stan.org/rstan/reference/stan.html">rstan::stan</a></code> (the code could be put into a function <code>sample_prior.BinRW2</code>).</p>
+<p>To sample the prior predictive disribution, we need to generate an empty dataset to pass to <code>prepare_standata</code> and then call <code><a href="https://mc-stan.org/rstan/reference/stan.html" class="external-link">rstan::stan</a></code> (the code could be put into a function <code>sample_prior.BinRW2</code>).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">N_patient</span> <span class="op">&lt;-</span> <span class="fl">10</span>
-<span class="va">t_max</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html">rpois</a></span><span class="op">(</span><span class="va">N_patient</span>, <span class="fl">20</span><span class="op">)</span>
-<span class="va">sex</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">N_patient</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span>
+<span class="va">t_max</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="va">N_patient</span>, <span class="fl">20</span><span class="op">)</span>
+<span class="va">sex</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="va">N_patient</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span>
 
 <span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_empty_data.html">make_empty_data</a></span><span class="op">(</span>N_patient <span class="op">=</span> <span class="va">N_patient</span>,
                        t_max <span class="op">=</span> <span class="va">t_max</span>,
                        max_score <span class="op">=</span> <span class="va">model</span><span class="op">$</span><span class="va">max_score</span>,
                        discrete <span class="op">=</span> <span class="va">model</span><span class="op">$</span><span class="va">discrete</span><span class="op">)</span>
 
-<span class="va">data_stan</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_standata.html">prepare_standata</a></span><span class="op">(</span><span class="va">model</span>, train <span class="op">=</span> <span class="va">tmp</span><span class="op">[[</span><span class="st">"Training"</span><span class="op">]</span><span class="op">]</span>, test <span class="op">=</span> <span class="va">tmp</span><span class="op">[[</span><span class="st">"Testing"</span><span class="op">]</span><span class="op">]</span>, sex <span class="op">=</span> <span class="va">sex</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>run <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span>
+<span class="va">data_stan</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_standata.html">prepare_standata</a></span><span class="op">(</span><span class="va">model</span>, train <span class="op">=</span> <span class="va">tmp</span><span class="op">[[</span><span class="st">"Training"</span><span class="op">]</span><span class="op">]</span>, test <span class="op">=</span> <span class="va">tmp</span><span class="op">[[</span><span class="st">"Testing"</span><span class="op">]</span><span class="op">]</span>, sex <span class="op">=</span> <span class="va">sex</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>run <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span>
 
 <span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">fit_prior</span> <span class="op">&lt;-</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stan.html">stan</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">stanmodel</span>, data <span class="op">=</span> <span class="va">data_stan</span>, <span class="va">...</span><span class="op">)</span>
+  <span class="va">fit_prior</span> <span class="op">&lt;-</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stan.html" class="external-link">stan</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">stanmodel</span>, data <span class="op">=</span> <span class="va">data_stan</span>, <span class="va">...</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<p>To fit the model to real data, assuming we have a training set and optionally a testing set, we would just need to call <code>prepare_standata</code> and then <code><a href="https://mc-stan.org/rstan/reference/stan.html">rstan::stan</a></code> (this equivalent to the <code>EczemaFit</code> function).</p>
+<p>To fit the model to real data, assuming we have a training set and optionally a testing set, we would just need to call <code>prepare_standata</code> and then <code><a href="https://mc-stan.org/rstan/reference/stan.html" class="external-link">rstan::stan</a></code> (this equivalent to the <code>EczemaFit</code> function).</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">train</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_index.html">get_index2</a></span><span class="op">(</span><span class="va">t_max</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Score <span class="op">=</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html">extract</a></span><span class="op">(</span><span class="va">fit_prior</span>, pars <span class="op">=</span> <span class="st">"y_rep"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">10</span>, <span class="op">]</span><span class="op">)</span> <span class="co"># fake data for the example</span>
+  <span class="va">train</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_index.html">get_index2</a></span><span class="op">(</span><span class="va">t_max</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Score <span class="op">=</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html" class="external-link">extract</a></span><span class="op">(</span><span class="va">fit_prior</span>, pars <span class="op">=</span> <span class="st">"y_rep"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">10</span>, <span class="op">]</span><span class="op">)</span> <span class="co"># fake data for the example</span>
   
-  <span class="va">data_stan</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_standata.html">prepare_standata</a></span><span class="op">(</span><span class="va">model</span>, train <span class="op">=</span> <span class="va">train</span>, sex <span class="op">=</span> <span class="va">sex</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>run <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">data_stan</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_standata.html">prepare_standata</a></span><span class="op">(</span><span class="va">model</span>, train <span class="op">=</span> <span class="va">train</span>, sex <span class="op">=</span> <span class="va">sex</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>run <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
   
-  <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stan.html">stan</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">stanmodel</span>, data <span class="op">=</span> <span class="va">data_stan</span>, <span class="va">...</span><span class="op">)</span>
+  <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stan.html" class="external-link">stan</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">stanmodel</span>, data <span class="op">=</span> <span class="va">data_stan</span>, <span class="va">...</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 </div>
 </div>
@@ -278,11 +274,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Guillem Hurault.</p>
+  <p></p>
+<p>Developed by Guillem Hurault.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -290,6 +288,8 @@
 
   
 
+
+  
 
   </body>
 </html>
