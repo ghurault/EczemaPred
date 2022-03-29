@@ -30,26 +30,14 @@ list_parameters.BinRW <- function(model, main = TRUE, ...) {
 
 }
 
-#' @rdname list_parameters
-#' @importFrom HuraultMisc is_scalar
 #' @export
-#' @examples
-#' list_parameters(EczemaModel("OrderedRW", max_score = 100))
-list_parameters.OrderedRW <- function(model, main = TRUE, ...) {
-
-  stopifnot(is_scalar(main),
-            is.logical(main))
-
-  out <- list(Population = c("sigma", "mu_y0", "sigma_y0", "p0", "ct", "delta"),
-              Patient = "y0",
-              PatientTime = c("y_lat", "y_rep"),
-              Test = c("y_pred", "lpd", "cum_err"))
-  if (main) {
-    out$Population <- setdiff(out$Population, "p0")
-  }
-
-  return(out)
-
+list_parameters.OrderedRW <- function(model, ...) {
+  list(
+    Population = c("sigma_meas", "sigma_lat", "rho2", "sigma_tot", "ct", "delta", "mu_y0", "sigma_y0"),
+    Patient = "y0",
+    PatientTime = c("y_lat", "y_rep"),
+    Test = c("y_pred", "lpd", "cum_err")
+  )
 }
 
 #' @rdname list_parameters

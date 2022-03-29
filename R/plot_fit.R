@@ -16,7 +16,7 @@
 plot_latent_OrderedRW <- function(fit, id, patient_id) {
 
   stopifnot(is_stanfit(fit),
-            all(c("y_lat", "ct") %in% fit@model_pars),
+            all(c("y_lat", "ct", "sigma_meas") %in% fit@model_pars),
             is.data.frame(id),
             nrow(id) == fit@par_dims[["y_lat"]],
             all(c("Patient", "Time", "Index") %in% colnames(id)),
@@ -28,6 +28,9 @@ plot_latent_OrderedRW <- function(fit, id, patient_id) {
                  sapply(mean))
   ct <- rstan::extract(fit, pars = "ct")[[1]] %>%
     apply(2, mean)
+  sigma_meas <- rstan::extract(fit, pars = "sigma_meas")[[1]] %>%
+    mean()
+  s <- sigma_meas * sqrt(3) / pi
 
   max_score <- length(ct)
   lvl <- seq(0.1, 0.9, 0.1)
@@ -35,12 +38,12 @@ plot_latent_OrderedRW <- function(fit, id, patient_id) {
   # Label location
   midpoint <- (ct - lag(ct))[-1] / 2
   midpoint <- ct[1:length(midpoint)] + midpoint
-  midpoint <- c(ct[1] - 3.5, midpoint, ct[length(ct)] + 3.5)
+  midpoint <- c(ct[1] - 1, midpoint, ct[length(ct)] + 1)
 
   # Dataset containing CI of different levels
   ssi <- lapply(lvl,
                 function(CI) {
-                  z <- stats::qlogis(0.5 + CI / 2)
+                  z <- stats::qlogis(0.5 + CI / 2, scale = s)
                   out <- mutate(df, Lower = .data$Mean - z, Upper = .data$Mean + z, Level = CI)
                   return(out)
                 }) %>%

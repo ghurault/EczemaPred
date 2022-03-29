@@ -81,21 +81,21 @@ validate_prior.OrderedRW <- function(model, ...) {
   prior <- model$prior
   stopifnot(
     is.list(prior),
-    all(c("delta", "sigma", "mu_y0", "sigma_y0") %in% names(prior)),
+    all(c("delta", "sigma_meas", "sigma_lat", "mu_y0", "sigma_y0") %in% names(prior)),
     all(vapply(prior, is.numeric, logical(1))),
-    dim(prior$delta_sd) == c(2, model$max_score - 1),
-    all(prior$delta[2, ] > 0),
-    all(vapply(prior[c("sigma", "mu_y0", "sigma_y0")], function(x) {length(x) == 2}, logical(1))),
-    all(vapply(prior[c("sigma", "mu_y0", "sigma_y0")], function(x) {x[2] > 0}, logical(1)))
+    length(prior$delta) == model$max_score - 1,
+    all(prior$delta > 0),
+    all(vapply(prior[c("sigma_meas", "sigma_lat", "mu_y0", "sigma_y0")], function(x) {length(x) == 2}, logical(1))),
+    all(vapply(prior[c("sigma_meas", "sigma_lat", "mu_y0", "sigma_y0")], function(x) {x[2] > 0}, logical(1)))
   )
 }
 
 #' @export
 default_prior.OrderedRW <- function(model, ...) {
   list(
-    delta = matrix(rep(c(0, pi / sqrt(3) * 2), model$max_score - 1),
-                   nrow = 2, byrow = FALSE),
-    sigma = c(0, 0.1),
+    delta = rep(2, model$max_score - 1),
+    sigma_meas = c(-log(10), 0.5 * log(4)),
+    sigma_lat = c(-log(10), 0.5 * log(4)),
     mu_y0 = c(0.5, 0.25),
     sigma_y0 = c(0, 0.125)
   )
@@ -103,12 +103,11 @@ default_prior.OrderedRW <- function(model, ...) {
 
 #' @export
 print_prior.OrderedRW <- function(model, digits = 2, ...) {
-  for (i in 1:(model$max_score - 1)) {
-    print_distribution(paste0("delta[", i, "]"), "normal+", model$prior$delta[, i])
-  }
-  print_distribution("sigma", "normal+", model$prior$sigma, digits = digits)
-  print_distribution("mu_y0", "normal", model$prior$mu_y0, digits = digits)
-  print_distribution("sigma_y0", "normal+", model$prior$sigma_y0, digits = digits)
+  print_distribution("delta", "dirichlet", model$prior$delta, digits = digits)
+  print_distribution("sigma_meas / max_score", "lognormal", model$prior$sigma_meas, digits = digits)
+  print_distribution("sigma_lat / max_score", "lognormal", model$prior$sigma_lat, digits = digits)
+  print_distribution("mu_y0 / max_score", "normal", model$prior$mu_y0, digits = digits)
+  print_distribution("sigma_y0 / max_score", "normal+", model$prior$sigma_y0, digits = digits)
 }
 
 # BinMC -------------------------------------------------------------------

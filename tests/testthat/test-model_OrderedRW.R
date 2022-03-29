@@ -3,7 +3,7 @@ options(warn = -1)
 
 N_patient <- 10
 t_max <- rpois(N_patient, 25)
-param <- c("delta", "sigma", "mu_y0", "sigma_y0", "y0")
+param <- list_parameters("OrderedRW")[c("Population", "Patient")]
 max_score <- 5
 
 model <- EczemaModel("OrderedRW", max_score = max_score)
@@ -14,15 +14,13 @@ dprior <- model$prior
 
 wrong_priors <- list(
   1:4,
-  # as.list(1:4),
-  # c(dprior[names(dprior) != "delta"], list(a = dprior$delta)),
-  c(dprior[names(dprior) != "delta"], list(delta = as.character(dprior$delta))),
-  c(dprior[names(dprior) != "delta"], list(delta = matrix(rep(c(0, -3.5), max_score - 1),
-                                                          nrow = 2, byrow = FALSE))),
-  c(dprior[names(dprior) != "sigma"], list(sigma = 1)),
-  c(dprior[names(dprior) != "sigma"], list(sigma = c(0, -1))),
-  c(dprior[names(dprior) != "mu_y0"], list(mu_y0 = c(0, -1))),
-  c(dprior[names(dprior) != "sigma_y0"], list(sigma_y0 = c(0, -1)))
+  list(delta = as.character(dprior$delta)),
+  list(delta = rep(-1, max_score - 1)),
+  list(sigma_meas = 1),
+  list(sigma_meas = c(0, -1)),
+  list(sigma_lat = c(0, -1)),
+  list(mu_y0 = c(0, -1)),
+  list(mu_y0 = c(0, -1))
 )
 
 test_that("OrderedRW constructor catches errors in prior", {
@@ -44,7 +42,7 @@ test_that("sample_prior returns a stanfit object", {
 l <- extract_simulations(fit = fit0,
                          id = get_index2(t_max),
                          draw = 5,
-                         pars = param)
+                         pars = unlist(param))
 
 fit <- EczemaFit(model, train = l$Data, test = NULL, chains = 1, refresh = 0)
 
@@ -52,7 +50,7 @@ test_that("EczemaFit returns a stanfit object", {
   expect_true(is_stanfit(fit))
 })
 
-par <- HuraultMisc::summary_statistics(fit, pars = param) %>%
+par <- HuraultMisc::summary_statistics(fit, pars = unlist(param)) %>%
   left_join(l$Parameters, by = c("Variable" = "Parameter", "Index")) %>%
   rename(True = Value) %>%
   mutate(Coverage90 = (True > `5%` & True < `95%`),

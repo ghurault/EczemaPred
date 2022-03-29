@@ -6,7 +6,8 @@
 \arguments{
 \item{max_score}{Maximum value that the score can take}
 
-\item{prior}{Named list of the model's priors. If \code{NULL}, uses the default prior for the model (see \code{\link[=default_prior]{default_prior()}}).}
+\item{prior}{Named list of the model's priors.
+If \code{NULL}, uses the default prior for the model (see \code{\link[=default_prior]{default_prior()}}).}
 }
 \description{
 This is a state-space model defined by a Ordered logistic measurement error distribution and a latent random walk.
@@ -19,24 +20,28 @@ Details of the model are available in the \href{#}{paper}.
 
 \subsection{Population parameters:}{
 \itemize{
-\item \code{sigma}: Standard deviation of the random walk
+\item \code{sigma_lat}: Standard deviation of the random walk
+\item \code{sigma_meas}: Standard deviation (not scale) of the logistic distribution (in \verb{[0, max_score]} space)
+\item \code{sigma_tot}: Total standard deviation for prediction one step ahead
+\item \code{rho2}: Proportion of measurement variance to the total variance.
+It can be interpreted similarly to an R-squared, the proportion of the explained variance
+(the variance of the measurements) in the total variance.
 \item \code{mu_y0}: Population mean of \code{y0} (initial condition).
 \item \code{sigma_y0}: Population standard deviation of \code{y0} (initial condition).
-\item \code{delta}: Difference between cutpoints (vector of length \code{max_score - 1})
-\item \code{ct}: Cutpoints (vector of length \code{max_score})
-\item \code{p0}: Probability distribution of the average patient at t0 (vector of length \code{max_score})
+\item \code{delta}: Relative difference between cutpoints (simplex of length \code{max_score - 1})
+\item \code{ct}: Cutpoints (vector of length \code{max_score}, in \verb{[0, max_score]} space)
 }
 }
 
 \subsection{Patient-dependent parameters:}{
 \itemize{
-\item \code{y0}: \code{y_lat} at t0.
+\item \code{y0}: initial latent score (\code{y_lat} at t0).
 }
 }
 
 \subsection{Observation-dependent (patient- and time-dependent) parameters:}{
 \itemize{
-\item \code{y_lat}: Latent score
+\item \code{y_lat}: Latent score (in \verb{[0, max_score]} space)
 }
 
 See \code{list_parameters(model = "OrderedRW")} for more details.
@@ -45,31 +50,38 @@ See \code{list_parameters(model = "OrderedRW")} for more details.
 
 \section{Priors}{
 
-The priors are passed as a named list with elements \code{delta}, \code{sigma}, \code{mu_y0} and \code{sigma_y0}
+The priors are passed as a named list with elements \code{delta}, \code{sigma_lat}, \code{sigma_meas}, \code{mu_y0} and \code{sigma_y0}
 specifying priors for the corresponding parameters.
 
-The element \code{delta} should be a matrix with 2 rows and \code{max_score - 1} columns,
-such as the i-th column is a vector with values x1 and x2, where x2 > 0 and
-\verb{delta[i] ~ normal+(x1, x2)}.
-The other parameters are normalised by the difference between the highest and lowest cutpoints (approx. the range of the score),
-and their priors are defined by a vector of length 2, containing values for x1 and x2, x2 > 0, such as:
+The element \code{delta} should be a vector X1 of length \code{max_score - 1},
+such as all all elements of X1 are positive and
+\code{delta ~ dirichlet(X1)}.
+
+The latent score can be interpreted in the original \verb{[0, max_score]} space,
+the priors for the other parameters are specified normalised \code{max_score}.
+Their priors are defined by a vector of length 2, containing values for x1 and x2, x2 > 0, such as:
 \itemize{
-\item \verb{sigma ~ normal+(x1, x2)}
+\item \code{sigma_meas / max_score ~ lognormal(x1, x2)}
+\item \code{sigma_lat / max_score ~ lognormal(x1, x2)}
 \item \code{mu_y0 ~ normal(x1, x2)}
 \item \verb{sigma_y0 ~ normal+(x1, x2)}
 }
 
-NB: \code{delta}, \code{sigma} and \code{sigma_y0} are constrained to be positive so x1 are usually set to 0 to define a half-normal distribution.
+NB: for the lognormal distribution, x1 corresponds to the mean of the log and x2 to the sd of the log.
+NB: \code{sigma_y0} is constrained to be positive so x1 are usually set to 0 to define a half-normal distribution.
 }
 
 \section{Default priors}{
 
 \itemize{
-\item The default prior for \code{delta} is set so that \code{delta} is less than the width of the logistic distribution.
-\item The default prior for \code{sigma} assumes it would be to go to a state where \code{y = 0} is the most likely outcome to
-a state where \code{y = M} in two transitions.
-\item The default priors for \code{mu_y0} and \code{sigma_y0} have reasonable ranges and translate to an approximately uniform prior
-over the range of the score for \code{y0}.
+\item The default prior for \code{delta} is a uniform symmetric Dirichlet distribution with concentration 2.
+\item The default priors for \code{sigma_meas} and \code{sigma_lat} are lognormal distribution which translate to
+a 95\% CI that is approximately \verb{[.02, 0.40] * M}.
+The prior for \code{sigma_lat} thus allows fast or slow transitions from a state where \code{y = 0}
+is the most likely outcome to a state where \code{y = M} is the most likely outcome.
+The prior for \code{sigma_meas} allows very precise or imprecise measurements.
+\item The default priors for \code{mu_y0} and \code{sigma_y0} have reasonable ranges and translate to
+an approximately uniform prior over the range of the score for \code{y0}.
 }
 }
 

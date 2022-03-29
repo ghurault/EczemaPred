@@ -201,6 +201,16 @@ prepare_standata.AR1 <- function(model, train, test = NULL, ...) {
     add_prior(list(tau = numeric(0)))
 }
 
+prepare_standata.OrderedRW <- function(model, train, test = NULL, ...) {
+  # By default, logistic distribution with unknown delta
+  NextMethod() %>%
+    c(list(
+      measurement_distribution = 0,
+      delta_known = 0,
+      delta_data = matrix(numeric(0), nrow = 0, ncol = model$max_score - 1)
+    ))
+}
+
 # Prepare data for Markov Chain model -------------------------------------
 
 #' Stop if the dataframe is not a correct input for the Markov Chain model.
