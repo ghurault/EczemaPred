@@ -46,6 +46,7 @@ src/stanExports_*
 src/*.cpp
 *.o
 *.so
+src/EczemaPred.dll
 
 # Custom
 src-i386/*

@@ -51,3 +51,4 @@ reference:
   - extract_parameters
   - extract_simulations
   - samples_to_list
+  - EczemaPred-package
