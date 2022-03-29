@@ -19,7 +19,7 @@ you may want to call validate_prior() after using this function."><!-- mathjax -
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -89,24 +89,21 @@ you may want to call <code><a href="validate_prior.html">validate_prior()</a></c
 <span class="r-out co"><span class="r-pr">#&gt;</span> OrderedRW model (discrete)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> max_score = 5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Prior: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[1] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[2] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[3] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[4] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - sigma ~ normal+(0,0.1)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - mu_y0 ~ normal(0.5,0.25)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - sigma_y0 ~ normal+(0,0.12)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - delta ~ dirichlet(2,2,2,2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - sigma_meas / max_score ~ lognormal(-2.3,0.69)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - sigma_lat / max_score ~ lognormal(-2.3,0.69)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - mu_y0 / max_score ~ normal(0.5,0.25)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - sigma_y0 / max_score ~ normal+(0,0.12)</span>
 <span class="r-in"><span class="fu">replace_prior</span><span class="op">(</span><span class="va">model</span>, prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The following parameters do not exist or their priors do not need to be specified: sigma</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OrderedRW model (discrete)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> max_score = 5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Prior: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[1] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[2] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[3] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[4] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - sigma ~ normal+(0,1)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - mu_y0 ~ normal(0.5,0.25)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - sigma_y0 ~ normal+(0,0.12)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - delta ~ dirichlet(2,2,2,2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - sigma_meas / max_score ~ lognormal(-2.3,0.69)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - sigma_lat / max_score ~ lognormal(-2.3,0.69)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - mu_y0 / max_score ~ normal(0.5,0.25)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - sigma_y0 / max_score ~ normal+(0,0.12)</span>
 </code></pre></div>
     </div>
   </div>

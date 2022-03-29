@@ -18,7 +18,7 @@ For more details see the BinRW vignette."><!-- mathjax --><script src="https://c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -70,7 +70,8 @@ For more details see the BinRW <a href="https://ghurault.github.io/EczemaPred/ar
     <dl><dt>max_score</dt>
 <dd><p>Maximum value that the score can take</p></dd>
 <dt>prior</dt>
-<dd><p>Named list of the model's priors. If <code>NULL</code>, uses the default prior for the model (see <code><a href="default_prior.html">default_prior()</a></code>).</p></dd>
+<dd><p>Named list of the model's priors.
+If <code>NULL</code>, uses the default prior for the model (see <code><a href="default_prior.html">default_prior()</a></code>).</p></dd>
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -83,24 +84,28 @@ For more details see the BinRW <a href="https://ghurault.github.io/EczemaPred/ar
 <div class="section">
 <h3 id="population-parameters-">Population parameters:<a class="anchor" aria-label="anchor" href="#population-parameters-"></a></h3>
 
-<ul><li><p><code>sigma</code>: Standard deviation of the random walk</p></li>
+<ul><li><p><code>sigma_lat</code>: Standard deviation of the random walk</p></li>
+<li><p><code>sigma_meas</code>: Standard deviation (not scale) of the logistic distribution (in <code>[0, max_score]</code> space)</p></li>
+<li><p><code>sigma_tot</code>: Total standard deviation for prediction one step ahead</p></li>
+<li><p><code>rho2</code>: Proportion of measurement variance to the total variance.
+It can be interpreted similarly to an R-squared, the proportion of the explained variance
+(the variance of the measurements) in the total variance.</p></li>
 <li><p><code>mu_y0</code>: Population mean of <code>y0</code> (initial condition).</p></li>
 <li><p><code>sigma_y0</code>: Population standard deviation of <code>y0</code> (initial condition).</p></li>
-<li><p><code>delta</code>: Difference between cutpoints (vector of length <code>max_score - 1</code>)</p></li>
-<li><p><code>ct</code>: Cutpoints (vector of length <code>max_score</code>)</p></li>
-<li><p><code>p0</code>: Probability distribution of the average patient at t0 (vector of length <code>max_score</code>)</p></li>
+<li><p><code>delta</code>: Relative difference between cutpoints (simplex of length <code>max_score - 1</code>)</p></li>
+<li><p><code>ct</code>: Cutpoints (vector of length <code>max_score</code>, in <code>[0, max_score]</code> space)</p></li>
 </ul></div>
 
 <div class="section">
 <h3 id="patient-dependent-parameters-">Patient-dependent parameters:<a class="anchor" aria-label="anchor" href="#patient-dependent-parameters-"></a></h3>
 
-<ul><li><p><code>y0</code>: <code>y_lat</code> at t0.</p></li>
+<ul><li><p><code>y0</code>: initial latent score (<code>y_lat</code> at t0).</p></li>
 </ul></div>
 
 <div class="section">
 <h3 id="observation-dependent-patient-and-time-dependent-parameters-">Observation-dependent (patient- and time-dependent) parameters:<a class="anchor" aria-label="anchor" href="#observation-dependent-patient-and-time-dependent-parameters-"></a></h3>
 
-<ul><li><p><code>y_lat</code>: Latent score</p></li>
+<ul><li><p><code>y_lat</code>: Latent score (in <code>[0, max_score]</code> space)</p></li>
 </ul><p>See <code>list_parameters(model = "OrderedRW")</code> for more details.</p>
 </div>
 
@@ -109,26 +114,32 @@ For more details see the BinRW <a href="https://ghurault.github.io/EczemaPred/ar
     <h2>Priors</h2>
     
 
-<p>The priors are passed as a named list with elements <code>delta</code>, <code>sigma</code>, <code>mu_y0</code> and <code>sigma_y0</code>
+<p>The priors are passed as a named list with elements <code>delta</code>, <code>sigma_lat</code>, <code>sigma_meas</code>, <code>mu_y0</code> and <code>sigma_y0</code>
 specifying priors for the corresponding parameters.</p>
-<p>The element <code>delta</code> should be a matrix with 2 rows and <code>max_score - 1</code> columns,
-such as the i-th column is a vector with values x1 and x2, where x2 &gt; 0 and
-<code>delta[i] ~ normal+(x1, x2)</code>.
-The other parameters are normalised by the difference between the highest and lowest cutpoints (approx. the range of the score),
-and their priors are defined by a vector of length 2, containing values for x1 and x2, x2 &gt; 0, such as:</p><ul><li><p><code>sigma ~ normal+(x1, x2)</code></p></li>
+<p>The element <code>delta</code> should be a vector X1 of length <code>max_score - 1</code>,
+such as all all elements of X1 are positive and
+<code>delta ~ dirichlet(X1)</code>.</p>
+<p>The latent score can be interpreted in the original <code>[0, max_score]</code> space,
+the priors for the other parameters are specified normalised <code>max_score</code>.
+Their priors are defined by a vector of length 2, containing values for x1 and x2, x2 &gt; 0, such as:</p><ul><li><p><code>sigma_meas / max_score ~ lognormal(x1, x2)</code></p></li>
+<li><p><code>sigma_lat / max_score ~ lognormal(x1, x2)</code></p></li>
 <li><p><code>mu_y0 ~ normal(x1, x2)</code></p></li>
 <li><p><code>sigma_y0 ~ normal+(x1, x2)</code></p></li>
-</ul><p>NB: <code>delta</code>, <code>sigma</code> and <code>sigma_y0</code> are constrained to be positive so x1 are usually set to 0 to define a half-normal distribution.</p>
+</ul><p>NB: for the lognormal distribution, x1 corresponds to the mean of the log and x2 to the sd of the log.
+NB: <code>sigma_y0</code> is constrained to be positive so x1 are usually set to 0 to define a half-normal distribution.</p>
     </div>
     <div id="default-priors">
     <h2>Default priors</h2>
     
 
-<ul><li><p>The default prior for <code>delta</code> is set so that <code>delta</code> is less than the width of the logistic distribution.</p></li>
-<li><p>The default prior for <code>sigma</code> assumes it would be to go to a state where <code>y = 0</code> is the most likely outcome to
-a state where <code>y = M</code> in two transitions.</p></li>
-<li><p>The default priors for <code>mu_y0</code> and <code>sigma_y0</code> have reasonable ranges and translate to an approximately uniform prior
-over the range of the score for <code>y0</code>.</p></li>
+<ul><li><p>The default prior for <code>delta</code> is a uniform symmetric Dirichlet distribution with concentration 2.</p></li>
+<li><p>The default priors for <code>sigma_meas</code> and <code>sigma_lat</code> are lognormal distribution which translate to
+a 95% CI that is approximately <code>[.02, 0.40] * M</code>.
+The prior for <code>sigma_lat</code> thus allows fast or slow transitions from a state where <code>y = 0</code>
+is the most likely outcome to a state where <code>y = M</code> is the most likely outcome.
+The prior for <code>sigma_meas</code> allows very precise or imprecise measurements.</p></li>
+<li><p>The default priors for <code>mu_y0</code> and <code>sigma_y0</code> have reasonable ranges and translate to
+an approximately uniform prior over the range of the score for <code>y0</code>.</p></li>
 </ul></div>
 
     <div id="ref-examples">
@@ -137,18 +148,11 @@ over the range of the score for <code>y0</code>.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OrderedRW model (discrete)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> max_score = 10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Prior: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[1] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[2] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[3] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[4] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[5] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[6] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[7] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[8] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - delta[9] ~ normal+(0,3.6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - sigma ~ normal+(0,0.1)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - mu_y0 ~ normal(0.5,0.25)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - sigma_y0 ~ normal+(0,0.12)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - delta ~ dirichlet(2,2,2,2,2,2,2,2,2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - sigma_meas / max_score ~ lognormal(-2.3,0.69)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - sigma_lat / max_score ~ lognormal(-2.3,0.69)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - mu_y0 / max_score ~ normal(0.5,0.25)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - sigma_y0 / max_score ~ normal+(0,0.12)</span>
 </code></pre></div>
     </div>
   </div>
