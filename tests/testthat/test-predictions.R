@@ -106,11 +106,18 @@ test_that("add_metrics1_c returns a correct dataframe", {
 })
 
 test_that("add_metrics2_c returns a correct dataframe", {
-  perf <- RW_split$Testing %>%
-    mutate(Samples = samples_to_list(RW_fit, par_name = "y_pred")) %>%
-    add_metrics2_c() %>%
-    select(-Samples)
-  test_when_continuous(perf, RW_split$Testing)
+  tmp <- RW_split$Testing %>%
+    mutate(Samples = samples_to_list(RW_fit, par_name = "y_pred"))
+
+  list(
+    add_metrics2_c(tmp),
+    add_metrics2_c(tmp, add_samples = 0:RW_setup$max_score),
+    add_metrics2_c(tmp, bw = 1)
+  ) %>%
+    lapply(function(perf) {
+      test_when_continuous(select(perf, -Samples),
+                           RW_split$Testing)
+    })
 })
 
 test_that("add_predictions returns a correct dataframe (continuous)", {
