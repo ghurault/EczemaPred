@@ -4,7 +4,7 @@
 \alias{plot_latent_OrderedRW}
 \title{Plot the evolution of the expected latent score of the OrderedRW model}
 \usage{
-plot_latent_OrderedRW(fit, id, patient_id)
+plot_latent_OrderedRW(fit, id, patient_id, ...)
 }
 \arguments{
 \item{fit}{Stanfit object}
@@ -12,6 +12,8 @@ plot_latent_OrderedRW(fit, id, patient_id)
 \item{id}{Dataframe linking index in fit to (Patient, Time) pairs, cf. output from \code{\link[=get_index]{get_index()}}}
 
 \item{patient_id}{Patient ID}
+
+\item{...}{Arguments to pass to \code{\link[=add_fanchart]{add_fanchart()}}}
 }
 \value{
 Ggplot

@@ -68,7 +68,7 @@ Let's call this new model `BinRW2`.
 ## Updating the pre-processing
 
 One way to use the package infrastructure to minimise the amount of new code to write would be to create a new model class `BinRW2` that inherits from the class `BinRW`.
-We also write `BinRW2` methods for `default_prior`, `validate_prior` and `print_prior` which makes use of `NextMethod()` to call the metods for the parent class `BinRW`.
+We also write `BinRW2` methods for `default_prior`, `validate_prior` and `print_prior` which makes use of `NextMethod()` to call the methods for the parent class `BinRW`.
 
 ```{r constructor}
 BinRW2 <- function(max_score, prior = NULL) {
@@ -143,7 +143,7 @@ max_score <- 100
 list_parameters(model)
 ```
 
-To sample the prior predictive disribution, we need to generate an empty dataset to pass to `prepare_standata` and then call `rstan::stan` (the code could be put into a function `sample_prior.BinRW2`).
+To sample the prior predictive distribution, we need to generate an empty dataset to pass to `prepare_standata` and then call `rstan::stan` (the code could be put into a function `sample_prior.BinRW2`).
 
 ```{r sample-prior}
 N_patient <- 10

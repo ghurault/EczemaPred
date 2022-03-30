@@ -2,7 +2,8 @@
 
 #' @export
 list_parameters.character <- function(model, ...) {
-  structure(list(name = model),
+  structure(list(name = model,
+                 discrete = FALSE),
             class = c(model)) %>%
     list_parameters(...)
 }
@@ -64,35 +65,51 @@ list_parameters.BinMC <- function(model, main = TRUE, ...) {
 
 #' @export
 list_parameters.RW <- function(model, ...) {
-  list(Population = "sigma",
-       PatientTime = "y_rep",
-       Test = c("y_pred", "lpd", "cum_err"),
-       Misc = "y_mis")
+  out <- list(Population = "sigma",
+              PatientTime = "y_rep",
+              Test = c("y_pred", "lpd"),
+              Misc = "y_mis")
+  if (model$discrete) {
+    out$Test <- c(out$Test, "cum_err")
+  }
+  return(out)
 }
 
 #' @export
 list_parameters.Smoothing <- function(model, ...) {
-  list(Population = c("sigma", "tau", "alpha"),
-       PatientTime = c("L", "y_rep"),
-       Test = c("y_pred", "lpd"),
-       Misc = "y_mis")
+  out <- list(Population = c("sigma", "tau", "alpha"),
+              PatientTime = c("L", "y_rep"),
+              Test = c("y_pred", "lpd"),
+              Misc = "y_mis")
+  if (model$discrete) {
+    out$Test <- c(out$Test, "cum_err")
+  }
+  return(out)
 }
 
 #' @export
 list_parameters.AR1 <- function(model, ...) {
-  list(Population = c("sigma", "slope", "intercept", "y_inf"),
-       PatientTime = "y_rep",
-       Test = c("y_pred", "lpd"),
-       Misc = "y_mis")
+  out <- list(Population = c("sigma", "slope", "intercept", "y_inf"),
+              PatientTime = "y_rep",
+              Test = c("y_pred", "lpd"),
+              Misc = "y_mis")
+  if (model$discrete) {
+    out$Test <- c(out$Test, "cum_err")
+  }
+  return(out)
 }
 
 #' @export
 list_parameters.MixedAR1 <- function(model, ...) {
-  list(Population = c("sigma", "mu_logit_slope", "sigma_logit_slope", "mu_inf", "sigma_inf"),
-       Patient = c("slope", "y_inf", "intercept"),
-       PatientTime = c("y_rep"),
-       Test = c("y_pred", "lpd"),
-       Misc = "y_mis")
+  out <- list(Population = c("sigma", "mu_logit_slope", "sigma_logit_slope", "mu_inf", "sigma_inf"),
+              Patient = c("slope", "y_inf", "intercept"),
+              PatientTime = c("y_rep"),
+              Test = c("y_pred", "lpd"),
+              Misc = "y_mis")
+  if (model$discrete) {
+    out$Test <- c(out$Test, "cum_err")
+  }
+  return(out)
 }
 
 #' @export

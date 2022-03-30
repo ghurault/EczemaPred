@@ -155,7 +155,7 @@ NULL
 #' ## Observation-dependent (patient- and time-dependent) parameters:
 #'
 #' - `p01`: Probability of transitioning from state 0 to state 1
-#' - `lambda`: Mobility of the Markov Chain (eigen value of the transition matrix)
+#' - `lambda`: Mobility of the Markov Chain (eigenvalue of the transition matrix)
 #' - `ss1`: Steady state probability of state 1
 #' - `y_lat`: Latent score (probability)
 #'
@@ -332,13 +332,16 @@ NULL
 
 #' Mixed effect autoregressive model (order 1)
 #'
-#' @param max_score Maximum value that the score can take
+#' @param max_score Maximum value that the score can take.
+#' Note that even if `discrete=FALSE`, `max_score` must be an integer.
+#' @param discrete Whether to use a discrete normal distribution.
+#' This will be used to check whether the data is discrete or not, and for rounding predictions (cf. testing).
 #' @param prior Named list of the model's priors. If `NULL`, uses the default prior for the model (see [default_prior()]).
 #'
 #' @details
 #' - Details of the model are available in the [paper](#).
 #' The model takes as input a continuous score defined between 0 and `max_score`.
-#' - The model is naive as the likelihood distribution is not truncated.
+#' - The model is naive as the likelihood is non-truncated and not discretised (when `discrete = TRUE`).
 #' - Unlike the `AR1` model, the discretisation of predictions is not implemented
 #' - For more details see the [vignette](https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html).
 #'

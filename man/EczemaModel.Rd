@@ -31,7 +31,7 @@ An object (list) of class \code{model_name} and EczemaModel, with elements:
 \item \code{model_name}: Name of the model
 \item \code{stanmodel}: Name of the Stan model.
 Used internally to locate the compiled code.
-It can also be used to store the filepath of the Stan code.
+It can also be used to store the Stan code filepath.
 \item \code{discrete}: Whether the model is discrete or not.
 \item \code{max_score}: Maximum value that the score can take (when applicable)
 \item \code{K}: Number of categories (when applicable)

@@ -50,6 +50,6 @@ NB: While the purpose of the package is to abstract the implementation to the us
 
 ## License
 
-The open source version of EczemaPred is licensed under the GPLv3 license, which can be seen in the [LICENSE](LICENSE.md) file.
-A closed source version of EczemaPred is also available without the restrictions of the GPLv3 license with a software usage agreement from Imperial College London.
+The open source version of EczemaPred is licensed under the GPL v3 license, which can be seen in the [LICENSE](LICENSE.md) file.
+A closed source version of EczemaPred is also available without the restrictions of the GPL v3 license with a software usage agreement from Imperial College London.
 For more information, please contact [Diana Yin](mailto:d.yin@imperial.ac.uk).

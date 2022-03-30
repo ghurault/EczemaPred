@@ -14,7 +14,7 @@ add_predictions(
 }
 \arguments{
 \item{df}{Dataframe.
-For \code{add_metrics}, when \code{discrete = FALSE}, it must contain a column "Score".}
+When \code{discrete = FALSE}, it must contain a column "Score".}
 
 \item{fit}{Stanfit object}
 
@@ -26,7 +26,7 @@ For a discrete forecast, the RPS will be computed and the CRPS for a continuous 
 \item{n_samples}{If \code{include_samples=TRUE}, how many samples to return. Default (=NULL) to all samples.}
 }
 \value{
-Dataframe \code{df} appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"
+Dataframe \code{df} appended by the columns "lpd", "RPS" (or CRPS if \code{discrete=FALSE}) and optionally "Samples"
 }
 \description{
 Append lpd, (C)RPS and predictive samples to (test) dataframe

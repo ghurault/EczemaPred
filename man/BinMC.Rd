@@ -36,7 +36,7 @@ Details of the model are available in the \href{#}{paper}.
 \subsection{Observation-dependent (patient- and time-dependent) parameters:}{
 \itemize{
 \item \code{p01}: Probability of transitioning from state 0 to state 1
-\item \code{lambda}: Mobility of the Markov Chain (eigen value of the transition matrix)
+\item \code{lambda}: Mobility of the Markov Chain (eigenvalue of the transition matrix)
 \item \code{ss1}: Steady state probability of state 1
 \item \code{y_lat}: Latent score (probability)
 }

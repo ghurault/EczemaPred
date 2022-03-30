@@ -5,6 +5,7 @@
 #' @param fit Stanfit object
 #' @param id Dataframe linking index in fit to (Patient, Time) pairs, cf. output from [get_index()]
 #' @param patient_id Patient ID
+#' @param ... Arguments to pass to [add_fanchart()]
 #'
 #' @return Ggplot
 #' - Horizontal lines correspond to the expected cut-offs
@@ -13,7 +14,7 @@
 #' @import ggplot2 dplyr
 #'
 #' @export
-plot_latent_OrderedRW <- function(fit, id, patient_id) {
+plot_latent_OrderedRW <- function(fit, id, patient_id, ...) {
 
   stopifnot(is_stanfit(fit),
             all(c("y_lat", "ct", "sigma_meas") %in% fit@model_pars),
@@ -24,8 +25,9 @@ plot_latent_OrderedRW <- function(fit, id, patient_id) {
 
   # Extract mean latent score and cutpoints
   id1 <- filter(id, .data$Patient == patient_id)
-  df <- mutate(id1, Mean = rstan::extract(fit, pars = paste0("y_lat[", id1[["Index"]], "]")) %>%
-                 sapply(mean))
+  df <- id1 %>%
+    mutate(Mean = rstan::extract(fit, pars = paste0("y_lat[", id1[["Index"]], "]")) %>%
+             vapply(mean, numeric(1)))
   ct <- rstan::extract(fit, pars = "ct")[[1]] %>%
     apply(2, mean)
   sigma_meas <- rstan::extract(fit, pars = "sigma_meas")[[1]] %>%
@@ -49,7 +51,8 @@ plot_latent_OrderedRW <- function(fit, id, patient_id) {
                 }) %>%
     bind_rows()
 
-  p <- plot_fanchart(ssi) +
+  p <- ggplot() +
+    add_fanchart(df = ssi, ...) +
     geom_hline(yintercept = ct) +
     geom_label(data = data.frame(Label = paste0("y = ", 0:max_score), x = 1, y = midpoint),
                aes_string(x = "x", y = "y", label = "Label"), hjust = 0) +

@@ -32,7 +32,7 @@ for example to add a uniform distribution to the vector of samples to avoid prob
 If \code{NULL}, the empirical pmf is not changed.
 Default to the uniform distribution (i.e. \code{support}) for \code{\link[=add_metrics2_d]{add_metrics2_d()}} and \code{NULL} for \code{\link[=add_metrics2_c]{add_metrics2_c()}}.}
 
-\item{bw}{Bandwith, for calculating lpd, see \code{\link[scoringRules:scores_sample_univ]{scoringRules::logs_sample()}}.
+\item{bw}{Bandwidth, for calculating lpd, see \code{\link[scoringRules:scores_sample_univ]{scoringRules::logs_sample()}}.
 Useful to set the "resolution" of the distribution.}
 }
 \value{

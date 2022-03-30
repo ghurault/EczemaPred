@@ -26,5 +26,5 @@ Named list:
 Extract simulations
 }
 \details{
-This function is not desgined to use with the Markov Chain model (MC).
+This function is not designed to use with the Markov Chain model (MC).
 }

@@ -58,7 +58,7 @@ stopifnot_valid_score <- function(x, max_score = NA, discrete) {
     if (discrete) {
       stopifnot(all(x %in% c(0:max_score)))
     } else {
-      stopifnot(all(sapply(x, function(x) {dplyr::between(x, 0, max_score)})))
+      stopifnot(all(vapply(x, function(x) {dplyr::between(x, 0, max_score)}, logical(1))))
     }
   }
 
@@ -109,13 +109,17 @@ stopifnot_lgtd_test <- function(test, train, max_score, discrete) {
 #' @param discrete Whether to use a discrete normal distribution (only relevant for testing)
 #'
 #' @export
-#' @importFrom HuraultMisc is_scalar_wholenumber
+#' @importFrom HuraultMisc is_scalar_wholenumber is_wholenumber
 prepare_data_lgtd <- function(train, test = NULL, max_score, discrete) {
 
-  stopifnot(is_scalar_wholenumber(max_score),
+  stopifnot(is_scalar(max_score),
+            is.numeric(max_score),
             max_score > 0,
             is_scalar(discrete),
             is.logical(discrete))
+  if (discrete) {
+    stopifnot(is_wholenumber(max_score))
+  }
   stopifnot_lgtd_train(train, max_score, discrete)
 
   data_stan <- list(
@@ -201,6 +205,13 @@ prepare_standata.AR1 <- function(model, train, test = NULL, ...) {
     add_prior(list(tau = numeric(0)))
 }
 
+#' @export
+prepare_standata.MixedAR1 <- function(model, train, test = NULL, ...) {
+  NextMethod() %>%
+    c(list(discrete = as.numeric(model$discrete)))
+}
+
+#' @export
 prepare_standata.OrderedRW <- function(model, train, test = NULL, ...) {
   # By default, logistic distribution with unknown delta
   NextMethod() %>%

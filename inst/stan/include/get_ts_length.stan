@@ -4,7 +4,7 @@ int[] get_ts_length(int[] k, int[] t) {
 
   int N = size(k);
   int N_pt = max(k);
-  int t_max[N_pt];
+  int t_max[N_pt] = rep_array(0, N_pt);
   if (size(t) != N) {
     reject("k and t should have the same length");
   }

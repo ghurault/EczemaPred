@@ -15,7 +15,7 @@
 #' - `model_name`: Name of the model
 #' - `stanmodel`: Name of the Stan model.
 #' Used internally to locate the compiled code.
-#' It can also be used to store the filepath of the Stan code.
+#' It can also be used to store the Stan code filepath.
 #' - `discrete`: Whether the model is discrete or not.
 #' - `max_score`: Maximum value that the score can take (when applicable)
 #' - `K`: Number of categories (when applicable)
@@ -41,8 +41,6 @@ EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC", "RW", "Smo
 
   if (model_name %in% c("BinRW", "OrderedRW", "BinMC", "MC")) {
     discrete <- TRUE
-  } else if (model_name %in% c("MixedAR1")) {
-    discrete <- FALSE
   } else {
     stopifnot(is_scalar(discrete),
               is.logical(discrete))
@@ -53,10 +51,16 @@ EczemaModel <- function(model_name = c("BinRW", "OrderedRW", "BinMC", "RW", "Smo
     if (is.null(max_score)) {
       stop("max_score must be supplied for ", model_name)
     } else {
-      # NB: max_score must be a wholenumber even if discrete=FALSE
-      stopifnot(is_scalar_wholenumber(max_score),
-                max_score > 0,
-                max_score > 1 || model_name != "OrderedRW")
+      stopifnot(is_scalar(max_score),
+                is.numeric(max_score),
+                max_score > 0)
+      if (model_spec$discrete || model_name == "MixedAR1") {
+        # max_score as a real not implemented for MixedAR1
+        stopifnot(is_wholenumber(max_score))
+      }
+      if (model_name == "OrderedRW") {
+        stopifnot(max_score > 1)
+      }
       model_spec$max_score <- max_score
     }
   }
@@ -188,11 +192,11 @@ print_prior <- function(model, ...) {
 #' @param ... Arguments to pass to other methods
 #'
 #' @return Named list of parameters names, grouped into broad categories:
-#' - Population: population parameters (i.e. patient- and time-independent)
-#' - Patient: patient-dependent parameters
-#' - PatientTime: patient- and time-dependent parameters (e.g. latent scores)
-#' - Test: parameters related to the test set
-#' - Misc: other parameters
+#' - `Population`: population parameters (i.e. patient- and time-independent)
+#' - `Patient`: patient-dependent parameters
+#' - `PatientTime`: patient- and time-dependent parameters (e.g. latent scores)
+#' - `Test`: parameters related to the test set
+#' - `Misc`: other parameters
 #'
 #' @details
 #' See [MC], [BinRW], [BinMC], [OrderedRW], [RW], [Smoothing], [AR1] and [MixedAR1] for details about the model-specific parameters.

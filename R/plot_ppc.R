@@ -1,5 +1,4 @@
 # Plot posterior predictive trajectory for longitudinal models
-# NB: tests are located in test-model_BinRW.R
 
 # Documentation -----------------------------------------------------------
 
@@ -11,31 +10,31 @@
 #' - `plot_ppc_traj_*` overlays the observed trajectory to the posterior predictive trajectory
 #'
 #' @param obj Stanfit object or matrix of replications, with rows corresponding to samples and
-#' columns corresponding to variables (there should be `nrow(id)` columns)
-#' @param id Dataframe linking index in obj to (Patient, Time) pairs, cf. output from [get_index()]
-#' @param train Training dataset used to obtain the fit
-#' @param test Testing dataset used to obtain the fit (can be NULL)
-#' @param patient_id Patient ID
+#' columns corresponding to variables (there should be `nrow(id)` columns).
+#' @param id Dataframe linking index in `obj` to (`Patient`, `Time`) pairs, cf. output from [get_index()].
+#' @param train Training dataset used to obtain the fit.
+#' @param test Testing dataset used to obtain the fit (can be `NULL`).
+#' @param patient_id Patient ID.
 #' @param max_score (Optional) Maximum value that the score can take.
 #' In `plot_*_traj_pmf` this will set `support` if it is not supplied.
 #' In `plot_*_traj_fanchart` this will set the y axis range.
 #' In `plot_ppc_traj_*` this will check the content of `train` and `test`.
-#' @param support Values that the discrete distribution can take
+#' @param support Values that the discrete distribution can take.
 #' Can be NULL, in that case the support of the pmf is estimated from the data (cf. [HuraultMisc::extract_distribution()]).
 #' @param max_scale Maximum value that the legend display.
-#' If NA, this chosen automatically
+#' If NA, this chosen automatically.
 #' @param interval Type of confidence of interval to display, one of "eti" for equal-tailed intervals and
 #' "hdi" for highest density interval.
-#' @param CI_level Vector of confidence level to plot for the fanchart
-#' @param ... arguments to pass to `plot_post_traj_*`
+#' @param CI_level Vector of confidence level to plot for the fanchart.
+#' @param ... arguments to pass to `plot_post_traj_*`.
+#' For `plot_post_traj_fanchart()`, arguments to pass to [add_fanchart()].
 #'
 #' @return Ggplot
 #'
 #' @name plot_ppc
 NULL
 
-
-# Helper functions --------------------------------------------------------
+# Processing helpers --------------------------------------------------------
 
 #' Helper function to extract patient replications distribution
 #'
@@ -79,6 +78,37 @@ extract_yrep <- function(obj, id, patient_id, ...) {
 
 }
 
+#' Helper function to prepare dataframe for ppc
+#'
+#' Not exported
+#'
+#' @rdname plot_ppc
+#' @noRd
+process_df_ppc <- function(train, test, max_score = NA, patient_id, discrete) {
+
+  stopifnot(is_scalar(max_score))
+  if (!is.na(max_score)) {
+    stopifnot(is.numeric(max_score),
+              max_score > 0)
+  }
+
+  stopifnot_lgtd_train(train, max_score = max_score, discrete = discrete)
+  train <- mutate(train, Label = "Training")
+  if (!is.null(test)) {
+    stopifnot_lgtd_test(test, train, max_score = max_score, discrete = discrete)
+    test <- mutate(test, Label = "Testing")
+    df <- bind_rows(train, test)
+  } else {
+    df <- train
+  }
+  df <- df[, c("Patient", "Time", "Score", "Label")]
+  stopifnot(patient_id %in% unique(df[["Patient"]]))
+
+  return(df)
+}
+
+# Plotting helpers --------------------------------------------------------
+
 #' Plot posterior predictive trajectory as a pmf
 #'
 #' Not exported
@@ -117,107 +147,36 @@ plot_pmf <- function(ssd,
 
 }
 
-#' Plot posterior predictive trajectory as a fanchart
-#'
-#' Not exported
-#'
-#' @param ssi Dataframe summarising the distribution as a confidence interval
-#' (output from [HuraultMisc::extract_distribution()] with type eti or hdi).
-#' @param palette Colour palette (character vector).
-#' Default is a single-hue blue palette: `rev(c("#FFFFFF", RColorBrewer::brewer.pal(n = 6, "Blues")))`.
-#'
-#' @return Ggplot
-#' @noRd
-plot_fanchart <- function(ssi,
-                          ylim = NULL,
-                          palette = rev(c("#FFFFFF", "#EFF3FF", "#C6DBEF", "#9ECAE1", "#6BAED6", "#3182BD", "#08519C"))) {
-
-  lvl <- sort(unique(ssi[["Level"]]), decreasing = TRUE)
-
-  p <- ggplot()
-  # Prediction intervals (cf. fill cannot be an aesthetic with a ribbon)
-  for (i in 1:length(lvl)) {
-    p <- p + geom_ribbon(data = filter(ssi, .data$Level == lvl[i]),
-                         aes_string(x = "Time", ymin = "Lower", ymax = "Upper", fill = "Level"))
-  }
-
-  # Formatting
-  p <- p +
-    scale_fill_gradientn(colours = palette, limits = c(0, 1), breaks = c(.1, .5, .9)) +
-    labs(fill = "Confidence level") +
-    theme_classic(base_size = 15)
-
-  return(p)
-
-}
-
-#' Helper function to prepare dataframe for ppc
-#'
-#' Not exported
-#'
-#' @rdname plot_ppc
-#' @noRd
-process_df_ppc <- function(train, test, max_score = NA, patient_id, discrete) {
-
-  stopifnot(is_scalar(max_score))
-  if (!is.na(max_score)) {
-    stopifnot(is.numeric(max_score),
-              max_score > 0)
-  }
-
-  stopifnot_lgtd_train(train, max_score = max_score, discrete = discrete)
-  train <- mutate(train, Label = "Training")
-  if (!is.null(test)) {
-    stopifnot_lgtd_test(test, train, max_score = max_score, discrete = discrete)
-    test <- mutate(test, Label = "Testing")
-    df <- bind_rows(train, test)
-  } else {
-    df <- train
-  }
-  df <- df[, c("Patient", "Time", "Score", "Label")]
-  stopifnot(patient_id %in% unique(df[["Patient"]]))
-
-  return(df)
-}
-
 #' Add trajectory to existing ggplot
 #'
+#' - The trajectory is broken to "show" missing values
+#' - Training and testing sets are coloured differently
+#'
 #' Not exported
 #'
-#' @param p Ggplot
-#' @param df Dataframe
+#' @param df Dataframe with columns `Label` (`Training` or `Testing`), `Time`, `Score`
 #'
-#' @return Ggplot
+#' @return List to pass to a ggplot
 #' @import ggplot2 dplyr
 #' @noRd
-add_trajectory <- function(p = ggplot(), df) {
+add_trajectory <- function(df) {
 
   last_train_time <- df %>%
     filter(.data$Label == "Training") %>%
     summarise(max(.data$Time)) %>%
     pull()
-  # Add missing values to have a broken line
-  t_mis <- setdiff(1:max(df[["Time"]], na.rm = TRUE), df[["Time"]])
-  if (length(t_mis) > 0) {
-    df <- data.frame(Time = sort(t_mis)) %>%
-      mutate(Label = case_when(.data$Time <= last_train_time ~ "Training",
-                               TRUE ~ "Testing")) %>%
-      bind_rows(df)
-  }
   df <- df %>%
-    mutate(Label = factor(.data$Label, levels = c("Training", "Testing"))) %>%
-    arrange(.data$Time)
+    mutate(Label = case_when(.data$Time <= last_train_time ~ "Training",
+                             TRUE ~ "Testing"),
+           Label = factor(.data$Label, levels = c("Training", "Testing")))
 
-  p <- p +
-    geom_path(data = df, aes_string(x = "Time", y = "Score", colour = "Label"), size = 1) +
-    geom_point(data = df, aes_string(x = "Time", y = "Score", colour = "Label"), size = 1) + # cf. isolated missing values
-    scale_colour_manual(values = c("#000000", "#E69F00"))
+  out <- c(add_broken_pointline(df, aes_x = "Time", aes_y = "Score", colour = as.name("Label")),
+           list(scale_colour_manual(values = c("#000000", "#E69F00"), na.translate = FALSE),
+                labs(y = "Score", colour = "")))
 
-  p <- p +
-    labs(y = "Score", colour = "") +
-    theme_classic(base_size = 15)
+  # NA appearing in legend?
 
-  return(p)
+  return(out)
 
 }
 
@@ -260,7 +219,8 @@ plot_post_traj_fanchart <- function(obj,
                                     patient_id,
                                     max_score = NA,
                                     interval = c("eti", "hdi"),
-                                    CI_level = seq(0.1, 0.9, 0.1)) {
+                                    CI_level = seq(0.1, 0.9, 0.1),
+                                    ...) {
 
   stopifnot(is_scalar(max_score))
   if (!is.na(max_score)) {
@@ -278,7 +238,8 @@ plot_post_traj_fanchart <- function(obj,
                       type = interval,
                       CI_level = CI_level)
 
-  p <- plot_fanchart(ssi) +
+  p <- ggplot() +
+    add_fanchart(df = ssi, ...) +
     coord_cartesian(ylim = c(0, max_score), expand = FALSE)
 
   return(p)
@@ -296,14 +257,15 @@ plot_ppc_traj_pmf <- function(obj,
                               max_score = NA,
                               ...) {
 
+  df <- process_df_ppc(train = train, test = test, patient_id = patient_id, max_score = max_score, discrete = TRUE)
+
   p <- plot_post_traj_pmf(obj = obj,
                           id = get_index(train = train, test = test),
                           patient_id = patient_id,
                           max_score = max_score,
-                          ...)
-  df <- process_df_ppc(train = train, test = test, patient_id = patient_id, max_score = max_score, discrete = TRUE)
-  p <- add_trajectory(p,
-                      filter(df, .data$Patient == patient_id))
+                          ...) +
+    add_trajectory(filter(df, .data$Patient == patient_id)) +
+    theme_classic(base_size = 15)
 
   return(p)
 }
@@ -317,14 +279,15 @@ plot_ppc_traj_fanchart <- function(obj,
                                    max_score = NA,
                                    ...) {
 
+  df <- process_df_ppc(train = train, test = test, patient_id = patient_id, max_score = max_score, discrete = FALSE)
+
   p <- plot_post_traj_fanchart(obj = obj,
                                id = get_index(train = train, test = test),
                                patient_id = patient_id,
                                max_score = max_score,
-                               ...)
-  df <- process_df_ppc(train = train, test = test, patient_id = patient_id, max_score = max_score, discrete = FALSE)
-  p <- add_trajectory(p,
-                      filter(df, .data$Patient == patient_id))
+                               ...) +
+    add_trajectory(filter(df, .data$Patient == patient_id)) +
+    theme_classic(base_size = 15)
 
   return(p)
 }

@@ -1,6 +1,6 @@
 Package: EczemaPred
 Title: Predicting the Evolution of Eczema Severity
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: 
     person(given = "Guillem",
            family = "Hurault",
@@ -9,6 +9,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-1052-3564"))
 Description: A collection of models to serve as building blocks for predicting eczema severity.
 License: GPL (>= 3)
+Language: en-GB
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
@@ -27,7 +28,7 @@ Imports:
     tidyr,
     ggplot2,
     markovchain,
-    HuraultMisc (>= 1.0.0),
+    HuraultMisc (>= 1.1.1),
     stats,
     scoringRules
 LinkingTo: 
@@ -38,7 +39,8 @@ LinkingTo:
     rstan (>= 2.18.1),
     StanHeaders (>= 2.18.0)
 SystemRequirements: GNU make
-Suggests: 
+Suggests:
+    spelling, 
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
@@ -48,5 +50,3 @@ Suggests:
     covr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-Remotes: 
-    github::ghurault/HuraultMisc

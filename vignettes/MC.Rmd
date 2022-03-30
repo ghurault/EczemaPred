@@ -23,6 +23,7 @@ In this example, we will consider a Markov Chain with **K = `r params$K` states*
 
 ```{r setup, warning=FALSE}
 library(EczemaPred)
+library(HuraultMisc)
 library(dplyr)
 library(tidyr)
 library(ggplot2)

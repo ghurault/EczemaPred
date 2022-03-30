@@ -57,4 +57,25 @@ test_that("get_index works", {
 
 # Test extract_simulation -------------------------------------------------
 
-# In test-model_AR1.R
+id <- get_index(RW_split$Training, RW_split$Testing)
+param <- c("sigma", "y_mis")
+
+l <- extract_simulations(fit = RW_fit,
+                         id = id,
+                         draw = 10,
+                         pars = param)
+
+test_that("extract_simulations works", {
+  expect_true(is.list(l))
+  expect_true(all(c("Data", "Parameters") %in% names(l)))
+  lapply(l, function(x) {expect_s3_class(x, "data.frame")})
+  expect_true(all(c("Patient", "Time", "Score") %in% colnames(l$Data)))
+  expect_true(all(c("Draw", "Index", "Value", "Parameter") %in% colnames(l$Parameters)))
+})
+
+test_that("extract_simulations catches errors in inputs", {
+  expect_error(extract_simulations(fit = rstan::extract(RW_fit, pars = "y_rep"), id = id, draw = 10, pars = param))
+  expect_error(extract_simulations(fit = RW_fit, id = RW_setup$t_max, draw = 10, pars = param))
+  expect_error(extract_simulations(fit = RW_fit, id = id, draw = -1, pars = param))
+  expect_error(extract_simulations(fit = RW_fit, id = id, draw = 10, pars = y_rep))
+})

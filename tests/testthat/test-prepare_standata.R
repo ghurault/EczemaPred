@@ -1,8 +1,8 @@
 # Helpers -----------------------------------------------------------------
 
-is_vector_or_array <- function(x) {is.vector(x) | is.array(x)}
+is_vector_or_array <- function(x) {is.vector(x) || is.array(x)}
 
-check_format <- function(ds) {
+check_format_lgtd <- function(ds) {
   # Args: ds: List to be passed to the stan sampler
   input_names <- c("N_obs", "N_pt", "M", "k_obs", "t_obs", "y_obs", "N_test", "k_test", "t_test", "y_test")
 
@@ -16,7 +16,7 @@ check_format <- function(ds) {
   expect_true(is_vector_or_array(ds$y_test))
 }
 
-make_wrong_df <- function(df, max_score) {
+wrong_data_lgtd <- function(df, max_score) {
   # Assuming df is a correct train/test input, makes a list of inputs derived from df that are incorrect
 
   list(
@@ -35,6 +35,38 @@ make_wrong_df <- function(df, max_score) {
 
 }
 
+check_format_MC <- function(ds) {
+  input_names <- c("K", "N", "y0", "y1", "dt", "N_test", "y0_test", "y1_test", "dt_test", "prior_p")
+
+  expect_true(is.list(ds))
+  expect_true(all(input_names %in% names(ds)))
+  expect_true(is_vector_or_array(ds$y0))
+  expect_true(is_vector_or_array(ds$y1))
+  expect_true(is_vector_or_array(ds$dt))
+  expect_true(is_vector_or_array(ds$y0_test))
+  expect_true(is_vector_or_array(ds$y1_test))
+  expect_true(is_vector_or_array(ds$dt_test))
+}
+
+wrong_data_MC <- function(df, K) {
+  # Assuming df is a correct train/test input, makes a list of inputs derived from df that are incorrect
+
+  list(
+    as.list(df),
+    rename(df, Current = y0),
+    rename(df, Next = y1),
+    rename(df, Delay = dt),
+    mutate(df, y0 = y0 - max(y0) + K + 1),
+    mutate(df, y0 = y0 - min(y0)),
+    mutate(df, y1 = y1 - max(y1) + K + 1),
+    mutate(df, y1 = y1 - min(y1)),
+    mutate(df, dt = dt + 0.5),
+    mutate(df, dt = -dt),
+    mutate(df, y0 = replace(y0, y0 == min(y0), NA))
+  )
+
+}
+
 # Test prepare_data_lgtd and prepare_stan.EczemaModel --------------------------------------------------
 
 max_score <- 100
@@ -47,7 +79,7 @@ test <- df %>% filter(Time > 8)
 test_that("prepare_data_lgtd returns the correct output", {
 
   ds1 <- prepare_data_lgtd(train, test = NULL, max_score, discrete)
-  check_format(ds1)
+  check_format_lgtd(ds1)
   expect_equal(ds1$N_obs, nrow(train))
   expect_equal(ds1$N_pt, length(unique(train[["Patient"]])))
   expect_equal(as.numeric(ds1$k_obs), train[["Patient"]])
@@ -56,7 +88,7 @@ test_that("prepare_data_lgtd returns the correct output", {
   expect_equal(ds1$N_test, 0)
 
   ds2 <- prepare_data_lgtd(train, test = test, max_score, discrete)
-  check_format(ds2)
+  check_format_lgtd(ds2)
   expect_equal(ds2$N_test, nrow(test))
   expect_equal(as.numeric(ds2$k_test), test[["Patient"]])
   expect_equal(as.numeric(ds2$t_test), test[["Time"]])
@@ -67,7 +99,7 @@ test_that("prepare_data_lgtd returns the correct output", {
 test_that("prepare_stan.EczemaModel returns the correct output", {
   model <- EczemaModel("BinRW", max_score = max_score)
   ds <- prepare_standata(model, train = train, test = test)
-  check_format(ds)
+  check_format_lgtd(ds)
   expect_equal(sum(grepl("prior_", names(ds))), length(model$prior))
 })
 
@@ -78,7 +110,7 @@ test_that("prepare_data_lgtd train and test inputs are correct", {
 
 test_that("prepare_data_lgtd catches errors with train", {
   # cf. stopifnot_lgtd_dataframe
-  l <- make_wrong_df(train, max_score)
+  l <- wrong_data_lgtd(train, max_score)
   for (i in 1:length(l)) {
     expect_error(prepare_data_lgtd(l[[i]], test = NULL, max_score, discrete))
   }
@@ -88,7 +120,7 @@ test_that("prepare_data_lgtd catches errors with train", {
 
 test_that("prepare_data_lgtd catches errors with test", {
   # cf. stopifnot_lgtd_dataframe
-  l <- make_wrong_df(test, max_score)
+  l <- wrong_data_lgtd(test, max_score)
   for (i in 1:length(l)) {
     expect_error(prepare_data_lgtd(train, test = l[[i]], max_score, discrete))
   }
@@ -109,4 +141,46 @@ test_that("prepare_data_lgtd catches errors with max_score", {
 
 # Test prepare_standata.MC ------------------------------------------------
 
-# In test-model_MC.R
+K <- 5
+model <- EczemaModel("MC", K = K)
+train <- data.frame(y0 = 1:K, y1 = 1:K, dt = 1)
+test <- data.frame(y0 = K, y1 = 1, dt = 2)
+
+test_that("prepare_standata.MC returns the correct output", {
+
+  expect_null(stopifnot_MC_dataframe(train, K))
+
+  ds1 <- prepare_standata(model, train, test = NULL)
+  check_format_MC(ds1)
+  expect_equal(ds1$K, K)
+  expect_equal(ds1$N, nrow(train))
+  expect_equal(as.numeric(ds1$y0), train[["y0"]])
+  expect_equal(as.numeric(ds1$y1), train[["y1"]])
+  expect_equal(as.numeric(ds1$dt), train[["dt"]])
+  expect_equal(ds1$N_test, 0)
+  expect_equal(ds1$prior_p, model$prior$p)
+
+  ds2 <- prepare_standata(model, train, test)
+  check_format_MC(ds2)
+  expect_equal(ds2$N_test, nrow(test))
+  expect_equal(as.numeric(ds2$y0_test), test[["y0"]])
+  expect_equal(as.numeric(ds2$y1_test), test[["y1"]])
+  expect_equal(as.numeric(ds2$dt_test), test[["dt"]])
+
+})
+
+test_that("prepare_standata.MC catches errors in train", {
+  # cf. stopifnot_MC_dataframe
+  l <- wrong_data_MC(train, K)
+  for (i in 1:length(l)) {
+    expect_error(prepare_standata(modell[[i]], test = NULL))
+  }
+})
+
+test_that("prepare_standata.MC catches errors in test", {
+  # cf. stopifnot_MC_dataframe
+  l <- wrong_data_MC(test, K)
+  for (i in 1:length(l)) {
+    expect_error(prepare_standata(model, train, test = l[[i]]))
+  }
+})
