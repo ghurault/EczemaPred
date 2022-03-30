@@ -67,6 +67,7 @@ get_compiled_model <- function(stanmodel) {
 #' @param n_samples How many samples to return.
 #' Default (=NULL) to all samples.
 #' @param par_name Name of variable to extract when `object` is a stanfit object.
+#' Default to `"y_pred"` (variable containing predictions).
 #'
 #' @return List of vector of samples
 #'
@@ -74,11 +75,13 @@ get_compiled_model <- function(stanmodel) {
 #'
 #' @examples
 #' samples_to_list(matrix(rnorm(1e3), nrow = 1e2))
-samples_to_list <- function(object, par_name = "", n_samples = NULL) {
+samples_to_list <- function(object, par_name = "y_pred", n_samples = NULL) {
 
   if (is_stanfit(object)) {
-    stopifnot("y_pred" %in% object@model_pars)
-    pred <- rstan::extract(object, pars = "y_pred")[[1]]
+    stopifnot(is_scalar(par_name),
+              is.character(par_name),
+              par_name %in% object@model_pars)
+    pred <- rstan::extract(object, pars = par_name)[[1]]
   } else {
     pred <- object
   }
