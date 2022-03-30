@@ -28,3 +28,7 @@ To regenerate the website locally, use `pkgdown::build_site()`.
   and you can call them with e.g., 'rstan::sampling(stanmodels$foo, ...)'
   
 See [Guidelines for developers of R packages interfacing with Stan](https://mc-stan.org/rstantools/articles/developer-guidelines.html) for more information.
+
+## Git
+
+I try to follow the Git flow for managing this repository.
