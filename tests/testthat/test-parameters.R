@@ -5,6 +5,10 @@ test_that("list_parameters works", {
     pars <- list_parameters(model_name)
     expect_true(is.list(pars))
     expect_true(all(is.character(unlist(pars))))
+
+    pars_d <- EczemaModel(model_name, max_score = 10, K = 10, discrete = TRUE) %>%
+      list_parameters()
+    expect_true("cum_err" %in% pars_d$Test)
   }
 })
 
