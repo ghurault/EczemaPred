@@ -1,0 +1,17 @@
+bibentry(bibtype = "Article",
+  title        = "EczemaPred: A computational framework for personalised prediction of eczema severity dynamics",
+  author       = personList(person("Guillem", "Hurault"),
+                   person("Jean François", "Stalder"),
+                   person("Sophie", "Mery"),
+                   person("Alain", "Delarue"),
+                   person("Markéta", "Saint Aroman"),
+                   person("Gwendal", "Josse"),
+                   person("Reiko J.", "Tanaka")),
+  journal      = "Clinical and Translational Allergy",
+  year         = "2022",
+  volume       = "12",
+  number       = "3",
+  pages        = "e12140",
+  doi          = "10.1002/clt2.12140",
+  header       = "To cite EczemaPred in publications use:"
+)

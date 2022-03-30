@@ -15,3 +15,6 @@ coverage:
 
 ignore:
   - "src"
+
+codecov:
+  token: 7f3625fb-d74e-4835-9193-c59a84c0a06c

@@ -9,6 +9,9 @@
 EczemaPred is a R package implementing models to serve as building blocks for predicting the evolution of eczema severity, and provides a set of generic functions to manipulate these models.
 The models are implemented in the probabilistic programming language [Stan](https://mc-stan.org/).
 
+EczemaPred was first introduced in [**Hurault et al. (2022), "EczemaPred: A computational framework for personalised prediction of eczema severity dynamics"**](https://doi.org/10.1002/clt2.12140), published in Clinical and Translational Allergy.
+The analysis code of this research article is available [here](https://github.com/ghurault/EczemaPredPOSCORAD).
+
 ## Installation
 
 The package requires RStan and C++ toolchain, which can be installed by following these [instructions](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started).
@@ -44,3 +47,9 @@ Basic knowledge of Bayesian modelling with Stan and the package [rstan](https://
 The Stan documentation is available [here](https://mc-stan.org/users/documentation/).
 
 NB: While the purpose of the package is to abstract the implementation to the user, the R code and Stan code can be accessed in the [R/](R/) and [inst/stan](inst/stan) directories, respectively.
+
+## License
+
+The open source version of EczemaPred is licensed under the GPLv3 license, which can be seen in the [LICENSE](LICENSE.md) file.
+A closed source version of EczemaPred is also available without the restrictions of the GPLv3 license with a software usage agreement from Imperial College London.
+For more information, please contact [Diana Yin](mailto:d.yin@imperial.ac.uk).

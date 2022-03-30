@@ -53,3 +53,4 @@ reference:
   - samples_to_list
   - add_fanchart
   - add_broken_pointline
+  - EczemaPred-package
