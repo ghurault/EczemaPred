@@ -79,3 +79,22 @@ test_that("extract_simulations catches errors in inputs", {
   expect_error(extract_simulations(fit = RW_fit, id = id, draw = -1, pars = param))
   expect_error(extract_simulations(fit = RW_fit, id = id, draw = 10, pars = y_rep))
 })
+
+# Test add_fanchart -------------------------------------------------------
+
+test_that("add_fanchart returns a ggplot", {
+
+  tmp <- tibble(Time = 0:10,
+                y = Time^1.5) %>%
+    expand_grid(Level = seq(0.1, 0.9, 0.2)) %>%
+    mutate(Width = qnorm(0.5 + Level / 2, sd = 2),
+           Lower = y - Width,
+           Upper = y + Width)
+
+  p1 <- ggplot() + add_fanchart(tmp, legend_fill = "continuous")
+  p2 <- ggplot() + add_fanchart(tmp, legend_fill = "discrete")
+
+  expect_is(p1, "ggplot")
+  expect_is(p2, "ggplot")
+
+})
