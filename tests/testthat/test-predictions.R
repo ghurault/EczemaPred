@@ -32,19 +32,29 @@ test_that("add_uniform_pred returns a correct dataframe (discrete)", {
 
 test_that("add_uniform_pred returns samples when prompted", {
 
-  perf3 <- add_uniform_pred(test = RW_split$Testing,
-                            max_score = RW_setup$max_score,
-                            discrete = FALSE,
-                            include_samples = TRUE,
-                            n_samples = 50)
-  perf4 <- add_uniform_pred(test = data.frame(Score = rbinom(1e2, 100, .5)),
-                            max_score = 100,
-                            discrete = TRUE,
-                            include_samples = TRUE,
-                            n_samples = 50)
-  for (x in list(perf3, perf4)) {
+  ll <- list(
+    add_uniform_pred(test = RW_split$Testing,
+                     max_score = RW_setup$max_score,
+                     discrete = FALSE,
+                     include_samples = TRUE,
+                     n_samples = 50),
+    add_uniform_pred(test = RW_split$Testing,
+                     max_score = RW_setup$max_score,
+                     discrete = FALSE,
+                     include_samples = TRUE), # n_samples not supplied
+    add_uniform_pred(test = data.frame(Score = rbinom(1e2, 100, .5)),
+                     max_score = 100,
+                     discrete = TRUE,
+                     include_samples = TRUE,
+                     n_samples = 50)
+  )
+
+  for (x in ll) {
     expect_true(all(c("Samples") %in% colnames(x)))
     expect_true(is.list(x[["Samples"]]))
+
+  }
+  for (x in ll[c(1, 3)]) {
     expect_true(all(vapply(x[["Samples"]], length, numeric(1)) == 50))
   }
 
