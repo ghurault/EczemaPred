@@ -60,17 +60,24 @@ test_that("get_index works", {
 id <- get_index(RW_split$Training, RW_split$Testing)
 param <- c("sigma", "y_mis")
 
-l <- extract_simulations(fit = RW_fit,
-                         id = id,
-                         draw = 10,
-                         pars = param)
-
 test_that("extract_simulations works", {
-  expect_true(is.list(l))
-  expect_true(all(c("Data", "Parameters") %in% names(l)))
-  lapply(l, function(x) {expect_s3_class(x, "data.frame")})
-  expect_true(all(c("Patient", "Time", "Score") %in% colnames(l$Data)))
-  expect_true(all(c("Draw", "Index", "Value", "Parameter") %in% colnames(l$Parameters)))
+  ll <- list(
+    extract_simulations(fit = RW_fit,
+                        id = id,
+                        draw = 10,
+                        pars = param),
+    extract_simulations(fit = RW_fit,
+                        id = id,
+                        draw = 10)
+  )
+
+  for (l in ll) {
+    expect_true(is.list(l))
+    expect_true(all(c("Data", "Parameters") %in% names(l)))
+    lapply(l, function(x) {expect_s3_class(x, "data.frame")})
+    expect_true(all(c("Patient", "Time", "Score") %in% colnames(l$Data)))
+    expect_true(all(c("Draw", "Index", "Value", "Parameter") %in% colnames(l$Parameters)))
+  }
 })
 
 test_that("extract_simulations catches errors in inputs", {
