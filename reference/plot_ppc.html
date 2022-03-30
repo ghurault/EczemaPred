@@ -22,7 +22,7 @@ plot_ppc_traj_* overlays the observed trajectory to the posterior predictive tra
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -49,6 +49,9 @@ plot_ppc_traj_* overlays the observed trajectory to the posterior predictive tra
       <a href="../articles/MC.html">Markov Chain model</a>
     </li>
   </ul></li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -85,7 +88,8 @@ as a fanchart (stacked confidence interval, suffix <code>_fanchart</code>).</p><
   <span class="va">patient_id</span>,
   max_score <span class="op">=</span> <span class="cn">NA</span>,
   interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"eti"</span>, <span class="st">"hdi"</span><span class="op">)</span>,
-  CI_level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.9</span>, <span class="fl">0.1</span><span class="op">)</span>
+  CI_level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.9</span>, <span class="fl">0.1</span><span class="op">)</span>,
+  <span class="va">...</span>
 <span class="op">)</span>
 
 <span class="fu">plot_ppc_traj_pmf</span><span class="op">(</span><span class="va">obj</span>, <span class="va">train</span>, <span class="va">test</span>, <span class="va">patient_id</span>, max_score <span class="op">=</span> <span class="cn">NA</span>, <span class="va">...</span><span class="op">)</span>
@@ -97,33 +101,34 @@ as a fanchart (stacked confidence interval, suffix <code>_fanchart</code>).</p><
     <h2>Arguments</h2>
     <dl><dt>obj</dt>
 <dd><p>Stanfit object or matrix of replications, with rows corresponding to samples and
-columns corresponding to variables (there should be <code>nrow(id)</code> columns)</p></dd>
+columns corresponding to variables (there should be <code>nrow(id)</code> columns).</p></dd>
 <dt>id</dt>
-<dd><p>Dataframe linking index in obj to (Patient, Time) pairs, cf. output from <code><a href="get_index.html">get_index()</a></code></p></dd>
+<dd><p>Dataframe linking index in <code>obj</code> to (<code>Patient</code>, <code>Time</code>) pairs, cf. output from <code><a href="get_index.html">get_index()</a></code>.</p></dd>
 <dt>patient_id</dt>
-<dd><p>Patient ID</p></dd>
+<dd><p>Patient ID.</p></dd>
 <dt>max_score</dt>
 <dd><p>(Optional) Maximum value that the score can take.
 In <code>plot_*_traj_pmf</code> this will set <code>support</code> if it is not supplied.
 In <code>plot_*_traj_fanchart</code> this will set the y axis range.
 In <code>plot_ppc_traj_*</code> this will check the content of <code>train</code> and <code>test</code>.</p></dd>
 <dt>support</dt>
-<dd><p>Values that the discrete distribution can take
-Can be NULL, in that case the support of the pmf is estimated from the data (cf. <code><a href="https://ghurault.github.io/HuraultMisc//reference/extract_distribution.html" class="external-link">HuraultMisc::extract_distribution()</a></code>).</p></dd>
+<dd><p>Values that the discrete distribution can take.
+Can be NULL, in that case the support of the pmf is estimated from the data (cf. <code><a href="https://rdrr.io/pkg/HuraultMisc/man/extract_distribution.html" class="external-link">HuraultMisc::extract_distribution()</a></code>).</p></dd>
 <dt>max_scale</dt>
 <dd><p>Maximum value that the legend display.
-If NA, this chosen automatically</p></dd>
+If NA, this chosen automatically.</p></dd>
 <dt>interval</dt>
 <dd><p>Type of confidence of interval to display, one of "eti" for equal-tailed intervals and
 "hdi" for highest density interval.</p></dd>
 <dt>CI_level</dt>
-<dd><p>Vector of confidence level to plot for the fanchart</p></dd>
-<dt>train</dt>
-<dd><p>Training dataset used to obtain the fit</p></dd>
-<dt>test</dt>
-<dd><p>Testing dataset used to obtain the fit (can be NULL)</p></dd>
+<dd><p>Vector of confidence level to plot for the fanchart.</p></dd>
 <dt>...</dt>
-<dd><p>arguments to pass to <code>plot_post_traj_*</code></p></dd>
+<dd><p>arguments to pass to <code>plot_post_traj_*</code>.
+For <code>plot_post_traj_fanchart()</code>, arguments to pass to <code><a href="add_fanchart.html">add_fanchart()</a></code>.</p></dd>
+<dt>train</dt>
+<dd><p>Training dataset used to obtain the fit.</p></dd>
+<dt>test</dt>
+<dd><p>Testing dataset used to obtain the fit (can be <code>NULL</code>).</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>

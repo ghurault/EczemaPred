@@ -31,6 +31,9 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/news/index.html</loc>
+  </url>
+  <url>
     <loc>/reference/AR1.html</loc>
   </url>
   <url>
@@ -62,6 +65,12 @@
   </url>
   <url>
     <loc>/reference/Smoothing.html</loc>
+  </url>
+  <url>
+    <loc>/reference/add_broken_pointline.html</loc>
+  </url>
+  <url>
+    <loc>/reference/add_fanchart.html</loc>
   </url>
   <url>
     <loc>/reference/add_historical_pred.html</loc>

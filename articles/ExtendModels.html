@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -62,6 +62,9 @@
       <a href="../articles/MC.html">Markov Chain model</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
@@ -149,7 +152,7 @@
 <div class="section level3">
 <h3 id="updating-the-pre-processing">Updating the pre-processing<a class="anchor" aria-label="anchor" href="#updating-the-pre-processing"></a>
 </h3>
-<p>One way to use the package infrastructure to minimise the amount of new code to write would be to create a new model class <code>BinRW2</code> that inherits from the class <code>BinRW</code>. We also write <code>BinRW2</code> methods for <code>default_prior</code>, <code>validate_prior</code> and <code>print_prior</code> which makes use of <code><a href="https://rdrr.io/r/base/UseMethod.html" class="external-link">NextMethod()</a></code> to call the metods for the parent class <code>BinRW</code>.</p>
+<p>One way to use the package infrastructure to minimise the amount of new code to write would be to create a new model class <code>BinRW2</code> that inherits from the class <code>BinRW</code>. We also write <code>BinRW2</code> methods for <code>default_prior</code>, <code>validate_prior</code> and <code>print_prior</code> which makes use of <code><a href="https://rdrr.io/r/base/UseMethod.html" class="external-link">NextMethod()</a></code> to call the methods for the parent class <code>BinRW</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">BinRW2</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">max_score</span>, <span class="va">prior</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span>
   
@@ -231,7 +234,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $Test</span>
 <span class="co">#&gt; [1] "y_pred"  "lpd"     "cum_err"</span></code></pre></div>
-<p>To sample the prior predictive disribution, we need to generate an empty dataset to pass to <code>prepare_standata</code> and then call <code><a href="https://mc-stan.org/rstan/reference/stan.html" class="external-link">rstan::stan</a></code> (the code could be put into a function <code>sample_prior.BinRW2</code>).</p>
+<p>To sample the prior predictive distribution, we need to generate an empty dataset to pass to <code>prepare_standata</code> and then call <code><a href="https://mc-stan.org/rstan/reference/stan.html" class="external-link">rstan::stan</a></code> (the code could be put into a function <code>sample_prior.BinRW2</code>).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">N_patient</span> <span class="op">&lt;-</span> <span class="fl">10</span>
 <span class="va">t_max</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="va">N_patient</span>, <span class="fl">20</span><span class="op">)</span>

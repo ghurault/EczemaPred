@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -44,6 +44,9 @@
       <a href="../articles/MC.html">Markov Chain model</a>
     </li>
   </ul></li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -66,7 +69,11 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>max_score</dt>
-<dd><p>Maximum value that the score can take</p></dd>
+<dd><p>Maximum value that the score can take.
+Note that even if <code>discrete=FALSE</code>, <code>max_score</code> must be an integer.</p></dd>
+<dt>discrete</dt>
+<dd><p>Whether to use a discrete normal distribution.
+This will be used to check whether the data is discrete or not, and for rounding predictions (cf. testing).</p></dd>
 <dt>prior</dt>
 <dd><p>Named list of the model's priors. If <code>NULL</code>, uses the default prior for the model (see <code><a href="default_prior.html">default_prior()</a></code>).</p></dd>
 </dl></div>
@@ -75,7 +82,7 @@
     
 <ul><li><p>Details of the model are available in the <a href="#">paper</a>.
 The model takes as input a continuous score defined between 0 and <code>max_score</code>.</p></li>
-<li><p>The model is naive as the likelihood distribution is not truncated.</p></li>
+<li><p>The model is naive as the likelihood is non-truncated and not discretised (when <code>discrete = TRUE</code>).</p></li>
 <li><p>Unlike the <code>AR1</code> model, the discretisation of predictions is not implemented</p></li>
 <li><p>For more details see the <a href="https://ghurault.github.io/EczemaPred/articles/ContinuousModels.html" class="external-link">vignette</a>.</p></li>
 </ul></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -44,6 +44,9 @@
       <a href="../articles/MC.html">Markov Chain model</a>
     </li>
   </ul></li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -76,7 +79,7 @@
     <h2>Arguments</h2>
     <dl><dt>df</dt>
 <dd><p>Dataframe.
-For <code>add_metrics</code>, when <code>discrete = FALSE</code>, it must contain a column "Score".</p></dd>
+When <code>discrete = FALSE</code>, it must contain a column "Score".</p></dd>
 <dt>fit</dt>
 <dd><p>Stanfit object</p></dd>
 <dt>discrete</dt>
@@ -89,7 +92,7 @@ For a discrete forecast, the RPS will be computed and the CRPS for a continuous 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Dataframe <code>df</code> appended by the columns "lpd", "RPS" (or CRPS if discrete=FALSE) and optionally "Samples"</p>
+    <p>Dataframe <code>df</code> appended by the columns "lpd", "RPS" (or CRPS if <code>discrete=FALSE</code>) and optionally "Samples"</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>

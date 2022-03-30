@@ -20,7 +20,7 @@ At iteration 1, timepoints 1 to 1 + horizon are included."><!-- mathjax --><scri
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -47,6 +47,9 @@ At iteration 1, timepoints 1 to 1 + horizon are included."><!-- mathjax --><scri
       <a href="../articles/MC.html">Markov Chain model</a>
     </li>
   </ul></li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -85,8 +88,8 @@ At iteration 1, timepoints 1 to <code>1 + horizon</code> are included.</p>
 <dt>horizon</dt>
 <dd><p>Updating horizon</p></dd>
 <dt>df</dt>
-<dd><p>Dataframe with columns Patient, Time, Horizon, Iteration.
-Only the colums Time is required for <code>detail_fc_training</code>.</p></dd>
+<dd><p>Dataframe with columns <code>Patient</code>, <code>Time</code>, <code>Horizon</code>, <code>Iteration.</code>
+Only the columns Time is required for <code>detail_fc_training</code>.</p></dd>
 <dt>it</dt>
 <dd><p>Iteration number</p></dd>
 <dt>it_test</dt>
@@ -95,9 +98,9 @@ Only the colums Time is required for <code>detail_fc_training</code>.</p></dd>
     <div id="value">
     <h2>Value</h2>
     <ul><li><p><code>get_fc_iteration</code> returns a vector corresponding to iteration numbers</p></li>
-<li><p><code>split_fc_dataset</code> returns a named list of dataframes ("Training" and "Testing")</p></li>
+<li><p><code>split_fc_dataset</code> returns a named list of dataframes (<code>Training</code> and <code>Testing</code>)</p></li>
 <li><p><code>get_fc_training_iteration</code> returns a vector of unique training iteration number</p></li>
-<li><p><code>detail_fc_training</code> returns a dataframe with columns: Iteration, N, Proportion, LastTime</p></li>
+<li><p><code>detail_fc_training</code> returns a dataframe with columns: <code>Iteration</code>, <code>N</code>, <code>Proportion</code>, <code>LastTime</code></p></li>
 </ul></div>
     <div id="details">
     <h2>Details</h2>

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -63,6 +63,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
 </div>
@@ -91,7 +94,7 @@
 <p>These models are Bayesian implementation of their off-the-shelf counterparts and are used as baselines to benchmark the performance of other models. In our context, we work with score defines between 0 and a maximum value <code>max_score</code>. As a result, while the models are trained assuming a likelihood from a unbounded distribution, predictions from these models are truncated for proper evaluation. This mismatch would result in biases if we try to generate fake data from the prior predictive distribution and fit the fake data to recover the parameters of the model.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">EczemaPred</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ghurault.github.io/HuraultMisc/" class="external-link">HuraultMisc</a></span><span class="op">)</span>
+<span class="co"># library(HuraultMisc)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
@@ -122,11 +125,11 @@
              <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span>
                <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="va">t_max</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>
                <span class="va">err</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">t_max</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">-</span> <span class="fl">1</span>, <span class="fl">0</span>, <span class="va">sigma</span><span class="op">)</span>
-               <span class="va">y</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ghurault.github.io/HuraultMisc//reference/logit.html" class="external-link">logit</a></span><span class="op">(</span><span class="va">y0</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>
+               <span class="va">y</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/logit.html" class="external-link">logit</a></span><span class="op">(</span><span class="va">y0</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>
                <span class="kw">for</span> <span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="va">t_max</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span>
                  <span class="va">y</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">=</span> <span class="va">alpha</span> <span class="op">*</span> <span class="va">y</span><span class="op">[</span><span class="va">t</span> <span class="op">-</span> <span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">b</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">+</span> <span class="va">err</span><span class="op">[</span><span class="va">t</span> <span class="op">-</span> <span class="fl">1</span><span class="op">]</span>
                <span class="op">}</span>
-               <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ghurault.github.io/HuraultMisc//reference/logit.html" class="external-link">inv_logit</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">*</span> <span class="va">max_score</span>
+               <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">HuraultMisc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/HuraultMisc/man/logit.html" class="external-link">inv_logit</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">*</span> <span class="va">max_score</span>
                <span class="va">t_mis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_missing.html">generate_missing</a></span><span class="op">(</span><span class="va">t_max</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, type <span class="op">=</span> <span class="st">"markovchain"</span>, p_mis <span class="op">=</span> <span class="fl">0.2</span>, p_obs_obs <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span>
                <span class="va">y</span><span class="op">[</span><span class="va">t_mis</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
                

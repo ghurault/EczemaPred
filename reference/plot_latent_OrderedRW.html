@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -44,6 +44,9 @@
       <a href="../articles/MC.html">Markov Chain model</a>
     </li>
   </ul></li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -63,7 +66,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plot_latent_OrderedRW</span><span class="op">(</span><span class="va">fit</span>, <span class="va">id</span>, <span class="va">patient_id</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plot_latent_OrderedRW</span><span class="op">(</span><span class="va">fit</span>, <span class="va">id</span>, <span class="va">patient_id</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -74,6 +77,8 @@
 <dd><p>Dataframe linking index in fit to (Patient, Time) pairs, cf. output from <code><a href="get_index.html">get_index()</a></code></p></dd>
 <dt>patient_id</dt>
 <dd><p>Patient ID</p></dd>
+<dt>...</dt>
+<dd><p>Arguments to pass to <code><a href="add_fanchart.html">add_fanchart()</a></code></p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
