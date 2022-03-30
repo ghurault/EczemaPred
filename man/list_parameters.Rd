@@ -13,7 +13,7 @@ list_parameters(model, ...)
 \method{list_parameters}{BinMC}(model, main = TRUE, ...)
 }
 \arguments{
-\item{model}{Object}
+\item{model}{Object, usually the model name or an EczemaModel object}
 
 \item{...}{Arguments to pass to other methods}
 
