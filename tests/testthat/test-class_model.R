@@ -106,6 +106,10 @@ for (model_name in c(main_models, ref_models, "MC")) {
 
   }
 
+  test_that("default_prior.character() works", {
+    expect_true(is.list(default_prior(model_name)))
+  })
+
 }
 
 # Test inference methods --------------------------------------------------
