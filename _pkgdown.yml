@@ -1,3 +1,10 @@
+template:
+  bootstrap: 5
+
+authors:
+  Guillem Hurault:
+    href: https://ghurault.github.io/
+
 reference:
 - title: "Available models"
 - subtitle: "Main models"

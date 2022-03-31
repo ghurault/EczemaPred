@@ -1,6 +1,6 @@
 Package: EczemaPred
 Title: Predicting the Evolution of Eczema Severity
-Version: 0.3.1
+Version: 0.3.2
 Authors@R: 
     person(given = "Guillem",
            family = "Hurault",
@@ -8,6 +8,8 @@ Authors@R:
            email = "guillem.hurault@hotmail.fr",
            comment = c(ORCID = "0000-0002-1052-3564"))
 Description: A collection of models to serve as building blocks for predicting eczema severity.
+URL: https://ghurault.github.io/EczemaPred/, https://github.com/ghurault/EczemaPred
+BugReports: https://github.com/ghurault/EczemaPred/issues
 License: GPL (>= 3)
 Language: en-GB
 Encoding: UTF-8
