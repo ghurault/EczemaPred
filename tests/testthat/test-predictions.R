@@ -32,19 +32,29 @@ test_that("add_uniform_pred returns a correct dataframe (discrete)", {
 
 test_that("add_uniform_pred returns samples when prompted", {
 
-  perf3 <- add_uniform_pred(test = RW_split$Testing,
-                            max_score = RW_setup$max_score,
-                            discrete = FALSE,
-                            include_samples = TRUE,
-                            n_samples = 50)
-  perf4 <- add_uniform_pred(test = data.frame(Score = rbinom(1e2, 100, .5)),
-                            max_score = 100,
-                            discrete = TRUE,
-                            include_samples = TRUE,
-                            n_samples = 50)
-  for (x in list(perf3, perf4)) {
+  ll <- list(
+    add_uniform_pred(test = RW_split$Testing,
+                     max_score = RW_setup$max_score,
+                     discrete = FALSE,
+                     include_samples = TRUE,
+                     n_samples = 50),
+    add_uniform_pred(test = RW_split$Testing,
+                     max_score = RW_setup$max_score,
+                     discrete = FALSE,
+                     include_samples = TRUE), # n_samples not supplied
+    add_uniform_pred(test = data.frame(Score = rbinom(1e2, 100, .5)),
+                     max_score = 100,
+                     discrete = TRUE,
+                     include_samples = TRUE,
+                     n_samples = 50)
+  )
+
+  for (x in ll) {
     expect_true(all(c("Samples") %in% colnames(x)))
     expect_true(is.list(x[["Samples"]]))
+
+  }
+  for (x in ll[c(1, 3)]) {
     expect_true(all(vapply(x[["Samples"]], length, numeric(1)) == 50))
   }
 
@@ -106,11 +116,18 @@ test_that("add_metrics1_c returns a correct dataframe", {
 })
 
 test_that("add_metrics2_c returns a correct dataframe", {
-  perf <- RW_split$Testing %>%
-    mutate(Samples = samples_to_list(RW_fit, par_name = "y_pred")) %>%
-    add_metrics2_c() %>%
-    select(-Samples)
-  test_when_continuous(perf, RW_split$Testing)
+  tmp <- RW_split$Testing %>%
+    mutate(Samples = samples_to_list(RW_fit, par_name = "y_pred"))
+
+  list(
+    add_metrics2_c(tmp),
+    add_metrics2_c(tmp, add_samples = 0:RW_setup$max_score),
+    add_metrics2_c(tmp, bw = 1)
+  ) %>%
+    lapply(function(perf) {
+      test_when_continuous(select(perf, -Samples),
+                           RW_split$Testing)
+    })
 })
 
 test_that("add_predictions returns a correct dataframe (continuous)", {

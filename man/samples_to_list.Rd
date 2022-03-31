@@ -4,13 +4,14 @@
 \alias{samples_to_list}
 \title{Process samples to a list that can be included to a dataframe}
 \usage{
-samples_to_list(object, par_name = "", n_samples = NULL)
+samples_to_list(object, par_name = "y_pred", n_samples = NULL)
 }
 \arguments{
 \item{object}{Stanfit object containing variable \code{par_name} or
 matrix with rows representing samples, columns representing variables.}
 
-\item{par_name}{Name of variable to extract when \code{object} is a stanfit object.}
+\item{par_name}{Name of variable to extract when \code{object} is a stanfit object.
+Default to \code{"y_pred"} (variable containing predictions).}
 
 \item{n_samples}{How many samples to return.
 Default (=NULL) to all samples.}

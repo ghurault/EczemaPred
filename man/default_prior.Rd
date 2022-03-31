@@ -7,7 +7,7 @@
 \usage{
 default_prior(model, ...)
 
-\method{default_prior}{character}(model, max_score = 1, K = 2, ...)
+\method{default_prior}{character}(model, max_score = 2, K = 2, ...)
 }
 \arguments{
 \item{model}{Object}

@@ -60,17 +60,24 @@ test_that("get_index works", {
 id <- get_index(RW_split$Training, RW_split$Testing)
 param <- c("sigma", "y_mis")
 
-l <- extract_simulations(fit = RW_fit,
-                         id = id,
-                         draw = 10,
-                         pars = param)
-
 test_that("extract_simulations works", {
-  expect_true(is.list(l))
-  expect_true(all(c("Data", "Parameters") %in% names(l)))
-  lapply(l, function(x) {expect_s3_class(x, "data.frame")})
-  expect_true(all(c("Patient", "Time", "Score") %in% colnames(l$Data)))
-  expect_true(all(c("Draw", "Index", "Value", "Parameter") %in% colnames(l$Parameters)))
+  ll <- list(
+    extract_simulations(fit = RW_fit,
+                        id = id,
+                        draw = 10,
+                        pars = param),
+    extract_simulations(fit = RW_fit,
+                        id = id,
+                        draw = 10)
+  )
+
+  for (l in ll) {
+    expect_true(is.list(l))
+    expect_true(all(c("Data", "Parameters") %in% names(l)))
+    lapply(l, function(x) {expect_s3_class(x, "data.frame")})
+    expect_true(all(c("Patient", "Time", "Score") %in% colnames(l$Data)))
+    expect_true(all(c("Draw", "Index", "Value", "Parameter") %in% colnames(l$Parameters)))
+  }
 })
 
 test_that("extract_simulations catches errors in inputs", {
@@ -78,4 +85,23 @@ test_that("extract_simulations catches errors in inputs", {
   expect_error(extract_simulations(fit = RW_fit, id = RW_setup$t_max, draw = 10, pars = param))
   expect_error(extract_simulations(fit = RW_fit, id = id, draw = -1, pars = param))
   expect_error(extract_simulations(fit = RW_fit, id = id, draw = 10, pars = y_rep))
+})
+
+# Test add_fanchart -------------------------------------------------------
+
+test_that("add_fanchart returns a ggplot", {
+
+  tmp <- tibble(Time = 0:10,
+                y = Time^1.5) %>%
+    expand_grid(Level = seq(0.1, 0.9, 0.2)) %>%
+    mutate(Width = qnorm(0.5 + Level / 2, sd = 2),
+           Lower = y - Width,
+           Upper = y + Width)
+
+  p1 <- ggplot() + add_fanchart(tmp, legend_fill = "continuous")
+  p2 <- ggplot() + add_fanchart(tmp, legend_fill = "discrete")
+
+  expect_is(p1, "ggplot")
+  expect_is(p2, "ggplot")
+
 })

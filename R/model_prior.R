@@ -38,7 +38,7 @@ print_distribution <- function(parameter_name, distribution_name, arguments, dig
 #' default_prior("BinRW")
 #'
 #' @describeIn default_prior The function creates an EczemaModel object and call the corresponding method.
-default_prior.character <- function(model, max_score = 1, K = 2, ...) {
+default_prior.character <- function(model, max_score = 2, K = 2, ...) {
   message("default prior for max_score=", max_score, " (or, when applicable K=", K, ")")
   EczemaModel(model, max_score = max_score, K = K) %>%
     default_prior(...)

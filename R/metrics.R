@@ -45,10 +45,11 @@ extract_RPS <- function(fit) {
 #' - For [add_metrics2_c()] and [add_metrics2_d()], it must contain the columns "Samples" and "Score".
 #' @param fit Stanfit object with parameters "lpd", and for [add_metrics1_d()] "cum_err".
 #' @param support Support of the distribution
-#' @param add_samples Numeric vector used to initialise the distribution,
+#' @param add_samples Numeric vector used to initialise the distribution when computing the lpd and (C)RPS,
 #' for example to add a uniform distribution to the vector of samples to avoid problems at the tail of the distribution.
 #' If `NULL`, the empirical pmf is not changed.
 #' Default to the uniform distribution (i.e. `support`) for [add_metrics2_d()] and `NULL` for [add_metrics2_c()].
+#' The column "Samples" is not modified when `add_samples` is not NULL.
 #' @param bw Bandwidth, for calculating lpd, see [scoringRules::logs_sample()].
 #' Useful to set the "resolution" of the distribution.
 #'

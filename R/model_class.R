@@ -187,7 +187,7 @@ print_prior <- function(model, ...) {
 
 #' List available parameters
 #'
-#' @param model Object
+#' @param model Object, usually the model name or an EczemaModel object
 #' @param main Whether to output the main parameters only (when applicable).
 #' @param ... Arguments to pass to other methods
 #'
