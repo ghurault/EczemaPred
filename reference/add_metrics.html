@@ -23,7 +23,7 @@ The metrics in add_metrics2_c() and the CRPS of add_metrics1_c() are calculated 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EczemaPred</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.1</span>
       </span>
     </div>
 
@@ -95,10 +95,11 @@ The metrics in add_metrics2_c() and the CRPS of add_metrics1_c() are calculated 
 <dt>support</dt>
 <dd><p>Support of the distribution</p></dd>
 <dt>add_samples</dt>
-<dd><p>Numeric vector used to initialise the distribution,
+<dd><p>Numeric vector used to initialise the distribution when computing the lpd and (C)RPS,
 for example to add a uniform distribution to the vector of samples to avoid problems at the tail of the distribution.
 If <code>NULL</code>, the empirical pmf is not changed.
-Default to the uniform distribution (i.e. <code>support</code>) for <code>add_metrics2_d()</code> and <code>NULL</code> for <code>add_metrics2_c()</code>.</p></dd>
+Default to the uniform distribution (i.e. <code>support</code>) for <code>add_metrics2_d()</code> and <code>NULL</code> for <code>add_metrics2_c()</code>.
+The column "Samples" is not modified when <code>add_samples</code> is not NULL.</p></dd>
 <dt>bw</dt>
 <dd><p>Bandwidth, for calculating lpd, see <code><a href="https://rdrr.io/pkg/scoringRules/man/scores_sample_univ.html" class="external-link">scoringRules::logs_sample()</a></code>.
 Useful to set the "resolution" of the distribution.</p></dd>
