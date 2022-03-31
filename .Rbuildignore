@@ -6,6 +6,5 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
-^DEVNOTES\.md$
 ^\.github$
 ^codecov\.yml$
