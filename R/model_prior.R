@@ -287,3 +287,130 @@ print_prior.MC <- function(model, digits = 2, ...) {
     print_distribution(paste0("p[", i, ", ]"), "dirichlet", model$prior$p[i, ])
   }
 }
+
+# OrderedMRW --------------------------------------------------------------
+
+#' @export
+validate_prior.OrderedMRW <- function(model, ...) {
+  prior <- model$prior
+  par_names <- c("delta", "sigma_meas", "sigma_lat", "Omega", "Omega0", "mu_y0", "sigma_y0")
+  stopifnot(
+    is.list(prior),
+    all(par_names %in% names(prior)),
+    all(vapply(prior[par_names], is.numeric, logical(1))),
+    all(prior$delta > 0),
+    dim(prior$delta) == c(model$D, model$max_score - 1),
+    all(vapply(prior[c("Omega", "Omega0")], HuraultMisc::is_scalar, logical(1))),
+    all(vapply(prior[c("Omega", "Omega0")], function(x) {x > 0}, logical(1))),
+    all(vapply(prior[setdiff(par_names, c("delta", "Omega", "Omega0"))],
+               function(x) {dim(x) == c(2, model$D)},
+               logical(2))),
+    all(vapply(prior[setdiff(par_names, c("delta", "Omega", "Omega0"))],
+               function(x) {all(x[2, ] > 0)},
+               logical(1)))
+  )
+}
+
+#' @export
+print_prior.OrderedMRW <- function(model, digits = 2, ...) {
+  print_distribution("Omega", "LKJ", model$prior$Omega, digits = digits)
+  print_distribution("Omega0", "LKJ", model$prior$Omega0, digits = digits)
+  for (d in 1:model$D) {
+    cat("Component", d, "\n")
+    print_distribution(glue::glue("delta[{d}]"), "dirichlet", model$prior$delta[d, ], digits = digits)
+    print_distribution(glue::glue("sigma_meas[{d}]"), "lognormal", model$prior$sigma_meas[, d], digits = digits)
+    print_distribution(glue::glue("sigma_lat[{d}]"), "lognormal", model$prior$sigma_lat[, d], digits = digits)
+    print_distribution(glue::glue("mu_y0[{d}]"), "normal", model$prior$mu_y0[, d], digits = digits)
+    print_distribution(glue::glue("sigma_y0[{d}]"), "normal+", model$prior$sigma_y0[, d], digits = digits)
+  }
+}
+
+#' @export
+default_prior.OrderedMRW <- function(model, ...) {
+
+  dp <- EczemaModel("OrderedRW", max_score = model$max_score) %>%
+    default_prior()
+  D <- model$D
+
+  list(
+    delta = matrix(2, nrow = D, ncol = model$max_score - 1),
+    sigma_meas = matrix(dp$sigma_meas, nrow = 2, ncol = D, byrow = FALSE),
+    sigma_lat = matrix(dp$sigma_lat, nrow = 2, ncol = D, byrow = FALSE),
+    Omega = 1,
+    Omega0 = 1,
+    mu_y0 = matrix(dp$mu_y0, nrow = 2, ncol = D, byrow = FALSE),
+    sigma_y0 = matrix(dp$sigma_y0, nrow = 2, ncol = D, byrow = FALSE)
+  )
+
+}
+
+# BinMRW ------------------------------------------------------------------
+
+#' Check that the prior of an "BinMRW" model is correct
+#'
+#' @param model Object of class "BinMRW"
+#' @param ... Arguments to pass to other methods
+#'
+#' @return NULL if the prior is correct, an error message otherwise.
+#'
+#' @export
+validate_prior.BinMRW <- function(model, ...) {
+  prior <- model$prior
+  par_names <- c("Omega", "Omega0", "sigma", "mu_logit_y0", "sigma_logit_y0")
+  stopifnot(
+    is.list(prior),
+    all(par_names %in% names(prior)),
+    all(vapply(prior[par_names], is.numeric, logical(1))),
+    all(vapply(prior[c("Omega", "Omega0")], HuraultMisc::is_scalar, logical(1))),
+    all(vapply(prior[c("Omega", "Omega0")], function(x) {x > 0}, logical(1))),
+    all(vapply(prior[setdiff(par_names, c("Omega", "Omega0"))],
+               function(x) {dim(x) == c(2, model$D)},
+               logical(2))),
+    all(vapply(prior[setdiff(par_names, c("Omega", "Omega0"))],
+               function(x) {all(x[2, ] > 0)},
+               logical(1)))
+  )
+}
+
+#' Print prior of an OrderedMRW model
+#'
+#' @param model Object of class "OrderedMRW"
+#' @param digits Number of significant digits to print
+#' @param ... Arguments to pass to other methods
+#'
+#' @return None
+#'
+#' @export
+print_prior.BinMRW <- function(model, digits = 2, ...) {
+  print_distribution("Omega", "LKJ", model$prior$Omega, digits = digits)
+  print_distribution("Omega0", "LKJ", model$prior$Omega0, digits = digits)
+  for (d in 1:model$D) {
+    cat("Component", d, "\n")
+    print_distribution(glue::glue("sigma[{d}]"), "normal+", model$prior$sigma[, d], digits = digits)
+    print_distribution(glue::glue("mu_logit_y0[{d}]"), "normal", model$prior$mu_logit_y0[, d], digits = digits)
+    print_distribution(glue::glue("sigma_logit_y0[{d}]"), "normal+", model$prior$sigma_logit_y0[, d], digits = digits)
+  }
+}
+
+#' Default prior for BinMRW
+#'
+#' @param model Object of class "BinMRW"
+#' @param ... Arguments to pass to other methods
+#'
+#' @return List of parameters priors
+#'
+#' @export
+default_prior.BinMRW <- function(model, ...) {
+
+  dp <- EczemaModel("BinRW", max_score = model$max_score) %>%
+    default_prior()
+
+  list(
+    Omega = 1,
+    Omega0 = 1,
+    sigma = matrix(dp$sigma, nrow = 2, ncol = model$D, byrow = FALSE),
+    mu_logit_y0 = matrix(dp$mu_logit_y0, nrow = 2, ncol = model$D, byrow = FALSE),
+    sigma_logit_y0 = matrix(dp$sigma_logit_y0, nrow = 2, ncol = model$D, byrow = FALSE)
+  )
+
+}

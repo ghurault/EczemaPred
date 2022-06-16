@@ -18,6 +18,9 @@ list_parameters(model, ...)
 \item{...}{Arguments to pass to other methods}
 
 \item{main}{Whether to output the main parameters only (when applicable).}
+
+\item{full_names}{(experimental, for multivariate models)
+Whether to return the full names of multi-dimensional parameters (\code{Omega}, \code{Omega0} and \code{ct}).}
 }
 \value{
 Named list of parameters names, grouped into broad categories:

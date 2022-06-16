@@ -189,6 +189,8 @@ print_prior <- function(model, ...) {
 #'
 #' @param model Object, usually the model name or an EczemaModel object
 #' @param main Whether to output the main parameters only (when applicable).
+#' @param full_names (experimental, for multivariate models)
+#' Whether to return the full names of multi-dimensional parameters (`Omega`, `Omega0` and `ct`).
 #' @param ... Arguments to pass to other methods
 #'
 #' @return Named list of parameters names, grouped into broad categories:

@@ -250,3 +250,20 @@ add_broken_pointline <- function(df, aes_x = "x", aes_y = "y", size = 1, ...) {
   return(out)
 
 }
+
+# Helpers for multivariate models -----------------------------------------
+
+#' Full names of a two-dimensional parameter
+#'
+#' @param par_name Name of the parameter
+#' @param n1 First dimension
+#' @param n2 Second dimension
+#'
+#' @return Character vector
+#'
+#' @import tidyr
+expand_2d_parname <- function(par_name, n1, n2) {
+  expand_grid("i" = 1:n1, "j" = 1:n2) %>%
+    mutate(x = paste0(par_name, "[", .data$i, ",", .data$j, "]")) %>%
+    pull(.data$x)
+}

@@ -424,3 +424,142 @@ NULL
 #' @examples
 #' EczemaModel("MC", K = 5)
 NULL
+
+# OrderedMRW --------------------------------------------------------------
+
+#' Ordered Logistic Multivariate Random Walk model
+#'
+#' This is a state-space model defined by an ordered logistic measurement error distribution
+#' and a latent multivariate random walk.
+#'
+#' @param max_score Maximum value that the scores can take
+#' @param D Number of components
+#' @param independent_components Whether to have diagonal correlations matrices or not
+#' @param prior Named list of the model's priors.
+#' It uses the default priors (see [default_prior()]) if `NULL` and for the parameters that are not provided.
+#'
+#' @details Details of the model are available in **TBC**.
+#'
+#' @section Parameters:
+#'
+#' The parameters are essentially the same as the [EczemaPred::OrderedRW] model,
+#' except that they one extra dimension corresponding to the component.
+#' In addition, there are two news population parameters:
+#'
+#' - `Omega`: Correlation matrix of the latent dynamic
+#' - `Sigma`: Covariance matrix of the latent dynamic
+#' - `Omega0`: Correlation matrix of the initial condition (cf. `logit_y0`)
+#'
+#' And one extra observation (patient- and time-dependent) parameter:
+#'
+#' - `ytot_rep`, which corresponds to the posterior replications of the sum of all components
+#'
+#' See `list_parameters(model = "OrderedMRW")` for more details.
+#'
+#' @section Priors:
+#' The priors are passed as a named list with elements
+#' `delta`, `sigma_meas`, `sigma_lat`, `Omega`, `Omega0`, `mu_y0` and `sigma_y0`
+#' specifying priors for the corresponding parameters.
+#'
+#' `Omega` and `Omega0` follow a LKJ distribution with shape parameter `eta` > 0.
+#' The shape parameter `eta` can be interpreted like the shape parameter of a symmetric beta distribution.
+#' When `eta` is 1, this corresponds to a "uniform" distribution over correlation matrices.
+#' `eta >> 1` converges to identity matrix.
+#'
+#' - `Omega ~ LJJ(eta)`
+#' - `Omega0 ~ LKJ(eta)`
+#'
+#' Then, the priors for the remaining parameters are defined for each component,
+#' and are the same as the priors for the univariate model `OrderedRW`.
+#'
+#' The element `delta` should be a matrix with `D` rows and `max_score - 1` columns,
+#' the d-th row corresponding to a vector of positive values X1,
+#' defining the priors for the d-th component, `delta[d]`, such as:
+#'
+#' - `delta[d] ~ dirichlet(X1)`
+#'
+#' The elements `sigma_meas`, `sigma_lat`, `mu_y0` and `sigma_y0`
+#' should be matrices with 2 rows and `D` columns,
+#' where the d-th column {x1 x2} correspond to the prior for the d-th component, with x2 > 0 and:
+#'
+#' - `sigma_meas[d] ~ lognormal(x1, x2)`
+#' - `sigma_meas[d] / max_score ~ lognormal(x1, x2)`
+#' - `sigma_lat[d] / max_score ~ lognormal(x1, x2)`
+#' - `mu_y0[d] ~ normal(x1, x2)`
+#' - `sigma_y0[d] ~ normal+(x1, x2)`
+#'
+#' NB: For `sigma_y0`, usually x1=0 to define a half-normal distribution
+#' since the parameters are constrained to be positive.
+#'
+#' @section Default priors:
+#' - The default priors for each component are the same as the default priors for [EczemaPred::OrderedRW].
+#' - The default priors for `Omega` and `Omega0` is a LKJ distribution with a shape parameter of 1.
+#'
+#' @name OrderedMRW
+#'
+#' @examples
+#' EczemaMVModel("OrderedMRW", max_score = 10, D = 5)
+NULL
+
+# BinMRW ------------------------------------------------------------------
+
+#' Binomial Multivariate Random Walk model
+#'
+#' This is a state-space model defined by a Binomial measurement error and a latent multivariate random walk.
+#'
+#' @param max_score Maximum value that the scores can take
+#' @param D Number of components
+#' @param independent_components Whether to have diagonal correlations matrices or not
+#' @param prior Named list of the model's priors.
+#' It uses the default priors (see [default_prior()]) if `NULL` and for the parameters that are not provided.
+#'
+#' @details Details of the model are available in the [paper](#).
+#'
+#' @section Parameters:
+#'
+#' The parameters are essentially the same as the [EczemaPred::BinRW] model,
+#' except that they one extra dimension corresponding to the component.
+#' In addition, there are two news population parameters:
+#'
+#' - `Omega`: Correlation matrix of the latent dynamic
+#' - `Sigma`: Covariance matrix of the latent dynamic
+#' - `Omega0`: Correlation matrix of the initial condition (cf. `logit_y0`)
+#'
+#' And one extra observation (patient- and time-dependent) parameter:
+#'
+#' - `ytot_rep`, which corresponds to the posterior replications of the sum of all components
+#'
+#' See `list_parameters(model = "BinMRW")` for more details.
+#'
+#' @section Priors:
+#' The priors are passed as a named list with elements `Omega`, `Omega0`, `sigma`, `mu_logit_y0` and `sigma_logit_y0`
+#' specifying priors for the corresponding parameters.
+#'
+#' `Omega` and `Omega0` follow a LKJ distribution with shape parameter `eta` > 0.
+#' The shape parameter `eta` can be interpreted like the shape parameter of a symmetric beta distribution.
+#' When `eta` is 1, this corresponds to a "uniform" distribution over correlation matrices.
+#' `eta >> 1` converges to identity matrix.
+#'
+#' - `Omega ~ LJJ(eta)`
+#' - `Omega0 ~ LKJ(eta)`
+#'
+#' The elements `sigma`, `mu_logit_y0` and `sigma_logit_y0` should be a matrix with 2 rows and `D` columns,
+#' where the d-th column {x1 x2} correspond to the prior for the d-th component, with x2 > 0 and:
+#'
+#' - `sigma[d] ~ normal+(x1, x2)`.
+#' - `mu_logit_y0[d] ~ normal(x1, x2)`
+#' - `sigma_logit_y0[d] ~ normal+(x1, x2)`
+#'
+#' NB: For `sigma` and `sigma_logit_y0`, usually x1=0 to define a half-normal distribution
+#' since the parameters are constrained to be positive.
+#'
+#' @section Default priors:
+#' - The default priors for each `sigma`, `mu_logit_y0` and `sigma_logit_y0`
+#' are the same as the default priors for [EczemaPred::BinRW].
+#' - The default priors for `Omega` and `Omega0` is a LKJ distribution with a shape parameter of 1.
+#'
+#' @name BinMRW
+#'
+#' @examples
+#' EczemaMVModel("BinMRW", max_score = 10, D = 5)
+NULL

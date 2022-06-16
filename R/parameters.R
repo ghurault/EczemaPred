@@ -119,6 +119,62 @@ list_parameters.MC <- function(model, ...) {
        Test = c("y_pred", "lpd", "cum_err"))
 }
 
+#' @export
+list_parameters.OrderedMRW <- function(model, full_names = FALSE, ...) {
+
+  stopifnot(HuraultMisc::is_scalar(full_names),
+            is.logical(full_names))
+
+  out <- list_parameters("OrderedRW")
+  out$Population <- c("Omega", "Omega0", out$Population)
+  out$PatientTime <- c(out$PatientTime, "ytot_rep")
+
+  if (full_names) {
+
+    omg <- expand_grid("i" = 1:model$D, "j" = 1:model$D) %>%
+      filter(.data$i < .data$j) %>%
+      mutate(omg = paste0("Omega[", .data$i, ",", .data$j, "]")) %>%
+      pull(omg)
+    omg0 <- gsub("Omega", "Omega0", omg)
+
+    ct <- expand_2d_parname("ct", model$D, model$max_score)
+
+    out$Population <- setdiff(out$Population, c("Omega", "Omega0", "ct"))
+    out$Population <- c(out$Population, omg, omg0, ct)
+
+  }
+
+  return(out)
+
+}
+
+#' @export
+list_parameters.BinMRW <- function(model, full_names = FALSE, ...) {
+
+  stopifnot(HuraultMisc::is_scalar(full_names),
+            is.logical(full_names))
+
+  out <- list_parameters("BinRW")
+  out$Population <- c("Omega", "Omega0", out$Population)
+  out$Patienttime <- c(out$PatientTime, "ytot_rep")
+
+  if (full_names) {
+
+    omg <- expand_grid("i" = 1:model$D, "j" = 1:model$D) %>%
+      filter(.data$i < .data$j) %>%
+      mutate(omg = paste0("Omega[", .data$i, ",", .data$j, "]")) %>%
+      pull(omg)
+    omg0 <- gsub("Omega", "Omega0", omg)
+
+    out$Population <- setdiff(out$Population, c("Omega", "Omega0"))
+    out$Population <- c(out$Population, omg, omg0)
+
+  }
+
+  return(out)
+
+}
+
 # Extract parameters ------------------------------------------------------
 
 #' Extract parameters posterior summary statistics
