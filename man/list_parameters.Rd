@@ -4,6 +4,8 @@
 \alias{list_parameters}
 \alias{list_parameters.BinRW}
 \alias{list_parameters.BinMC}
+\alias{list_parameters.OrderedMRW}
+\alias{list_parameters.BinMRW}
 \title{List available parameters}
 \usage{
 list_parameters(model, ...)
@@ -11,6 +13,10 @@ list_parameters(model, ...)
 \method{list_parameters}{BinRW}(model, main = TRUE, ...)
 
 \method{list_parameters}{BinMC}(model, main = TRUE, ...)
+
+\method{list_parameters}{OrderedMRW}(model, full_names = FALSE, ...)
+
+\method{list_parameters}{BinMRW}(model, full_names = FALSE, ...)
 }
 \arguments{
 \item{model}{Object, usually the model name or an EczemaModel object}

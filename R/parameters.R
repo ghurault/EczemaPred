@@ -119,6 +119,8 @@ list_parameters.MC <- function(model, ...) {
        Test = c("y_pred", "lpd", "cum_err"))
 }
 
+#' @rdname list_parameters
+#' @importFrom HuraultMisc is_scalar
 #' @export
 list_parameters.OrderedMRW <- function(model, full_names = FALSE, ...) {
 
@@ -148,6 +150,8 @@ list_parameters.OrderedMRW <- function(model, full_names = FALSE, ...) {
 
 }
 
+#' @rdname list_parameters
+#' @importFrom HuraultMisc is_scalar
 #' @export
 list_parameters.BinMRW <- function(model, full_names = FALSE, ...) {
 
