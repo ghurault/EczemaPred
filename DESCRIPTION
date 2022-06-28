@@ -32,7 +32,8 @@ Imports:
     markovchain,
     HuraultMisc (>= 1.1.1),
     stats,
-    scoringRules
+    scoringRules,
+    glue
 LinkingTo: 
     BH (>= 1.66.0),
     Rcpp (>= 0.12.0),
