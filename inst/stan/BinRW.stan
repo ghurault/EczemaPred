@@ -57,6 +57,7 @@ model {
 generated quantities {
   vector[N] y_lat = inv_logit(logit_lat); // Latent score (0-1 scale; cf. logit-normal distribution)
   real y_rep[N]; // Replications (of the entire time-series, not just observations)
+  real log_lik[N_obs]; // Log Likelihood
   real lpd[N_test]; // Log predictive density of predictions
   real cum_err[N_test, M + 1]; // Cumulative error (useful to compute RPS)
   real y_pred[N_test]; // Predictive sample of y_test
@@ -65,6 +66,10 @@ generated quantities {
     y_rep[i] = binomial_rng(M, y_lat[i]);
   }
   y_pred = y_rep[idx_test];
+
+  for (i in 1:N_obs) {
+    log_lik[i] = binomial_lpmf(y_obs[i] | M, y_lat[idx_obs[i]]);
+  }
 
   for (i in 1:N_test) {
     lpd[i] = binomial_lpmf(y_test[i] | M, y_lat[idx_test[i]]);
