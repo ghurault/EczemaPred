@@ -1,14 +1,17 @@
 # Extract metric ---------------------------------------------------------------------
 
-#' Extract lpd and RPS from stanfit object
+#' Extract lpd (predictive log-likelihood) and RPS from stanfit object
 #'
-#' The lpd and RPS are computed for the expected forecast distribution.
+#' The metrics are computed for the expected forecast distribution.
 #' The lpd is defined for continuous and discrete outcomes.
 #' The RPS is defined for discrete outcomes only and is computed by
-#' extracting the cumulative error distribution (cumulative forecast - cumulative distribution),
-#' for which we take the expected value, square it and apply and `sum() / (R-1)`.
+#' extracting the cumulative error distribution (`cum_err`: cumulative forecast - cumulative distribution),
+#' taking its expected value (cf. expected forecast), squaring it and apply,
+#' summing over possible outcomes and normalising by the number of outcomes `- 1`.
 #'
 #' @param fit Stanfit object
+#' @param par_name Name of the parameter to parameter in the Stan model.
+#' Usually `lpd`, `log_lik` (for the log likelihood of the data) or `cum_err`.
 #'
 #' @return Vector of lpd/RPS for each prediction
 #'
@@ -17,17 +20,26 @@ NULL
 
 #' @export
 #' @rdname extract_metric
-extract_lpd <- function(fit) {
-  stopifnot(is_stanfit(fit)) # presence of "lpd" checked in rstan::extract
-  lpd_mat <- rstan::extract(fit, pars = "lpd")[[1]]
-  apply(lpd_mat, 2, function(x) {log(mean(exp(x)))}) # Taking expectation of probability (mean(exp)) and use log scoring rule
+extract_loglikelihood <- function(fit, par_name = "log_lik") {
+  stopifnot(is_stanfit(fit)) # presence of `par_name` checked in rstan::extract
+  lpd_mat <- rstan::extract(fit, pars = par_name)[[1]]
+  stopifnot(length(dim(lpd_mat)) == 2)
+  # Taking expectation of probability (mean(exp)) and use log scoring rule
+  apply(lpd_mat, 2, function(x) {log(mean(exp(x)))})
 }
 
 #' @export
 #' @rdname extract_metric
-extract_RPS <- function(fit) {
-  stopifnot(is_stanfit(fit)) # presence of "cum_err" checked in rstan::extract
-  cum_err_mat <- rstan::extract(fit, pars = "cum_err")[[1]]
+extract_lpd <- function(fit) {
+  extract_loglikelihood(fit, par_name = "lpd")
+}
+
+#' @export
+#' @rdname extract_metric
+extract_RPS <- function(fit, par_name = "cum_err") {
+  stopifnot(is_stanfit(fit)) # presence of `par_name` checked in rstan::extract
+  cum_err_mat <- rstan::extract(fit, pars = par_name)[[1]]
+  stopifnot(length(dim(cum_err_mat)) == 3)
   cum_err <- apply(cum_err_mat, c(2, 3), mean) # Taking expectation
   apply(cum_err, 1, function(x) {sum(x^2) / (length(x) - 1)})
 }
@@ -38,24 +50,28 @@ extract_RPS <- function(fit) {
 #'
 #' - [add_metrics1_d()] and [add_metrics1_c()] extracts the lpd and RPS from the Stanfit object
 #' - [add_metrics2_d()] and [add_metrics2_c()] calculates the lpd and (C)RPS from the empirical pmf
-#' - The metrics in [add_metrics2_c()] and the CRPS of [add_metrics1_c()] are calculated using the `scoringRules` package.
+#' - The metrics in [add_metrics2_c()] and the CRPS of [add_metrics1_c()] are
+#' calculated using the `scoringRules` package.
 #'
 #' @param df Dataframe to add the metrics to
 #' - For [add_metrics1_c()], it must contain a column "Score".
 #' - For [add_metrics2_c()] and [add_metrics2_d()], it must contain the columns "Samples" and "Score".
 #' @param fit Stanfit object with parameters "lpd", and for [add_metrics1_d()] "cum_err".
 #' @param support Support of the distribution
-#' @param add_samples Numeric vector used to initialise the distribution when computing the lpd and (C)RPS,
-#' for example to add a uniform distribution to the vector of samples to avoid problems at the tail of the distribution.
+#' @param add_samples Numeric vector used to initialise the distribution when computing the lpd and (C)RPS.
+#' For example, this can be used to add a uniform distribution to the vector of samples,
+#' to avoid problems at the tail of the distribution.
 #' If `NULL`, the empirical pmf is not changed.
 #' Default to the uniform distribution (i.e. `support`) for [add_metrics2_d()] and `NULL` for [add_metrics2_c()].
 #' The column "Samples" is not modified when `add_samples` is not NULL.
 #' @param bw Bandwidth, for calculating lpd, see [scoringRules::logs_sample()].
 #' Useful to set the "resolution" of the distribution.
 #'
-#' @return Dataframe `df` appended by the columns "lpd", "RPS" (or "CRPS" for [add_metrics1_c()] and [add_metrics2_d()]).
+#' @return Dataframe `df` appended by the columns "lpd", "RPS"
+#' (or "CRPS" for [add_metrics1_c()] and [add_metrics2_d()]).
 #'
-#' @seealso [extract_lpd()], [extract_RPS()], [HuraultMisc::compute_RPS()], [scoringRules::logs_sample()], [scoringRules::crps_sample()].
+#' @seealso [extract_lpd()], [extract_RPS()], [HuraultMisc::compute_RPS()],
+#' [scoringRules::logs_sample()], [scoringRules::crps_sample()].
 #'
 #' @import dplyr
 #'

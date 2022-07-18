@@ -2,24 +2,31 @@
 % Please edit documentation in R/metrics.R
 \name{extract_metric}
 \alias{extract_metric}
+\alias{extract_loglikelihood}
 \alias{extract_lpd}
 \alias{extract_RPS}
-\title{Extract lpd and RPS from stanfit object}
+\title{Extract lpd (predictive log-likelihood) and RPS from stanfit object}
 \usage{
+extract_loglikelihood(fit, par_name = "log_lik")
+
 extract_lpd(fit)
 
-extract_RPS(fit)
+extract_RPS(fit, par_name = "cum_err")
 }
 \arguments{
 \item{fit}{Stanfit object}
+
+\item{par_name}{Name of the parameter to parameter in the Stan model.
+Usually \code{lpd}, \code{log_lik} (for the log likelihood of the data) or \code{cum_err}.}
 }
 \value{
 Vector of lpd/RPS for each prediction
 }
 \description{
-The lpd and RPS are computed for the expected forecast distribution.
+The metrics are computed for the expected forecast distribution.
 The lpd is defined for continuous and discrete outcomes.
 The RPS is defined for discrete outcomes only and is computed by
-extracting the cumulative error distribution (cumulative forecast - cumulative distribution),
-for which we take the expected value, square it and apply and \code{sum() / (R-1)}.
+extracting the cumulative error distribution (\code{cum_err}: cumulative forecast - cumulative distribution),
+taking its expected value (cf. expected forecast), squaring it and apply,
+summing over possible outcomes and normalising by the number of outcomes \code{- 1}.
 }
