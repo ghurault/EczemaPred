@@ -115,6 +115,7 @@ generated quantities {
   real sigma_tot = sqrt(sigma_meas^2 + sigma_lat^2);
   real rho2 = square(sigma_meas / sigma_tot);
   real y_rep[N]; // Replications (of the entire time-series, not just observations)
+  real log_lik[N_obs]; // Log Likelihood
   real lpd[N_test]; // Log predictive density of predictions
   real cum_err[N_test, M + 1]; // Cumulative error (useful to compute RPS)
   real y_pred[N_test]; // Predictive sample of y_test
@@ -127,6 +128,14 @@ generated quantities {
     }
   }
   y_pred = y_rep[idx_test];
+
+  for (i in 1:N_obs) {
+    if (measurement_distribution == 0) {
+      log_lik[i] = ordered_logistic_lpmf(yc_obs[i] | z_lat[idx_obs[i]], z_ct);
+    } else {
+      log_lik[i] = ordered_probit_lpmf(yc_obs[i] | z_lat[idx_obs[i]], z_ct);
+    }
+  }
 
   for (i in 1:N_test) {
     // Store log pmf in cum_err[i]
