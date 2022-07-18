@@ -107,7 +107,9 @@ for (model_name in c(main_models, ref_models, "MC")) {
   }
 
   test_that("default_prior.character() works", {
-    expect_true(is.list(default_prior(model_name)))
+    suppressMessages({
+      expect_true(is.list(default_prior(model_name)))
+    })
   })
 
 }
@@ -115,7 +117,9 @@ for (model_name in c(main_models, ref_models, "MC")) {
 test_that("Methods for a base EczemaModel work", {
   model <- EczemaModel("OrderedRW", max_score = 10)
   class(model) <- "EczemaModel"
-  expect_null(validate_prior(model))
+  suppressMessages({
+    expect_null(validate_prior(model))
+  })
   expect_output(print(model), "^OrderedRW model \\(discrete\\)")
   expect_output(print(model), "max_score = 10")
   expect_output(print(model), "Prior:")
