@@ -31,7 +31,6 @@ parameters {
 
 transformed parameters {
   vector[N] logit_lat; // Latent score (logit scale)
-  vector[N] y_lat; // Latent score (0-1 scale)
   real logit_y0[N_pt]; // Initial latent score
 
   for (k in 1:N_pt) {
@@ -41,7 +40,6 @@ transformed parameters {
       logit_lat[t] = logit_lat[t - 1] + sigma * eta[t]; // Random walk
     }
   }
-  y_lat = inv_logit(logit_lat); // cf. y_lat follow a logit normal distribution
 }
 
 model {
@@ -52,11 +50,12 @@ model {
   sigma_logit_y0 ~ normal(prior_sigma_logit_y0[1], prior_sigma_logit_y0[2]);
 
   if (run == 1) {
-    y_obs ~ binomial(M, y_lat[idx_obs]);
+    y_obs ~ binomial_logit(M, logit_lat[idx_obs]);
   }
 }
 
 generated quantities {
+  vector[N] y_lat = inv_logit(logit_lat); // Latent score (0-1 scale; cf. logit-normal distribution)
   real y_rep[N]; // Replications (of the entire time-series, not just observations)
   real lpd[N_test]; // Log predictive density of predictions
   real cum_err[N_test, M + 1]; // Cumulative error (useful to compute RPS)
