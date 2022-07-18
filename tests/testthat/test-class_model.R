@@ -136,9 +136,9 @@ N_pt <- 10
 t_max <- rpois(N_pt, 20)
 df <- lapply(1:N_pt,
              function(i) {
-               data.frame(Patient = i,
-                          Time = 1:t_max[i],
-                          Score = rbinom(t_max[i], ms, .5))
+               tibble(Patient = i,
+                      Time = 1:t_max[i],
+                      Score = rbinom(t_max[i], ms, .5))
              }) %>%
   bind_rows()
 train <- df %>% filter(Time <= 20)
