@@ -115,6 +115,7 @@ generated quantities {
   real sigma_tot = sqrt(sigma_meas^2 + sigma_lat^2);
   real rho2 = square(sigma_meas / sigma_tot);
   real y_rep[N]; // Replications (of the entire time-series, not just observations)
+  real lpmf[N, M + 1]; // Log probability mass function
   real log_lik[N_obs]; // Log Likelihood
   real lpd[N_test]; // Log predictive density of predictions
   real cum_err[N_test, M + 1]; // Cumulative error (useful to compute RPS)
@@ -123,34 +124,25 @@ generated quantities {
   for (i in 1:N) {
     if (measurement_distribution == 0) {
       y_rep[i] = ordered_logistic_rng(z_lat[i], z_ct) - 1;
+      for (m in 0:M) {
+        lpmf[i, m + 1] = ordered_logistic_lpmf(m + 1 | z_lat[i], z_ct);
+      }
     } else {
       y_rep[i] = ordered_probit_rng(z_lat[i], z_ct) - 1;
+      for (m in 0:M) {
+        lpmf[i, m + 1] = ordered_probit_lpmf(m + 1 | z_lat[i], z_ct);
+      }
     }
   }
   y_pred = y_rep[idx_test];
 
   for (i in 1:N_obs) {
-    if (measurement_distribution == 0) {
-      log_lik[i] = ordered_logistic_lpmf(yc_obs[i] | z_lat[idx_obs[i]], z_ct);
-    } else {
-      log_lik[i] = ordered_probit_lpmf(yc_obs[i] | z_lat[idx_obs[i]], z_ct);
-    }
+    log_lik[i] = lpmf[idx_obs[i], yc_obs[i]];
   }
 
   for (i in 1:N_test) {
-    // Store log pmf in cum_err[i]
-    if (measurement_distribution == 0) {
-      for (m in 0:M) {
-        cum_err[i, m + 1] = ordered_logistic_lpmf(m + 1 | z_lat[idx_test[i]], z_ct);
-      }
-    } else {
-      for (m in 0:M) {
-        cum_err[i, m + 1] = ordered_probit_lpmf(m + 1 | z_lat[idx_test[i]], z_ct);
-      }
-    }
-    // Compute metrics
-    lpd[i] = cum_err[i, y_test[i] + 1];
-    cum_err[i] = compute_cumulative_error(y_test[i] + 1, exp(cum_err[i]));
+    lpd[i] = lpmf[idx_test[i], y_test[i] + 1];
+    cum_err[i] = compute_cumulative_error(y_test[i] + 1, exp(lpmf[idx_test[i]]));
   }
 
 }
