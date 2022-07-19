@@ -67,26 +67,46 @@ plot_latent_OrderedRW <- function(fit, id, patient_id, ...) {
 #' Markov Chain expected transition matrix
 #'
 #' @param fit Stanfit object corresponding to the Markov Chain model
+#' @param max_scale Maximum value that the legend display.
+#' If NA, this chosen automatically.
+#' @param show_text Whether to display the probability as text in the heatmap.
 #'
 #' @return Ggplot
 #' @export
 #' @import dplyr tidyr ggplot2
-plot_transition_MC <- function(fit) {
+plot_transition_MC <- function(fit, max_scale = NA, show_text = FALSE) {
+
+  stopifnot(is_scalar(max_scale),
+            is.na(max_scale) || dplyr::between(max_scale, 0, 1),
+            is_scalar(show_text),
+            is.logical(show_text))
 
   p <- rstan::extract(fit, pars = "p")[[1]]
+  dp <- dim(p)
+  stopifnot(length(dp) == 3,
+            dp[2] == dp[3])
+  K <- dp[2]
   p_mean <- apply(p, c(2, 3), mean)
+  dimnames(p_mean) <- list(NULL, paste0("F", 1:K))
 
   palette <- c("#FFFFFF", "#EFF3FF", "#C6DBEF", "#9ECAE1", "#6BAED6", "#3182BD", "#08519C") # cf. RColorBrewer::brewer.pal(n = 6, "Blues")
 
-  as.data.frame(p_mean) %>%
+  out <- as_tibble(p_mean) %>%
     mutate(Initial = 1:nrow(p_mean)) %>%
     pivot_longer(-.data$Initial, names_to = "Final", values_to = "Probability") %>%
-    mutate(Final = as.numeric(gsub("V", "", .data$Final))) %>%
+    mutate(Final = as.numeric(gsub("F", "", .data$Final)),
+           Label = signif(Probability, 2)) %>%
     ggplot(aes_string(x = "Final", y = "Initial", fill = "Probability")) +
     geom_tile() +
-    scale_fill_gradientn(colours = palette, limits = c(0, NA)) +
-    scale_x_continuous(expand = c(0, 0)) +
-    scale_y_continuous(expand = c(0, 0)) +
+    scale_fill_gradientn(colours = palette, limits = c(0, max_scale)) +
+    scale_x_continuous(expand = c(0, 0), breaks = 1:K) +
+    scale_y_continuous(expand = c(0, 0), breaks = 1:K) +
     theme_classic(base_size = 15)
+
+  if (show_text) {
+    out <- out + geom_text(aes_string(label = "Label"))
+  }
+
+  return(out)
 
 }
