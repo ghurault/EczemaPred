@@ -145,7 +145,7 @@ train <- df %>% filter(Time <= 20)
 test <- df %>% filter(Time > 20)
 
 cond <- expand_grid(Model = c(main_models, ref_models),
-                  Discrete = c(TRUE, FALSE)) %>%
+                    Discrete = c(TRUE, FALSE)) %>%
   filter(Discrete | Model %in% ref_models)
 
 for (i in 1:nrow(cond)) {
