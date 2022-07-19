@@ -143,8 +143,8 @@ test_that("prepare_data_lgtd catches errors with max_score", {
 
 K <- 5
 model <- EczemaModel("MC", K = K)
-train <- data.frame(y0 = 1:K, y1 = 1:K, dt = 1)
-test <- data.frame(y0 = K, y1 = 1, dt = 2)
+train <- tibble(y0 = 1:K, y1 = 1:K, dt = 1)
+test <- tibble(y0 = K, y1 = 1, dt = 2)
 
 test_that("prepare_standata.MC returns the correct output", {
 

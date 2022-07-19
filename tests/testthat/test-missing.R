@@ -33,8 +33,7 @@ test_that("generate_missing works", {
     expect_equal(N, length(x))
     expect_lt(abs(mean(x) - p_mis), tol)
     if (tp == "markovchain") {
-      freq_obs_obs <- data.frame(x) %>%
-        mutate(x_next = lead(x)) %>%
+      freq_obs_obs <- tibble(x, x_next = lead(x)) %>%
         drop_na() %>%
         summarise(sum(!x & !x_next) / sum(!x)) %>%
         pull()

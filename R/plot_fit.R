@@ -89,13 +89,14 @@ plot_transition_MC <- function(fit, max_scale = NA, show_text = FALSE) {
   p_mean <- apply(p, c(2, 3), mean)
   dimnames(p_mean) <- list(NULL, paste0("F", 1:K))
 
-  palette <- c("#FFFFFF", "#EFF3FF", "#C6DBEF", "#9ECAE1", "#6BAED6", "#3182BD", "#08519C") # cf. RColorBrewer::brewer.pal(n = 6, "Blues")
+  palette <- c("#FFFFFF", "#EFF3FF", "#C6DBEF", "#9ECAE1", "#6BAED6", "#3182BD", "#08519C")
+  # From RColorBrewer::brewer.pal(n = 6, "Blues")
 
   out <- as_tibble(p_mean) %>%
     mutate(Initial = 1:nrow(p_mean)) %>%
     pivot_longer(-.data$Initial, names_to = "Final", values_to = "Probability") %>%
     mutate(Final = as.numeric(gsub("F", "", .data$Final)),
-           Label = signif(Probability, 2)) %>%
+           Label = signif(.data$Probability, 2)) %>%
     ggplot(aes_string(x = "Final", y = "Initial", fill = "Probability")) +
     geom_tile() +
     scale_fill_gradientn(colours = palette, limits = c(0, max_scale)) +

@@ -147,7 +147,7 @@ wrong_prior_MC <- function(K) {
 
   list(
     matrix(1, nrow = K, ncol = K),
-    list(p = as.data.frame(matrix(1, nrow = K, ncol = K))),
+    list(p = as_tibble(matrix(1, nrow = K, ncol = K, dimnames = list(NULL, LETTERS[1:K])))),
     list(p = 1),
     list(p = matrix(-1, nrow = K, ncol = K))
   )

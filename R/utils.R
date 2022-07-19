@@ -102,11 +102,13 @@ samples_to_list <- function(object, par_name = "y_pred", n_samples = NULL) {
 
 #' Add fanchart to ggplot
 #'
-#' The fanchart is obtained by overlaying [ggplot2::geom_ribbon()] of different widths (corresponding to different levels).
-#' NB: this function is not a geom.
+#' The fanchart is obtained by overlaying [ggplot2::geom_ribbon()] of different widths
+#' (corresponding to different levels).
+#' This function is not a geom.
 #'
 #' @section Alternative:
-#' A similar result can be obtained using the [ggdist::geom_lineribbon()] with the difference that the `ggdist` function also plots a point estimate (and is a proper geom).
+#' A similar result can be obtained using [`ggdist::geom_lineribbon()`](https://mjskay.github.io/ggdist/),
+#' with the difference that the `ggdist` function also plots a point estimate (and is a proper geom).
 #' To avoid plotting the point estimate, `size` can be set to 0 and `y = .lower` for example.
 #'
 #' @param df Data with columns `aes_x`, `aes_ymin`, `aes_ymax` and `aes_fill`

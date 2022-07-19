@@ -104,8 +104,8 @@ detail_fc_training <- function(df, horizon) {
            Proportion = .data$N / max(.data$N)) %>%
     filter(.data$Iteration < max(.data$Iteration))
 
-  last_time <- data.frame(Time = 1:max(df[["Time"]])) %>%
-    mutate(Iteration = get_fc_iteration(.data$Time, horizon)) %>%
+  last_time <- tibble(Time = 1:max(df[["Time"]]),
+                      Iteration = get_fc_iteration(.data$Time, horizon)) %>%
     group_by(.data$Iteration) %>%
     summarise(LastTime = max(.data$Time))
 
