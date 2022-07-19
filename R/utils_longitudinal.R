@@ -41,12 +41,13 @@ get_index <- function(train, test = NULL) {
 
   tmp <- full_df %>%
     group_by(.data$Patient) %>%
-    summarise(t_max = max(.data$Time))
+    summarise(t_max = max(.data$Time)) %>%
+    arrange(Patient)
 
   out <- lapply(1:nrow(tmp),
                 function(i) {
-                  data.frame(Patient = tmp[i, "Patient"],
-                             Time = 1:tmp[i, "t_max"][[1]])
+                  tibble(Patient = tmp[[i, "Patient"]],
+                         Time = 1:tmp[[i, "t_max"]])
                 }) %>%
     bind_rows() %>%
     mutate(Index = 1:n())
@@ -57,7 +58,7 @@ get_index <- function(train, test = NULL) {
 #' @rdname get_index
 #' @export
 get_index2 <- function(t_max) {
-  get_index(train = data.frame(Patient = 1:length(t_max), Time = t_max), test = NULL)
+  get_index(train = tibble(Patient = seq_along(t_max), Time = t_max), test = NULL)
 }
 
 # Extract simulations -----------------------------------------------------

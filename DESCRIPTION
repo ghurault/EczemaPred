@@ -1,6 +1,6 @@
 Package: EczemaPred
 Title: Predicting the Evolution of Eczema Severity
-Version: 0.3.2.9000
+Version: 0.3.3.9000
 Authors@R: 
     person(given = "Guillem",
            family = "Hurault",

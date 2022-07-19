@@ -81,9 +81,9 @@ generate_fakedata <- function(
              l[t] = params$alpha * y[t] + (1 - params$alpha) * l[t - 1]
            }
 
-           out <- data.frame(Patient = k,
-                             Time = 1:t_max[k],
-                             Score = y) %>%
+           out <- tibble(Patient = k,
+                         Time = 1:t_max[k],
+                         Score = y) %>%
              mutate(OutsideRange = (Score < 0 | Score > max_score),
                     OutsideRange = cumsum(OutsideRange)) %>%
              filter(OutsideRange == 0)

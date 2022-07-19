@@ -39,7 +39,7 @@ test_that("get_index works", {
 
   df <- lapply(1:N_pt,
                function(i) {
-                 data.frame(Patient = i, Time = 1:t_max[i]) %>%
+                 tibble(Patient = i, Time = 1:t_max[i]) %>%
                    filter(!generate_missing(n()))
                }) %>%
     bind_rows()

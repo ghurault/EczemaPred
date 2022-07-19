@@ -62,8 +62,8 @@ MC_params <- list(
   p10 = 0.4
 )
 
-MC_df <- data.frame(t0 = 1:MC_setup$N,
-                    y0 = generate_MC2_sequence(N = MC_setup$N, p01 = MC_params$p01, p10 = MC_params$p10) + 1) %>%
+MC_df <- tibble(t0 = 1:MC_setup$N,
+                y0 = generate_MC2_sequence(N = MC_setup$N, p01 = MC_params$p01, p10 = MC_params$p10) + 1) %>%
   filter(!generate_missing(MC_setup$N, type = "random", p_mis = MC_setup$prob_mis)) %>%
   mutate(y1 = lead(y0),
          dt = lead(t0) - t0)

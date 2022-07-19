@@ -70,8 +70,8 @@ extract_yrep <- function(obj, id, patient_id, ...) {
 
   # Extract distribution
   out <- full_join(HuraultMisc::extract_distribution(yrep, ...),
-            mutate(id1, Index = 1:nrow(id1)),
-            by = "Index") %>%
+                   mutate(id1, Index = 1:n()),
+                   by = "Index") %>%
     select(-.data$Index, -.data$Variable)
 
   return(out)
