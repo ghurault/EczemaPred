@@ -8,8 +8,8 @@
 <meta name="description" content="A collection of models to serve as building blocks for predicting eczema severity.">
 <title>Predicting the Evolution of Eczema Severity • EczemaPred</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Predicting the Evolution of Eczema Severity">
 <meta property="og:description" content="A collection of models to serve as building blocks for predicting eczema severity.">
@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">EczemaPred</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,6 @@
 <div class="page-header"><h1 id="eczemapred">EczemaPred<a class="anchor" aria-label="anchor" href="#eczemapred"></a>
 </h1></div>
 <!-- badges: start -->
-
 <p>EczemaPred is a R package implementing models to serve as building blocks for predicting the evolution of eczema severity, and provides a set of generic functions to manipulate these models. The models are implemented in the probabilistic programming language <a href="https://mc-stan.org/" class="external-link">Stan</a>.</p>
 <p>EczemaPred was first introduced in <a href="https://doi.org/10.1002/clt2.12140" class="external-link"><strong>Hurault et al. (2022), “EczemaPred: A computational framework for personalised prediction of eczema severity dynamics”</strong></a>, published in Clinical and Translational Allergy. The analysis code of this research article is available <a href="https://github.com/ghurault/EczemaPredPOSCORAD" class="external-link">here</a>.</p>
 <div class="section level2">
@@ -81,9 +80,9 @@
 </h2>
 <p>The package requires RStan and C++ toolchain, which can be installed by following these <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started" class="external-link">instructions</a>.</p>
 <p>Then, the package can be installed by typing the following commands in R:</p>
-<pre><code><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ghurault/EczemaPred"</span><span class="op">)</span></code></pre>
+<pre><code><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ghurault/EczemaPred"</span><span class="op">)</span></span></code></pre>
 <p>Or to install a specific version, for example the initial release (v0.1.0):</p>
-<pre><code><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ghurault/EczemaPred@v0.1.0"</span><span class="op">)</span></code></pre>
+<pre><code><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ghurault/EczemaPred@v0.1.0"</span><span class="op">)</span></span></code></pre>
 <p>The package can take a few minutes to install as the models needs to be compiled (but no compilation will be required when using the package). Many warnings may be displayed during compilation but they can be safely ignored.</p>
 <p>NB: EczemaPred requires <a href="https://github.com/ghurault/HuraultMisc" class="external-link">HuraultMisc</a>, my personal function library, to work.</p>
 </div>
@@ -91,7 +90,7 @@
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
 <p>The package is loaded with:</p>
-<pre><code><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ghurault.github.io/EczemaPred/" class="external-link">EczemaPred</a></span><span class="op">)</span></code></pre>
+<pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ghurault.github.io/EczemaPred/" class="external-link">EczemaPred</a></span><span class="op">)</span></span></code></pre>
 <p>If you are working on a local, multicore CPU with excess RAM, you may want to call <code>options(mc.cores = parallel::detectCores())</code> to run Stan on multiple cores on parallel.</p>
 <p>The list of functions and datasets is available on the <a href="https://ghurault.github.io/EczemaPred/" class="external-link">package website</a> or by typing <code><a href="https://ghurault.github.io/EczemaPred/reference" class="external-link">help(package = "EczemaPred")</a></code>. Examples on how the package can be used are provided in <a href="https://ghurault.github.io/EczemaPred/articles/" class="external-link">vignettes</a> (long form documentation).</p>
 <p>Basic knowledge of Bayesian modelling with Stan and the package <a href="https://mc-stan.org/users/interfaces/rstan" class="external-link">rstan</a> is required to analyse models’ outputs. The Stan documentation is available <a href="https://mc-stan.org/users/documentation/" class="external-link">here</a>.</p>
@@ -161,7 +160,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer>
