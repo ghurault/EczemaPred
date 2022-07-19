@@ -1,6 +1,6 @@
 Package: EczemaPred
 Title: Predicting the Evolution of Eczema Severity
-Version: 0.3.2
+Version: 0.3.3
 Authors@R: 
     person(given = "Guillem",
            family = "Hurault",
@@ -15,7 +15,7 @@ Language: en-GB
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Biarch: true
 Depends: 
     R (>= 3.4.0)

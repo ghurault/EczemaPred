@@ -42,7 +42,7 @@ test_that("add_uniform_pred returns samples when prompted", {
                      max_score = RW_setup$max_score,
                      discrete = FALSE,
                      include_samples = TRUE), # n_samples not supplied
-    add_uniform_pred(test = data.frame(Score = rbinom(1e2, 100, .5)),
+    add_uniform_pred(test = tibble(Score = rbinom(1e2, 100, .5)),
                      max_score = 100,
                      discrete = TRUE,
                      include_samples = TRUE,

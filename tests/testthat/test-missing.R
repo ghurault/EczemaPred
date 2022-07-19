@@ -6,7 +6,7 @@ test_that("generate_MC2_sequence works", {
 
   for (t0 in list(NULL, 0, 1)) {
 
-    df <- data.frame(x = generate_MC2_sequence(N, p01 = p01, p10 = p10, t0 = t0)) %>%
+    df <- tibble(x = generate_MC2_sequence(N, p01 = p01, p10 = p10, t0 = t0)) %>%
       mutate(x_next = lead(x))
     x0_next <- df %>% filter(x == 0) %>% drop_na() %>% pull(x_next)
     x1_next <- df %>% filter(x == 1) %>% drop_na() %>% pull(x_next)
@@ -33,8 +33,7 @@ test_that("generate_missing works", {
     expect_equal(N, length(x))
     expect_lt(abs(mean(x) - p_mis), tol)
     if (tp == "markovchain") {
-      freq_obs_obs <- data.frame(x) %>%
-        mutate(x_next = lead(x)) %>%
+      freq_obs_obs <- tibble(x, x_next = lead(x)) %>%
         drop_na() %>%
         summarise(sum(!x & !x_next) / sum(!x)) %>%
         pull()

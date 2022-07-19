@@ -22,6 +22,7 @@ list_parameters.BinRW <- function(model, main = TRUE, ...) {
   out <- list(Population = c("sigma", "mu_logit_y0", "sigma_logit_y0"),
               Patient = "logit_y0",
               PatientTime =  c("y_lat", "logit_lat", "y_rep"),
+              Observation = c("log_lik"),
               Test = c("y_pred", "lpd", "cum_err"))
   if (main) {
     out$PatientTime <- setdiff(out$PatientTime, "logit_lat")
@@ -37,6 +38,7 @@ list_parameters.OrderedRW <- function(model, ...) {
     Population = c("sigma_meas", "sigma_lat", "rho2", "sigma_tot", "ct", "delta", "mu_y0", "sigma_y0"),
     Patient = "y0",
     PatientTime = c("y_lat", "y_rep"),
+    Observation = c("log_lik"),
     Test = c("y_pred", "lpd", "cum_err")
   )
 }

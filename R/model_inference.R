@@ -42,16 +42,16 @@ EczemaFit.EczemaModel <- function(model, train, test = NULL, ...) {
 #' make_empty_data(max_score = 10, discrete = TRUE)
 make_empty_data <- function(N_patient = 1, t_max = c(2), max_score, discrete) {
 
-  train <- data.frame(Patient = 1:N_patient,
-                      Time = 1,
-                      Score = stats::runif(N_patient, 0, max_score))
+  train <- tibble(Patient = 1:N_patient,
+                  Time = 1,
+                  Score = stats::runif(N_patient, 0, max_score))
   if (discrete) {
     train[["Score"]] <- round(train[["Score"]])
   }
 
-  test <- data.frame(Patient = 1:N_patient,
-                     Time = t_max,
-                     Score = 0)
+  test <- tibble(Patient = 1:N_patient,
+                 Time = t_max,
+                 Score = 0)
 
   return(list(Training = train, Testing = test))
 

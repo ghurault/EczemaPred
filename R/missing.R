@@ -61,24 +61,32 @@ generate_MC2_sequence <- function(N, p01 = .5, p10 = .5, t0 = NULL) {
 generate_missing <- function(N, type = c("random", "markovchain"), p_mis = .25, p_obs_obs = .75) {
 
   stopifnot(is_scalar_wholenumber(N),
+            N > 0,
             is_scalar(p_mis),
             is.numeric(p_mis),
             dplyr::between(p_mis, 0, 1))
   type <- match.arg(type)
 
-  if (type == "random") {
-    id_mis <- as.logical(stats::rbinom(N - 2, 1, p_mis))
-  } else if (type == "markovchain") {
-    stopifnot(is_scalar(p_obs_obs),
-              is.numeric(p_obs_obs),
-              dplyr::between(p_obs_obs, 1 - p_mis / (1 - p_mis), 1))
+  if (N <= 2) {
+    id_mis <- rep(FALSE, N)
+  } else {
 
-    beta <- 1 - p_obs_obs # transition probability from observed to missing
-    alpha <-  beta * (1 - p_mis) / p_mis # transition probability from missing to observed
-    id_mis <- generate_MC2_sequence(N - 2, p01 = alpha, p10 = beta, t0 = 1)
-    id_mis <- !as.logical(id_mis)
+    if (type == "random") {
+      id_mis <- as.logical(stats::rbinom(N - 2, 1, p_mis))
+    } else {
+      # type == "markovchain"
+      stopifnot(is_scalar(p_obs_obs),
+                is.numeric(p_obs_obs),
+                dplyr::between(p_obs_obs, 1 - p_mis / (1 - p_mis), 1))
+
+      beta <- 1 - p_obs_obs # transition probability from observed to missing
+      alpha <-  beta * (1 - p_mis) / p_mis # transition probability from missing to observed
+      id_mis <- generate_MC2_sequence(N - 2, p01 = alpha, p10 = beta, t0 = 1)
+      id_mis <- !as.logical(id_mis)
+    }
+    id_mis <- c(FALSE, id_mis, FALSE)
+
   }
 
-  id_mis <- c(FALSE, id_mis, FALSE)
   return(id_mis)
 }

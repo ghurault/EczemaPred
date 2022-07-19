@@ -37,12 +37,14 @@ The default is the single-hue blue palette from \code{RColorBrewer::brewer.pal(n
 List to be added to a ggplot
 }
 \description{
-The fanchart is obtained by overlaying \code{\link[ggplot2:geom_ribbon]{ggplot2::geom_ribbon()}} of different widths (corresponding to different levels).
-NB: this function is not a geom.
+The fanchart is obtained by overlaying \code{\link[ggplot2:geom_ribbon]{ggplot2::geom_ribbon()}} of different widths
+(corresponding to different levels).
+This function is not a geom.
 }
 \section{Alternative}{
 
-A similar result can be obtained using the \code{\link[ggdist:geom_lineribbon]{ggdist::geom_lineribbon()}} with the difference that the \code{ggdist} function also plots a point estimate (and is a proper geom).
+A similar result can be obtained using \href{https://mjskay.github.io/ggdist/}{\code{ggdist::geom_lineribbon()}},
+with the difference that the \code{ggdist} function also plots a point estimate (and is a proper geom).
 To avoid plotting the point estimate, \code{size} can be set to 0 and \code{y = .lower} for example.
 }
 
