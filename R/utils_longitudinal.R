@@ -42,7 +42,7 @@ get_index <- function(train, test = NULL) {
   tmp <- full_df %>%
     group_by(.data$Patient) %>%
     summarise(t_max = max(.data$Time)) %>%
-    arrange(Patient)
+    arrange(.data$Patient)
 
   out <- lapply(1:nrow(tmp),
                 function(i) {
