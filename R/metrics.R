@@ -170,6 +170,7 @@ add_metrics2_c <- function(df, add_samples = NULL, bw = NULL) {
     stopifnot(is_scalar(bw),
               is.numeric(bw))
     bw <- rep(bw, nrow(df))
+    stop("Specifying bw is disabled because of a bug in the scoringRules package.")
   }
 
   df <- df %>%
