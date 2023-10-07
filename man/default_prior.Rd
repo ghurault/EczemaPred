@@ -27,9 +27,9 @@ Default prior
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{character}: The function creates an EczemaModel object and call the corresponding method.
-}}
+\item \code{default_prior(character)}: The function creates an EczemaModel object and call the corresponding method.
 
+}}
 \examples{
 default_prior(EczemaModel("BinRW", max_score = 10))
 default_prior(EczemaModel("MC", K = 10))
