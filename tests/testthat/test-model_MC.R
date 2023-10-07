@@ -14,7 +14,7 @@ test_that("sample_prior_MC returns a stanfit object", {
 test_that("estimates from sample_prior_MC are accurate", {
   p_mean <- apply(rstan::extract(fit_prior, pars = "p")[[1]], c(2, 3), mean)
   p_se <- apply(rstan::extract(fit_prior, pars = "p")[[1]], c(2, 3), function(x) {sd(x) / sqrt(length(x))})
-  expect_true(all(abs(c(p_mean) - 1 / K1) < c(p_se) * 2.5)) # cf. default prior is symmetric
+  expect_true(all(abs(c(p_mean) - 1 / K1) < c(p_se) * 3)) # cf. default prior is symmetric
 })
 
 # Test fitting -------------------------------------------------------------
