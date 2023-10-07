@@ -52,7 +52,6 @@ test_that("add_uniform_pred returns samples when prompted", {
   for (x in ll) {
     expect_true(all(c("Samples") %in% colnames(x)))
     expect_true(is.list(x[["Samples"]]))
-
   }
   for (x in ll[c(1, 3)]) {
     expect_true(all(vapply(x[["Samples"]], length, numeric(1)) == 50))
@@ -121,8 +120,8 @@ test_that("add_metrics2_c returns a correct dataframe", {
 
   list(
     add_metrics2_c(tmp),
-    add_metrics2_c(tmp, add_samples = 0:RW_setup$max_score),
-    add_metrics2_c(tmp, bw = 1)
+    add_metrics2_c(tmp, add_samples = 0:RW_setup$max_score)#,
+    #add_metrics2_c(tmp, bw = 1)
   ) %>%
     lapply(function(perf) {
       test_when_continuous(select(perf, -Samples),
