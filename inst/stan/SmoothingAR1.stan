@@ -52,7 +52,7 @@ transformed data {
 
   if (discrete == 1) {
     if (M_int <= 0 || (M_int != M)) {
-      reject("When discrete=TRUE, M should be a stricly positive integer.")
+      reject("When discrete=TRUE, M should be a stricly positive integer.");
     }
     for (i in 1:N_test) {
       yi_test[i] = bin_search(y_test[i], 0, M_int);
