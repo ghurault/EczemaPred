@@ -1,30 +1,27 @@
-template:
-  bootstrap: 5
-
+url: https://ghurault.github.io/EczemaPred/
 authors:
   Guillem Hurault:
     href: https://ghurault.github.io/
-
 reference:
-- title: "Available models"
-- subtitle: "Main models"
+- title: Available models
+- subtitle: Main models
 - contents:
   - BinRW
   - OrderedRW
   - BinMC
-- subtitle: "Reference models"
+- subtitle: Reference models
 - contents:
   - MC
   - RW
   - Smoothing
   - AR1
   - MixedAR1
-- title: "Fitting models"
+- title: Fitting models
 - contents:
   - EczemaModel
   - EczemaFit
   - sample_prior
-- title: "Manipulating models"
+- title: Manipulating models
 - contents:
   - list_parameters
   - default_prior
@@ -37,13 +34,13 @@ reference:
   - replace_prior
   - get_index
   - make_empty_data
-- title: "Plotting models"
+- title: Plotting models
 - contents:
   - plot_ppc
   - plot_latent_OrderedRW
   - plot_transition_MC
-- title: "Validation"
-  desc: "Utility functions for validating models"
+- title: Validation
+  desc: Utility functions for validating models
 - contents:
   - forward_chaining
   - extract_metric
@@ -51,7 +48,7 @@ reference:
   - add_predictions
   - add_uniform_pred
   - add_historical_pred
-- title: "Miscellaneous"
+- title: Miscellaneous
 - contents:
   - get_compiled_model
   - generate_missing
@@ -61,3 +58,17 @@ reference:
   - add_fanchart
   - add_broken_pointline
   - EczemaPred-package
+template:
+  bootstrap: 5
+  includes:
+    in_header: |-
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-DYGYFM7T03"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-DYGYFM7T03');
+      </script>
+
