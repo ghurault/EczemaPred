@@ -33,7 +33,7 @@ data {
   real prior_sigma_meas[2];
   real prior_sigma_lat[2];
   real prior_mu_y0[2];
-  real<lower = 0> prior_sigma_y0[2];
+  real prior_sigma_y0[2];
 
 }
 
