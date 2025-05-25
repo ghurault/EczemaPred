@@ -11,3 +11,16 @@ A collection of models to serve as building blocks for predicting eczema severit
 \references{
 \href{https://mc-stan.org}{Stan Development Team (2020). RStan: the R interface to Stan.} R package version 2.21.2.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://ghurault.github.io/EczemaPred/}
+  \item \url{https://github.com/ghurault/EczemaPred}
+  \item Report bugs at \url{https://github.com/ghurault/EczemaPred/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Guillem Hurault \email{ghurault.dev@outlook.com} (\href{https://orcid.org/0000-0002-1052-3564}{ORCID})
+
+}
