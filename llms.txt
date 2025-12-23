@@ -1,0 +1,221 @@
+# EczemaPred
+
+EczemaPred is a R package implementing models to serve as building
+blocks for predicting the evolution of eczema severity, and provides a
+set of generic functions to manipulate these models. The models are
+implemented in the probabilistic programming language
+[Stan](https://mc-stan.org/).
+
+EczemaPred was first introduced in [**Hurault et al. (2022),
+“EczemaPred: A computational framework for personalised prediction of
+eczema severity dynamics”**](https://doi.org/10.1002/clt2.12140),
+published in Clinical and Translational Allergy. The analysis code of
+this research article is available
+[here](https://github.com/ghurault/EczemaPredPOSCORAD).
+
+## Installation
+
+The package requires RStan and C++ toolchain, which can be installed by
+following these
+[instructions](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started).
+
+Then, the package can be installed by typing the following commands in
+R:
+
+    devtools::install_github("ghurault/EczemaPred")
+
+Or to install a specific version, for example the initial release
+(v0.1.0):
+
+    devtools::install_github("ghurault/EczemaPred@v0.1.0")
+
+The package can take a few minutes to install as the models needs to be
+compiled (but no compilation will be required when using the package).
+Many warnings may be displayed during compilation but they can be safely
+ignored.
+
+NB: EczemaPred requires
+[HuraultMisc](https://github.com/ghurault/HuraultMisc), my personal
+function library, to work.
+
+## Usage
+
+The package is loaded with:
+
+    library(EczemaPred)
+
+If you are working on a local, multicore CPU with excess RAM, you may
+want to call `options(mc.cores = parallel::detectCores())` to run Stan
+on multiple cores on parallel.
+
+The list of functions and datasets is available on the [package
+website](https://ghurault.github.io/EczemaPred/) or by typing
+[`help(package = "EczemaPred")`](https://ghurault.github.io/EczemaPred/reference).
+Examples on how the package can be used are provided in
+[vignettes](https://ghurault.github.io/EczemaPred/articles/) (long form
+documentation).
+
+Basic knowledge of Bayesian modelling with Stan and the package
+[rstan](https://mc-stan.org/users/interfaces/rstan) is required to
+analyse models’ outputs. The Stan documentation is available
+[here](https://mc-stan.org/users/documentation/).
+
+NB: While the purpose of the package is to abstract the implementation
+to the user, the R code and Stan code can be accessed in the
+[R/](https://ghurault.github.io/EczemaPred/R/) and
+[inst/stan](https://ghurault.github.io/EczemaPred/inst/stan)
+directories, respectively.
+
+## License
+
+The open source version of EczemaPred is licensed under the GPL v3
+license, which can be seen in the
+[LICENSE](https://ghurault.github.io/EczemaPred/LICENSE.md) file. A
+closed source version of EczemaPred is also available without the
+restrictions of the GPL v3 license with a software usage agreement from
+Imperial College London. For more information, please contact [Diana
+Yin](mailto:d.yin@imperial.ac.uk).
+
+# Package index
+
+## Available models
+
+### Main models
+
+- [`BinRW`](https://ghurault.github.io/EczemaPred/reference/BinRW.md) :
+  Binomial random walk model
+- [`OrderedRW`](https://ghurault.github.io/EczemaPred/reference/OrderedRW.md)
+  : Ordered Logistic random walk model
+- [`BinMC`](https://ghurault.github.io/EczemaPred/reference/BinMC.md) :
+  Binomial Markov Chain model
+
+### Reference models
+
+- [`MC`](https://ghurault.github.io/EczemaPred/reference/MC.md) : Markov
+  Chain model
+- [`RW`](https://ghurault.github.io/EczemaPred/reference/RW.md) : Random
+  walk model
+- [`Smoothing`](https://ghurault.github.io/EczemaPred/reference/Smoothing.md)
+  : Exponential smoothing model
+- [`AR1`](https://ghurault.github.io/EczemaPred/reference/AR1.md) :
+  Autoregressive model (order 1)
+- [`MixedAR1`](https://ghurault.github.io/EczemaPred/reference/MixedAR1.md)
+  : Mixed effect autoregressive model (order 1)
+
+## Fitting models
+
+- [`EczemaModel()`](https://ghurault.github.io/EczemaPred/reference/EczemaModel.md)
+  : EczemaModel constructor
+- [`EczemaFit()`](https://ghurault.github.io/EczemaPred/reference/EczemaFit.md)
+  : Fit an EczemaModel
+- [`sample_prior()`](https://ghurault.github.io/EczemaPred/reference/sample_prior.md)
+  : Prior predictive distribution
+
+## Manipulating models
+
+- [`list_parameters()`](https://ghurault.github.io/EczemaPred/reference/list_parameters.md)
+  : List available parameters
+
+- [`default_prior()`](https://ghurault.github.io/EczemaPred/reference/default_prior.md)
+  : Default prior
+
+- [`validate_prior()`](https://ghurault.github.io/EczemaPred/reference/validate_prior.md)
+  : Check the prior of an EczemaModel is correct
+
+- [`print_prior()`](https://ghurault.github.io/EczemaPred/reference/print_prior.md)
+  [`print_distribution()`](https://ghurault.github.io/EczemaPred/reference/print_prior.md)
+  : Print prior distribution
+
+- [`print(`*`<EczemaModel>`*`)`](https://ghurault.github.io/EczemaPred/reference/print.EczemaModel.md)
+  : Print model
+
+- [`prepare_standata()`](https://ghurault.github.io/EczemaPred/reference/prepare_standata.md)
+  [`prepare_data_lgtd()`](https://ghurault.github.io/EczemaPred/reference/prepare_standata.md)
+  : Prepare the data list to pass to the Stan sampler
+
+- [`add_prior()`](https://ghurault.github.io/EczemaPred/reference/add_prior.md)
+  : Add prior to the list serving as input to the Stan sampler
+
+- [`replace_prior()`](https://ghurault.github.io/EczemaPred/reference/replace_prior.md)
+  : Replace prior
+
+- [`get_index()`](https://ghurault.github.io/EczemaPred/reference/get_index.md)
+  [`get_index2()`](https://ghurault.github.io/EczemaPred/reference/get_index.md)
+  : Associate (Patient, Time) pairs to corresponding index in the model
+
+- [`make_empty_data()`](https://ghurault.github.io/EczemaPred/reference/make_empty_data.md)
+  :
+
+  Create "empty" train and test set to pass to `prepare_standata` for
+  `sample_prior`
+
+## Plotting models
+
+- [`plot_post_traj_pmf()`](https://ghurault.github.io/EczemaPred/reference/plot_ppc.md)
+  [`plot_post_traj_fanchart()`](https://ghurault.github.io/EczemaPred/reference/plot_ppc.md)
+  [`plot_ppc_traj_pmf()`](https://ghurault.github.io/EczemaPred/reference/plot_ppc.md)
+  [`plot_ppc_traj_fanchart()`](https://ghurault.github.io/EczemaPred/reference/plot_ppc.md)
+  : Plot posterior predictive trajectory
+- [`plot_latent_OrderedRW()`](https://ghurault.github.io/EczemaPred/reference/plot_latent_OrderedRW.md)
+  : Plot the evolution of the expected latent score of the OrderedRW
+  model
+- [`plot_transition_MC()`](https://ghurault.github.io/EczemaPred/reference/plot_transition_MC.md)
+  : Markov Chain expected transition matrix
+
+## Validation
+
+Utility functions for validating models
+
+- [`get_fc_iteration()`](https://ghurault.github.io/EczemaPred/reference/forward_chaining.md)
+  [`split_fc_dataset()`](https://ghurault.github.io/EczemaPred/reference/forward_chaining.md)
+  [`detail_fc_training()`](https://ghurault.github.io/EczemaPred/reference/forward_chaining.md)
+  [`get_fc_training_iteration()`](https://ghurault.github.io/EczemaPred/reference/forward_chaining.md)
+  : Forward chaining
+- [`extract_loglikelihood()`](https://ghurault.github.io/EczemaPred/reference/extract_metric.md)
+  [`extract_lpd()`](https://ghurault.github.io/EczemaPred/reference/extract_metric.md)
+  [`extract_RPS()`](https://ghurault.github.io/EczemaPred/reference/extract_metric.md)
+  : Extract lpd (predictive log-likelihood) and RPS from stanfit object
+- [`add_metrics1_d()`](https://ghurault.github.io/EczemaPred/reference/add_metrics.md)
+  [`add_metrics1_c()`](https://ghurault.github.io/EczemaPred/reference/add_metrics.md)
+  [`add_metrics2_d()`](https://ghurault.github.io/EczemaPred/reference/add_metrics.md)
+  [`add_metrics2_c()`](https://ghurault.github.io/EczemaPred/reference/add_metrics.md)
+  : Append lpd and (C)RPS to (test) dataframe
+- [`add_predictions()`](https://ghurault.github.io/EczemaPred/reference/add_predictions.md)
+  : Append lpd, (C)RPS and predictive samples to (test) dataframe
+- [`add_uniform_pred()`](https://ghurault.github.io/EczemaPred/reference/add_uniform_pred.md)
+  : Performance of a uniform forecast
+- [`add_historical_pred()`](https://ghurault.github.io/EczemaPred/reference/add_historical_pred.md)
+  : Performance of (population) historical forecast
+
+## Miscellaneous
+
+- [`get_compiled_model()`](https://ghurault.github.io/EczemaPred/reference/get_compiled_model.md)
+  : Get compiled model
+- [`generate_missing()`](https://ghurault.github.io/EczemaPred/reference/generate_missing.md)
+  : Generate missing values in a times-series
+- [`extract_parameters()`](https://ghurault.github.io/EczemaPred/reference/extract_parameters.md)
+  : Extract parameters posterior summary statistics
+- [`extract_simulations()`](https://ghurault.github.io/EczemaPred/reference/extract_simulations.md)
+  : Extract simulations
+- [`samples_to_list()`](https://ghurault.github.io/EczemaPred/reference/samples_to_list.md)
+  : Process samples to a list that can be included to a dataframe
+- [`add_fanchart()`](https://ghurault.github.io/EczemaPred/reference/add_fanchart.md)
+  : Add fanchart to ggplot
+- [`add_broken_pointline()`](https://ghurault.github.io/EczemaPred/reference/add_broken_pointline.md)
+  : Add broken pointline to ggplot
+- [`EczemaPred-package`](https://ghurault.github.io/EczemaPred/reference/EczemaPred-package.md)
+  [`EczemaPred`](https://ghurault.github.io/EczemaPred/reference/EczemaPred-package.md)
+  : The 'EczemaPred' package.
+
+# Articles
+
+### All vignettes
+
+- [Binomial random walk
+  model](https://ghurault.github.io/EczemaPred/articles/BinRW.md):
+- [Continuous
+  models](https://ghurault.github.io/EczemaPred/articles/ContinuousModels.md):
+- [Extending EczemaPred
+  models](https://ghurault.github.io/EczemaPred/articles/ExtendModels.md):
+- [Markov Chain
+  model](https://ghurault.github.io/EczemaPred/articles/MC.md):
