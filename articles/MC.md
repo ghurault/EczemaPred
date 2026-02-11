@@ -51,7 +51,7 @@ plot_transition_MC(fit_prior1)
 #> ℹ See also `vignette("ggplot2-in-packages")` for more information.
 #> ℹ The deprecated feature was likely used in the EczemaPred package.
 #>   Please report the issue at <https://github.com/ghurault/EczemaPred/issues>.
-#> This warning is displayed once every 8 hours.
+#> This warning is displayed once per session.
 #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 #> generated.
 ```
@@ -284,7 +284,7 @@ HuraultMisc::plot_coverage(do.call(cbind, rstan::extract(fit, pars = true_param[
 #> ℹ Please use `linewidth` instead.
 #> ℹ The deprecated feature was likely used in the HuraultMisc package.
 #>   Please report the issue at <https://github.com/ghurault/HuraultMisc/issues>.
-#> This warning is displayed once every 8 hours.
+#> This warning is displayed once per session.
 #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 #> generated.
 ```

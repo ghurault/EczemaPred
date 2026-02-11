@@ -223,7 +223,7 @@ HuraultMisc::plot_prior_posterior(par0, par, pars = pars$Population)
 #> ℹ See also `vignette("ggplot2-in-packages")` for more information.
 #> ℹ The deprecated feature was likely used in the HuraultMisc package.
 #>   Please report the issue at <https://github.com/ghurault/HuraultMisc/issues>.
-#> This warning is displayed once every 8 hours.
+#> This warning is displayed once per session.
 #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 #> generated.
 ```
@@ -327,8 +327,12 @@ test %>%
   geom_pointrange() +
   facet_wrap(vars(Metric), scales = "free") +
   theme_bw(base_size = 15)
-#> `summarise()` has grouped output by 'Metric'. You can override using the
-#> `.groups` argument.
+#> `summarise()` has regrouped the output.
+#> ℹ Summaries were computed grouped by Metric and Horizon.
+#> ℹ Output is grouped by Metric.
+#> ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+#> ℹ Use `summarise(.by = c(Metric, Horizon))` for per-operation grouping
+#>   (`?dplyr::dplyr_by`) instead.
 ```
 
 ![](BinRW_files/figure-html/plot-perf-1.png)
