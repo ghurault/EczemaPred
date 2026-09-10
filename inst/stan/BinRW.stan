@@ -74,7 +74,7 @@ generated quantities {
   for (i in 1:N_test) {
     lpd[i] = binomial_lpmf(y_test[i] | M, y_lat[idx_test[i]]);
     for (j in 0:M) {
-      cum_err[i, j + 1] = binomial_cdf(j, M, y_lat[idx_test[i]]) - step(j - y_test[i]);
+      cum_err[i, j + 1] = binomial_cdf(j | M, y_lat[idx_test[i]]) - step(j - y_test[i]);
     }
   }
 

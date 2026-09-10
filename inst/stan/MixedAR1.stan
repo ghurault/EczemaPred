@@ -131,7 +131,7 @@ generated quantities {
       } else {
         lpd[i] = discrete_normal_lpmf(yi_test[i] | M, linpred[idx_test[i]], sigma);
         for (j in 0:M) {
-          cum_err[i, j + 1] = discrete_normal_cdf(j , M, linpred[idx_test[i]], sigma) - step(j - yi_test[i]);
+          cum_err[i, j + 1] = discrete_normal_cdf(j | M, linpred[idx_test[i]], sigma) - step(j - yi_test[i]);
         }
       }
     }
