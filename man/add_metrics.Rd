@@ -34,7 +34,7 @@ If \code{NULL}, the empirical pmf is not changed.
 Default to the uniform distribution (i.e. \code{support}) for \code{\link[=add_metrics2_d]{add_metrics2_d()}} and \code{NULL} for \code{\link[=add_metrics2_c]{add_metrics2_c()}}.
 The column "Samples" is not modified when \code{add_samples} is not NULL.}
 
-\item{bw}{Bandwidth, for calculating lpd, see \code{\link[scoringRules:scores_sample_univ]{scoringRules::logs_sample()}}.
+\item{bw}{Bandwidth, for calculating lpd, see \code{\link[scoringRules:logs_sample]{scoringRules::logs_sample()}}.
 Useful to set the "resolution" of the distribution.}
 }
 \value{
@@ -51,5 +51,5 @@ calculated using the \code{scoringRules} package.
 }
 \seealso{
 \code{\link[=extract_lpd]{extract_lpd()}}, \code{\link[=extract_RPS]{extract_RPS()}}, \code{\link[HuraultMisc:compute_RPS]{HuraultMisc::compute_RPS()}},
-\code{\link[scoringRules:scores_sample_univ]{scoringRules::logs_sample()}}, \code{\link[scoringRules:scores_sample_univ]{scoringRules::crps_sample()}}.
+\code{\link[scoringRules:logs_sample]{scoringRules::logs_sample()}}, \code{\link[scoringRules:crps_sample]{scoringRules::crps_sample()}}.
 }

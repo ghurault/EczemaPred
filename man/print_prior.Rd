@@ -20,7 +20,7 @@ print_distribution(parameter_name, distribution_name, arguments, digits = 2)
 
 \item{arguments}{Arguments of the distribution (numeric vector)}
 
-\item{digits}{Number of significant digits to print (cf. \code{\link[base:Round]{base::signif()}})}
+\item{digits}{Number of significant digits to print (cf. \code{\link[base:signif]{base::signif()}})}
 }
 \value{
 None
