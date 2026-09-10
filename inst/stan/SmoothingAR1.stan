@@ -21,31 +21,31 @@ data {
 
   real<lower = 0> M; // Upper bound of observations
 
-  real<lower = 0, upper = M> y_obs[N_obs]; // Observation (should be discrete when discrete = 1 but constraint not enforced)
-  real<lower = 0, upper = M> y_test[N_test]; // True value (rounded for discrete=1)
+  array[N_obs] real<lower = 0, upper = M> y_obs; // Observation (should be discrete when discrete = 1 but constraint not enforced)
+  array[N_test] real<lower = 0, upper = M> y_test; // True value (rounded for discrete=1)
 
   int<lower = 0, upper = 1> discrete; // Switch indicating whether the outcome is discrete or continuous (only relevant for predictions)
 
   // Optional parameters
   int<lower = 0, upper = 1> alpha_known; // Whether smoothing factor is know
-  real<lower = 0, upper = 1> alpha_data[alpha_known];
+  array[alpha_known] real<lower = 0, upper = 1> alpha_data;
   int<lower = 0, upper = 1> intercept_known; // Whether the intercept is known
-  real intercept_data[intercept_known];
+  array[intercept_known] real intercept_data;
   int<lower = 0, upper = 1> slope_known; // Whether the slope is known
-  real<lower = 0, upper = 1> slope_data[slope_known];
+  array[slope_known] real<lower = 0, upper = 1> slope_data;
 
   // Priors
-  real prior_sigma[2]; // Prior for sigma / M
-  real prior_tau[alpha_known ? 0 : 2]; // Prior for smoothing time constant
-  real prior_y_inf[intercept_known ? 0 : 2]; // Prior for AR1 intercept
-  real<lower = 0> prior_slope[slope_known ? 0 : 2]; // Pror for AR1 slope
+  array[2] real prior_sigma; // Prior for sigma / M
+  array[alpha_known ? 0 : 2] real prior_tau; // Prior for smoothing time constant
+  array[intercept_known ? 0 : 2] real prior_y_inf; // Prior for AR1 intercept
+  array[slope_known ? 0 : 2] real<lower = 0> prior_slope; // Pror for AR1 slope
 
 }
 
 transformed data {
   int N_mis; // Number of missing observations
   int M_int = bin_search(M, 0, 1048576);
-  int yi_test[N_test * discrete]; // y_test converted to int
+  array[N_test * discrete] int yi_test; // y_test converted to int
 #include /include/tdata_lgtd.stan // Compute id of start/end/observations of time-series
 
   N_mis = N - N_obs;
@@ -62,11 +62,11 @@ transformed data {
 }
 
 parameters {
-  real<lower = 0, upper = M> y_mis[N_mis]; // Missing values (including test)
+  array[N_mis] real<lower = 0, upper = M> y_mis; // Missing values (including test)
   real<lower = 0> sigma; // Standard deviation
-  real<lower = 0> tau_param[1 - alpha_known];
-  real<lower = 0, upper = 1> slope_param[1 - slope_known];
-  real y_inf_param[1 - intercept_known];
+  array[1 - alpha_known] real<lower = 0> tau_param;
+  array[1 - slope_known] real<lower = 0, upper = 1> slope_param;
+  array[1 - intercept_known] real y_inf_param;
 }
 
 transformed parameters {
@@ -75,8 +75,8 @@ transformed parameters {
   real slope; // Autocorrelation parameter
   real intercept; // Intercept / bias term
   real y_inf; // Autoregression mean
-  real L[N]; // Level, smoothed y
-  real linpred[N]; // Linear predictor
+  array[N] real L; // Level, smoothed y
+  array[N] real linpred; // Linear predictor
 #include /include/tparameters_missing.stan // Concatenate missing and observed values in y
 
   if (alpha_known) {
@@ -137,10 +137,10 @@ model {
 }
 
 generated quantities {
-  real y_rep[N]; // Replications (of the entire time-series, not just observations)
-  real lpd[N_test]; // Log predictive density of predictions
-  real cum_err[N_test * discrete, M_int + 1]; // Cumulative error (useful to compute RPS)
-  real y_pred[N_test]; // Predictive sample of y_test
+  array[N] real y_rep; // Replications (of the entire time-series, not just observations)
+  array[N_test] real lpd; // Log predictive density of predictions
+  array[N_test * discrete, M_int + 1] real cum_err; // Cumulative error (useful to compute RPS)
+  array[N_test] real y_pred; // Predictive sample of y_test
 
   // Replications
   for (k in 1:N_pt) {

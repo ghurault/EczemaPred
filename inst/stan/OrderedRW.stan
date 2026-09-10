@@ -18,27 +18,27 @@ data {
 
   int<lower = 2> M; // Upper bound of observations
 
-  int<lower = 0, upper = M> y_obs[N_obs]; // Observations
-  int<lower = 0, upper = M> y_test[N_test]; // True value
+  array[N_obs] int<lower = 0, upper = M> y_obs; // Observations
+  array[N_test] int<lower = 0, upper = M> y_test; // True value
 
   int<lower = 0, upper = 1> run; // Switch to evaluate the likelihood
   int<lower = 0, upper = 1> measurement_distribution; // 0: ordered logistic; 1: ordered probit
 
   // Optional parameters
   int<lower = 0, upper = 1> delta_known; // Indicating whether delta is provided or a parameter
-  simplex[M - 1] delta_data[delta_known ? 1 : 0]; // delta if delta_known=1
+  array[delta_known ? 1 : 0] simplex[M - 1] delta_data; // delta if delta_known=1
 
   // Priors
   vector<lower = 0>[delta_known ? 0 : (M - 1)] prior_delta;
-  real prior_sigma_meas[2];
-  real prior_sigma_lat[2];
-  real prior_mu_y0[2];
-  real prior_sigma_y0[2];
+  array[2] real prior_sigma_meas;
+  array[2] real prior_sigma_lat;
+  array[2] real prior_mu_y0;
+  array[2] real prior_sigma_y0;
 
 }
 
 transformed data {
-  int yc_obs[N_obs]; // Categorical y_obs
+  array[N_obs] int yc_obs; // Categorical y_obs
 #include /include/tdata_lgtd.stan // Compute id of start/end/observations of time-series
 
   for (i in 1:N_obs) {
@@ -48,10 +48,10 @@ transformed data {
 }
 
 parameters {
-  real eta[N]; // Error term, non-centered parametrisation for random walk
+  array[N] real eta; // Error term, non-centered parametrisation for random walk
   real<lower = 0> sigma_lat; // Standard deviation of random walk
   real<lower = 0> sigma_meas; // Equivalent standard deviation (not scale) of logistic distribution
-  simplex[M - 1] delta_param[delta_known ? 0 : 1]; // Relative difference between cutpoints
+  array[delta_known ? 0 : 1] simplex[M - 1] delta_param; // Relative difference between cutpoints
   real mu_y0; // Intercept / Population mean of y_lat at t0 (offset)
   real<lower = 0> sigma_y0; // Population standard deviation of y_lat at t0
 }
@@ -63,7 +63,7 @@ transformed parameters {
   vector[M] z_ct; // Cutpoints in affinity space
   vector[N] y_lat; // Latent score in ~ [0, M] space
   vector[N] z_lat; // Latent score in affinity space
-  real y0[N_pt]; // Initial latent score
+  array[N_pt] real y0; // Initial latent score
 
   if (delta_known == 0) {
     delta = delta_param[1];
@@ -114,11 +114,11 @@ model {
 generated quantities {
   real sigma_tot = sqrt(sigma_meas^2 + sigma_lat^2);
   real rho2 = square(sigma_meas / sigma_tot);
-  real y_rep[N]; // Replications (of the entire time-series, not just observations)
-  real log_lik[N_obs]; // Log Likelihood
-  real lpd[N_test]; // Log predictive density of predictions
-  real cum_err[N_test, M + 1]; // Cumulative error (useful to compute RPS)
-  real y_pred[N_test]; // Predictive sample of y_test
+  array[N] real y_rep; // Replications (of the entire time-series, not just observations)
+  array[N_obs] real log_lik; // Log Likelihood
+  array[N_test] real lpd; // Log predictive density of predictions
+  array[N_test, M + 1] real cum_err; // Cumulative error (useful to compute RPS)
+  array[N_test] real y_pred; // Predictive sample of y_test
 
   for (i in 1:N) {
     if (measurement_distribution == 0) {

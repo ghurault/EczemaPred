@@ -4,22 +4,22 @@ data {
   int<lower = 1> K; // Number of categories
 
   int<lower = 0> N; // Number of observations
-  int<lower = 1, upper = K> y0[N]; // Initial states
-  int<lower = 1, upper = K>  y1[N]; // End states
-  int<lower = 1> dt[N]; // Transition delay
-  real<lower = 0> prior_p[K, K]; // Dirichlet prior (row i correspond to transition from state i)
+  array[N] int<lower = 1, upper = K> y0; // Initial states
+  array[N] int<lower = 1, upper = K>  y1; // End states
+  array[N] int<lower = 1> dt; // Transition delay
+  array[K, K] real<lower = 0> prior_p; // Dirichlet prior (row i correspond to transition from state i)
 
   int<lower = 0, upper = 1> run; // Switch to evaluate the likelihood
 
   int<lower = 0> N_test; // Number of predictions to evaluate
-  int<lower = 1, upper = K> y0_test[N_test]; // Initial states of predictions
-  int<lower = 1, upper = K>  y1_test[N_test]; // End states of predictions
-  int<lower = 1> dt_test[N_test]; // Transition delay of predictions
+  array[N_test] int<lower = 1, upper = K> y0_test; // Initial states of predictions
+  array[N_test] int<lower = 1, upper = K>  y1_test; // End states of predictions
+  array[N_test] int<lower = 1> dt_test; // Transition delay of predictions
 }
 
 transformed data {
   int M = max(append_array(dt, append_array({1}, dt_test))); // Maximum exponent to compute
-  int y[K, M, K] = rep_array(0, K, M, K); // Array (initial state * transition delay * Final state) of observation counts
+  array[K, M, K] int y = rep_array(0, K, M, K); // Array (initial state * transition delay * Final state) of observation counts
 
   for (i in 1:N) {
     y[y0[i], dt[i], y1[i]] += 1;
@@ -28,11 +28,11 @@ transformed data {
 }
 
 parameters {
-  simplex[K] p[K]; // Array of K-simplex (each simplex give the transition probabilities from the initial states)
+  array[K] simplex[K] p; // Array of K-simplex (each simplex give the transition probabilities from the initial states)
 }
 
 transformed parameters {
-  matrix[K, K] P[M]; // Array (for each exponent) of transition matrices
+  array[M] matrix[K, K] P; // Array (for each exponent) of transition matrices
 
   if (M > 0) {
     // Fill transition matrix
@@ -67,10 +67,10 @@ model {
 }
 
 generated quantities {
-  real y_rep[N]; // Replications of y1 (observations)
-  real y_pred[N_test]; // Predictive sample of y_test
-  real lpd[N_test]; // Log predictive density of predictions
-  real cum_err[N_test, K]; // Cumulative error (useful to compute RPS)
+  array[N] real y_rep; // Replications of y1 (observations)
+  array[N_test] real y_pred; // Predictive sample of y_test
+  array[N_test] real lpd; // Log predictive density of predictions
+  array[N_test, K] real cum_err; // Cumulative error (useful to compute RPS)
 
   for (i in 1:N) {
     y_rep[i] = categorical_rng(to_vector(P[dt[i]][y0[i]]));

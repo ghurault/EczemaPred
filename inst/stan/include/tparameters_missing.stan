@@ -1,6 +1,6 @@
 // Missing values processing in the transformed parameters (for models without measurement error)
 
-real y[N] = rep_array(-1.0, N);
+array[N] real y = rep_array(-1.0, N);
 
 y[idx_obs] = y_obs;
 {

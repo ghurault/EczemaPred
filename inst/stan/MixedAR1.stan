@@ -18,21 +18,21 @@ data {
 
   int<lower = 0, upper = 1> discrete; // Switch indicating whether the outcome is discrete or continuous (only relevant for predictions)
 
-  real<lower = 0, upper = M> y_obs[N_obs]; // Observation (should be discrete when discrete = 1 but constraint not enforced)
-  real<lower = 0, upper = M> y_test[N_test]; // True value (rounded for discrete=1)
+  array[N_obs] real<lower = 0, upper = M> y_obs; // Observation (should be discrete when discrete = 1 but constraint not enforced)
+  array[N_test] real<lower = 0, upper = M> y_test; // True value (rounded for discrete=1)
 
   // Priors
-  real prior_sigma[2];
-  real prior_mu_logit_slope[2];
-  real prior_sigma_logit_slope[2];
-  real prior_mu_inf[2];
-  real prior_sigma_inf[2];
+  array[2] real prior_sigma;
+  array[2] real prior_mu_logit_slope;
+  array[2] real prior_sigma_logit_slope;
+  array[2] real prior_mu_inf;
+  array[2] real prior_sigma_inf;
 
 }
 
 transformed data {
   int N_mis; // Number of missing observations
-  int yi_test[N_test * discrete]; // y_test converted to int
+  array[N_test * discrete] int yi_test; // y_test converted to int
 #include /include/tdata_lgtd.stan // Compute id of start/end/observations of time-series
 
   N_mis = N - N_obs;
@@ -46,25 +46,25 @@ transformed data {
 }
 
 parameters {
-  real<lower = 0, upper = M> y_mis[N_mis]; // Missing values (including test)
+  array[N_mis] real<lower = 0, upper = M> y_mis; // Missing values (including test)
   real<lower = 0> sigma; // Standard deviation
 
   // Population autocorrelation parameters
   real mu_logit_slope; // Logit mean
   real<lower = 0> sigma_logit_slope; // Logit std
-  real eta_slope[N_pt]; // Error term
+  array[N_pt] real eta_slope; // Error term
 
   // Population autoregression mean
   real mu_inf; // Population mean
   real<lower = 0> sigma_inf; // Population std
-  real eta_inf[N_pt]; // Error term
+  array[N_pt] real eta_inf; // Error term
 }
 
 transformed parameters {
-  real slope[N_pt];
-  real y_inf[N_pt];
-  real intercept[N_pt];
-  real linpred[N]; // Linear predictor
+  array[N_pt] real slope;
+  array[N_pt] real y_inf;
+  array[N_pt] real intercept;
+  array[N] real linpred; // Linear predictor
 #include /include/tparameters_missing.stan // Concatenate missing and observed values in y
 
   for (k in 1:N_pt) {
@@ -98,10 +98,10 @@ model {
 }
 
 generated quantities {
-  real y_rep[N]; // Replications (of the entire time-series, not just observations)
-  real lpd[N_test]; // Log predictive density of predictions
-  real cum_err[N_test * discrete, M + 1]; // Cumulative error (useful to compute RPS)
-  real y_pred[N_test]; // Predictive sample of y_test
+  array[N] real y_rep; // Replications (of the entire time-series, not just observations)
+  array[N_test] real lpd; // Log predictive density of predictions
+  array[N_test * discrete, M + 1] real cum_err; // Cumulative error (useful to compute RPS)
+  array[N_test] real y_pred; // Predictive sample of y_test
 
   for (k in 1:N_pt) {
     y_rep[id_ts[k, 1]] = y[id_ts[k, 1]];
