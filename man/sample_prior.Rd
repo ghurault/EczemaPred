@@ -19,7 +19,7 @@ sample_prior(model, ...)
 \arguments{
 \item{model}{Object}
 
-\item{...}{Arguments to pass to \code{\link[rstan:stanmodel-method-sampling]{rstan::sampling()}}}
+\item{...}{Arguments to pass to \code{\link[rstan:sampling]{rstan::sampling()}}}
 
 \item{N_patient}{Number of patients to simulate}
 

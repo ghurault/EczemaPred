@@ -8,12 +8,12 @@ vector make_ct(vector delta) {
   return(ct);
 }
 
-real[] compute_cumulative_error(int y, real[] pmf) {
+array[] real compute_cumulative_error(int y, array[] real pmf) {
   // Return cumulative error distribution for the distribution pmf and observation y
   // Observations are assumed to be between 1 and M and pmf is an array of length M such as pmf[i] = prob(y = i)
 
   int M = size(pmf);
-  real cum_err[M];
+  array[M] real cum_err;
 
   if (y < 1 && y > M) {
     reject("y is not in 1:M");

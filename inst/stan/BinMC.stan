@@ -10,10 +10,10 @@ functions {
 data {
 #include /include/data_lgtd_discrete.stan
 
-  real prior_sigma[2];
-  real prior_mu_logit_p10[2];
-  real prior_sigma_logit_p10[2];
-  real prior_logit_tss1_0[2];
+  array[2] real prior_sigma;
+  array[2] real prior_mu_logit_p10;
+  array[2] real prior_sigma_logit_p10;
+  array[2] real prior_logit_tss1_0;
 
   int<lower = 0, upper = 1> run; // Switch to evaluate the likelihood
 
@@ -24,19 +24,19 @@ transformed data {
 }
 
 parameters {
-  real eta[N]; // Error term for ss1, non-centered parametrisation
+  array[N] real eta; // Error term for ss1, non-centered parametrisation
   real<lower = 0> sigma; // Standard deviation for evolution of ss1
 
-  real eta_logit_p10[N_pt]; // Error term for p10, non-centered parametrisation
+  array[N_pt] real eta_logit_p10; // Error term for p10, non-centered parametrisation
   real mu_logit_p10; // Mean of logit normal population prior for p10
   real<lower = 0> sigma_logit_p10; // Sigma of logit normal population prior for p10
 }
 
 transformed parameters {
-  real logit_p10[N_pt];
-  real p10[N_pt];
-  real p11[N_pt];
-  real logit_tss1_0[N_pt]; // Initial condition of logit_tss1
+  array[N_pt] real logit_p10;
+  array[N_pt] real p10;
+  array[N_pt] real p11;
+  array[N_pt] real logit_tss1_0; // Initial condition of logit_tss1
   vector[N] logit_tss1; // logit(ss1 * (1 + p10))
   vector[N] ss1; // Steady state probability of having a lesion
   vector[N] p01;
@@ -81,10 +81,10 @@ model {
 }
 
 generated quantities {
-  real y_rep[N]; // Replications (of the entire time-series, not just observations)
-  real lpd[N_test]; // Log predictive density of predictions
-  real cum_err[N_test, M + 1]; // Cumulative error (useful to compute RPS)
-  real y_pred[N_test]; // Predictive sample of y_test
+  array[N] real y_rep; // Replications (of the entire time-series, not just observations)
+  array[N_test] real lpd; // Log predictive density of predictions
+  array[N_test, M + 1] real cum_err; // Cumulative error (useful to compute RPS)
+  array[N_test] real y_pred; // Predictive sample of y_test
 
   for (i in 1:N) {
     y_rep[i] = binomial_rng(M, y_lat[i]);
@@ -94,7 +94,7 @@ generated quantities {
   for (i in 1:N_test) {
     lpd[i] = binomial_lpmf(y_test[i] | M, y_lat[idx_test[i]]);
     for (j in 0:M) {
-      cum_err[i, j + 1] = binomial_cdf(j, M, y_lat[idx_test[i]]) - step(j - y_test[i]);
+      cum_err[i, j + 1] = binomial_cdf(j | M, y_lat[idx_test[i]]) - step(j - y_test[i]);
     }
   }
 

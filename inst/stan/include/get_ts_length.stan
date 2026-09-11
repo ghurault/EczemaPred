@@ -1,10 +1,10 @@
-int[] get_ts_length(int[] k, int[] t) {
+array[] int get_ts_length(array[] int k, array[] int t) {
   // From vector of patient ID (k) and timepoints (t)
   // ... get the length of the time-series for each patient
 
   int N = size(k);
   int N_pt = max(k);
-  int t_max[N_pt] = rep_array(0, N_pt);
+  array[N_pt] int t_max = rep_array(0, N_pt);
   if (size(t) != N) {
     reject("k and t should have the same length");
   }

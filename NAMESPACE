@@ -96,10 +96,12 @@ import(ggplot2)
 import(methods)
 import(tidyr)
 importClassesFrom(markovchain,markovchain)
-importFrom(HuraultMisc,is_scalar)
-importFrom(HuraultMisc,is_scalar_wholenumber)
-importFrom(HuraultMisc,is_stanfit)
-importFrom(HuraultMisc,is_wholenumber)
+importFrom(HuraultMisc,
+  is_scalar,
+  is_scalar_wholenumber,
+  is_stanfit,
+  is_wholenumber
+)
 importFrom(magrittr,"%>%")
 importFrom(rstan,sampling)
 useDynLib(EczemaPred, .registration = TRUE)

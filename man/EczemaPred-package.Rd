@@ -23,4 +23,9 @@ Useful links:
 \author{
 \strong{Maintainer}: Guillem Hurault \email{ghurault.dev@outlook.com} (\href{https://orcid.org/0000-0002-1052-3564}{ORCID})
 
+Authors:
+\itemize{
+  \item Guillem Hurault \email{ghurault.dev@outlook.com} (\href{https://orcid.org/0000-0002-1052-3564}{ORCID})
+}
+
 }

@@ -16,7 +16,7 @@ EczemaFit(model, train, test, ...)
 
 \item{test}{Testing dataframe (see details below)}
 
-\item{...}{Arguments to pass to \code{\link[rstan:stanmodel-method-sampling]{rstan::sampling()}}}
+\item{...}{Arguments to pass to \code{\link[rstan:sampling]{rstan::sampling()}}}
 }
 \value{
 Stanfit object
