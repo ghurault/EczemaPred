@@ -1,4 +1,5 @@
-FROM rocker/tidyverse:latest
+ARG R_VERSION=4.4.1
+FROM rocker/tidyverse:${R_VERSION}
 
 # System libraries needed to compile the package's Stan/Rcpp code (rstan,
 # RcppParallel, StanHeaders) and its R dependencies (e.g. markovchain -> igraph).
