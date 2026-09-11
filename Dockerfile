@@ -30,7 +30,8 @@ WORKDIR /tmp/deps
 # `remotes::install_deps()` always installs the latest version available on
 # CRAN, so versions here are not pinned.
 COPY DESCRIPTION .
-RUN Rscript -e "remotes::install_github('ghurault/HuraultMisc')" && \
+RUN Rscript -e "install.packages('remotes')" && \
+    Rscript -e "remotes::install_github('ghurault/HuraultMisc')" && \
     Rscript -e "remotes::install_deps(dependencies = TRUE)"
 
 WORKDIR /home/rstudio/EczemaPred
