@@ -5,7 +5,7 @@ IMAGE_NAME := eczemapred-dev
 docker-build:
 	docker build -t $(IMAGE_NAME) .
 
-docker-run:
+docker-run: docker-build
 	docker run --rm -it \
 		-p 8787:8787 \
 		-e DISABLE_AUTH=true \
