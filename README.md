@@ -53,6 +53,11 @@ The Stan documentation is available [here](https://mc-stan.org/users/documentati
 
 NB: While the purpose of the package is to abstract the implementation to the user, the R code and Stan code can be accessed in the [R/](R/) and [inst/stan](inst/stan) directories, respectively.
 
+### Development environment
+
+A [Dockerfile](Dockerfile) is provided to develop the package in a container with RStan, the C++ toolchain, and all package dependencies pre-installed, avoiding the need to set these up locally.
+Run `make docker-run` to build the image and start an RStudio Server instance with the repository mounted, then open it at `http://localhost:8787`, and finally open the folder as a project.
+
 ## License
 
 The open source version of EczemaPred is licensed under the GPL v3 license, which can be seen in the [LICENSE](LICENSE.md) file.
