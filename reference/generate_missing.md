@@ -47,7 +47,7 @@ Logical vector of length N
 
 ``` r
 generate_missing(10)
-#>  [1] FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE
+#>  [1] FALSE FALSE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE
 generate_missing(10, type = "markovchain")
 #>  [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE
 ```

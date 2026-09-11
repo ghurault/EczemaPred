@@ -22,3 +22,8 @@ Useful links:
 
 **Maintainer**: Guillem Hurault <ghurault.dev@outlook.com>
 ([ORCID](https://orcid.org/0000-0002-1052-3564))
+
+Authors:
+
+- Guillem Hurault <ghurault.dev@outlook.com>
+  ([ORCID](https://orcid.org/0000-0002-1052-3564))

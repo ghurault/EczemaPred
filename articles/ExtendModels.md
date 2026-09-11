@@ -21,6 +21,7 @@ This vignette describes how we use the package to modify the
 pre-processing when a model has been extended.
 
 ``` r
+
 library(EczemaPred)
 library(dplyr)
 ```
@@ -86,6 +87,7 @@ inherits from the class `BinRW`. We also write `BinRW2` methods for
 methods for the parent class `BinRW`.
 
 ``` r
+
 BinRW2 <- function(max_score, prior = NULL) {
   
   model <- EczemaModel("BinRW", max_score = max_score)
@@ -126,6 +128,7 @@ print_prior.BinRW2 <- function(model, digits = 2) {
 Similarly we can write the method for `list_parameters`:
 
 ``` r
+
 list_parameters.BinRW2 <- function(model) {
   pars <- NextMethod()
   pars$Population <- c(pars$Population, "beta_sex")
@@ -138,6 +141,7 @@ only need to provide the `sex` data in addition to the data required for
 “BinRW”.
 
 ``` r
+
 prepare_standata.BinRW2 <- function(model, train, test = NULL, sex) {
   out <- NextMethod()
   stopifnot(out$N_pt == length(sex),
@@ -154,6 +158,7 @@ the prior predictive distribution of the model or fit to data like the
 EczemaPred models.
 
 ``` r
+
 max_score <- 100
 
 (model <- BinRW2(max_score = max_score))
@@ -188,6 +193,7 @@ empty dataset to pass to `prepare_standata` and then call
 could be put into a function `sample_prior.BinRW2`).
 
 ``` r
+
 N_patient <- 10
 t_max <- rpois(N_patient, 20)
 sex <- rbinom(N_patient, 1, 0.5)
@@ -211,6 +217,7 @@ and then [`rstan::stan`](https://mc-stan.org/rstan/reference/stan.html)
 (this equivalent to the `EczemaFit` function).
 
 ``` r
+
 if (FALSE) {
   train <- get_index2(t_max) %>%
     mutate(Score = rstan::extract(fit_prior, pars = "y_rep")[[1]][10, ]) # fake data for the example

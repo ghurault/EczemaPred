@@ -40,7 +40,7 @@ make_empty_data(max_score = 10, discrete = TRUE)
 #> # A tibble: 1 × 3
 #>   Patient  Time Score
 #>     <int> <dbl> <dbl>
-#> 1       1     1     8
+#> 1       1     1    10
 #> 
 #> $Testing
 #> # A tibble: 1 × 3

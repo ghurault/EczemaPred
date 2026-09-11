@@ -11,6 +11,7 @@ the ordered logistic random walk model (OrderedRW), which have a similar
 architecture.
 
 ``` r
+
 library(EczemaPred)
 library(HuraultMisc)
 library(dplyr)
@@ -28,7 +29,7 @@ library(cowplot)
 library(rstan)
 #> Loading required package: StanHeaders
 #> 
-#> rstan version 2.32.7 (Stan version 2.32.2)
+#> rstan version 2.32.7 (Stan version 2.39.0)
 #> For execution on a local, multicore CPU with excess RAM we recommend calling
 #> options(mc.cores = parallel::detectCores()).
 #> To avoid recompilation of unchanged Stan programs, we recommend calling
@@ -56,6 +57,7 @@ pars_of_interest <- pars[c("Population", "Patient")]
 ```
 
 ``` r
+
 model
 #> BinRW model (discrete)
 #> max_score = 100 
@@ -71,6 +73,7 @@ First, we sample from the prior predictive distribution to inspect the
 prior and generate fake data.
 
 ``` r
+
 fit0 <- sample_prior(model,
                      N_patient = N_patient,
                      t_max = t_max,
@@ -79,6 +82,7 @@ fit0 <- sample_prior(model,
 ```
 
 ``` r
+
 check_hmc_diagnostics(fit0)
 #> 
 #> Divergences:
@@ -102,6 +106,7 @@ We generate fake data by choosing a draw from one the prior predictive
 distribution.
 
 ``` r
+
 p_mis <- .1
 p_obs_obs <- .9
 horizon <- 5
@@ -123,6 +128,7 @@ representative to what we observe in real life. Here, we generate
 missingness using a two-state Markov Chain.
 
 ``` r
+
 fd <- lapply(1:N_patient,
              function(i) {
                sub_fd <- filter(fd, Patient == i)
@@ -137,6 +143,7 @@ fd <- lapply(1:N_patient,
 We inspect the time-series of a few patients.
 
 ``` r
+
 lapply(sort(sample(1:N_patient, min(N_patient, 4))),
        function(pid) {
          fd %>%
@@ -160,6 +167,7 @@ extracted from the prior predictive distribution to see if we can
 recover the true parameters.
 
 ``` r
+
 train <- fd %>%
   group_by(Patient) %>%
   filter(Time <= max(Time) - horizon) %>%
@@ -186,6 +194,7 @@ We look for evidence of an absence of convergences by inspecting
 divergences and trace plots.
 
 ``` r
+
 check_hmc_diagnostics(fit)
 #> 
 #> Divergences:
@@ -205,6 +214,7 @@ pairs(fit, pars = pars$Population)
 ![](BinRW_files/figure-html/check-fit-1.png)
 
 ``` r
+
 plot(fit, pars = pars$Population, plotfun = "trace")
 ```
 
@@ -215,6 +225,7 @@ plot(fit, pars = pars$Population, plotfun = "trace")
 We visualise posterior estimates and compare them to their prior.
 
 ``` r
+
 par0 <- extract_parameters(fit0, pars = pars_of_interest)
 par <- extract_parameters(fit, pars = pars_of_interest)
 HuraultMisc::plot_prior_posterior(par0, par, pars = pars$Population)
@@ -234,14 +245,15 @@ We can also quantify the influence of the prior on the posterior
 estimates by computing the posterior shrinkage and Mahalanobis distance
 between the mean posterior and the prior. The posterior shrinkage
 roughly quantifies how much the model is learning, and is defined for a
-parameter $\theta$ as
-$1 - \frac{\operatorname{Var}\left( \theta_{\text{post}} \right)}{\operatorname{Var}(\theta_{\text{prior}}}$.
+parameter $`\theta`$ as
+$`1 - \frac{\operatorname{Var}(\theta_\text{post})}{\operatorname{Var}(\theta_\text{prior}}`$.
 The distance between the prior and posterior can be used to assess
 whether the prior is informative or not, where a distance greater than 2
 or 3 could be interpreted as a posterior that is not “included” in the
 prior.
 
 ``` r
+
 HuraultMisc::plot_prior_influence(par0, par, pars = unlist(pars_of_interest))
 ```
 
@@ -253,6 +265,7 @@ We compare the posterior estimates to the true parameters to see if the
 algorithm worked as expected.
 
 ``` r
+
 par %>%
     left_join(true_param, by = c("Variable" = "Parameter", "Index")) %>%
     rename(True = Value) %>%
@@ -277,6 +290,7 @@ true value. For instance, we would expect that approximately 50% of the
 parameters have their 50% credible interval including the true value.
 
 ``` r
+
 HuraultMisc::plot_coverage(do.call(cbind, rstan::extract(fit, pars = true_param[["Parameter"]])),
                            true_param[["Value"]])
 ```
@@ -289,6 +303,7 @@ We inspect the posterior predictive trajectory to detect any
 discrepancies between the data and model’s simulations.
 
 ``` r
+
 ms <- min(1, 20 / (params$max_score + 1))
 pl <- lapply(sort(sample(1:N_patient, 4)),
        function(pid) {
@@ -315,6 +330,7 @@ would expect a lower performance (decreased lpd, increased RPS) with
 increasing prediction horizon.
 
 ``` r
+
 test <- test %>%
   mutate(lpd = extract_lpd(fit),
          RPS = extract_RPS(fit))

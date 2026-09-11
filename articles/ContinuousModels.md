@@ -16,6 +16,7 @@ predictive distribution and fit the fake data to recover the parameters
 of the model.
 
 ``` r
+
 library(EczemaPred)
 # library(HuraultMisc)
 library(dplyr)
@@ -42,6 +43,7 @@ also add missing values to make the data more representative to what is
 observed in real life.
 
 ``` r
+
 N_patient <- 20
 t_max <- rpois(N_patient, 50)
 y0 <- rbeta(N_patient, 5, 5)
@@ -73,6 +75,7 @@ df <- lapply(1:N_patient,
 We can inspect the time-series of a handful of patients.
 
 ``` r
+
 smp_pt <- sort(sample(1:N_patient, 4))
 lapply(smp_pt,
        function(pid) {
@@ -95,6 +98,7 @@ testing set would correspond to the last observations of each
 time-series.
 
 ``` r
+
 horizon <- 10
 
 df <- df %>%
@@ -117,6 +121,7 @@ We fit the different models to the data, and inspect whether there were
 any divergences during sampling.
 
 ``` r
+
 res <- lapply(mdl_names,
               function(mdl) {
                 
@@ -161,6 +166,7 @@ scale, we add the performance of a uniform forecast and a historical
 forecast to the plot.
 
 ``` r
+
 perf <- bind_rows(perf,
                   add_uniform_pred(test, max_score, discrete = FALSE) %>%
                     mutate(Model = "uniform"),
@@ -184,6 +190,7 @@ ggplot(data = mean_perf,
 
 ``` r
 
+
 best_model <- mean_perf %>%
   filter(Mean == max(Mean)) %>%
   pull(Model)
@@ -194,6 +201,7 @@ the posterior predictive trajectory of this model for a few patients to
 inspect how well it fits the data.
 
 ``` r
+
 fit_best <- res[[which(mdl_names == best_model)]]$Fit
 
 pl <- lapply(smp_pt,

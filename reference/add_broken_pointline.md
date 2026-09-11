@@ -70,7 +70,7 @@ ggplot() +
 #> ℹ Please use `linewidth` instead.
 #> ℹ The deprecated feature was likely used in the EczemaPred package.
 #>   Please report the issue at <https://github.com/ghurault/EczemaPred/issues>.
-#> Warning: Removed 20 rows containing missing values or values outside the scale range
+#> Warning: Removed 19 rows containing missing values or values outside the scale range
 #> (`geom_point()`).
 
 
@@ -80,9 +80,9 @@ ggplot() +
   add_broken_pointline(df2, colour = as.name("Group")) +
   scale_colour_discrete(na.translate = FALSE) +
   theme_bw(base_size = 15)
-#> Warning: Removed 20 rows containing missing values or values outside the scale range
+#> Warning: Removed 19 rows containing missing values or values outside the scale range
 #> (`geom_path()`).
-#> Warning: Removed 20 rows containing missing values or values outside the scale range
+#> Warning: Removed 19 rows containing missing values or values outside the scale range
 #> (`geom_point()`).
 
 ```
