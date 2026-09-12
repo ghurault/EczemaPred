@@ -1,9 +1,11 @@
 # EczemaPred
 
 <!-- badges: start -->
+
 [![R-CMD-check](https://github.com/ghurault/EczemaPred/workflows/R-CMD-check/badge.svg)](https://github.com/ghurault/EczemaPred/actions)
 [![Codecov test coverage](https://codecov.io/gh/ghurault/EczemaPred/branch/main/graph/badge.svg)](https://codecov.io/gh/ghurault/EczemaPred?branch=main)
 [![pkgdown](https://github.com/ghurault/EczemaPred/workflows/pkgdown/badge.svg)](https://github.com/ghurault/EczemaPred/actions)
+
 <!-- badges: end -->
 
 EczemaPred is a R package implementing models to serve as building blocks for predicting the evolution of eczema severity, and provides a set of generic functions to manipulate these models.
@@ -17,12 +19,14 @@ The analysis code of this research article is available [here](https://github.co
 The package requires RStan and C++ toolchain, which can be installed by following these [instructions](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started).
 
 Then, the package can be installed by typing the following commands in R:
-```
+
+```r
 devtools::install_github("ghurault/EczemaPred")
 ```
 
 Or to install a specific version, for example the initial release (v0.1.0):
-```
+
+```r
 devtools::install_github("ghurault/EczemaPred@v0.1.0")
 ```
 
@@ -34,7 +38,8 @@ NB: EczemaPred requires [HuraultMisc](https://github.com/ghurault/HuraultMisc), 
 ## Usage
 
 The package is loaded with:
-```
+
+```r
 library(EczemaPred)
 ```
 
@@ -47,6 +52,11 @@ Basic knowledge of Bayesian modelling with Stan and the package [rstan](https://
 The Stan documentation is available [here](https://mc-stan.org/users/documentation/).
 
 NB: While the purpose of the package is to abstract the implementation to the user, the R code and Stan code can be accessed in the [R/](R/) and [inst/stan](inst/stan) directories, respectively.
+
+### Development environment
+
+A [Dockerfile](Dockerfile) is provided to develop the package in a container with RStan, the C++ toolchain, and all package dependencies pre-installed, avoiding the need to set these up locally.
+Run `make docker-run` to build the image and start an RStudio Server instance with the repository mounted, then open it at `http://localhost:8787`, and finally open the folder as a project.
 
 ## License
 
