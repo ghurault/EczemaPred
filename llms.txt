@@ -22,12 +22,18 @@ following these
 Then, the package can be installed by typing the following commands in
 R:
 
-    devtools::install_github("ghurault/EczemaPred")
+``` r
+
+devtools::install_github("ghurault/EczemaPred")
+```
 
 Or to install a specific version, for example the initial release
 (v0.1.0):
 
-    devtools::install_github("ghurault/EczemaPred@v0.1.0")
+``` r
+
+devtools::install_github("ghurault/EczemaPred@v0.1.0")
+```
 
 The package can take a few minutes to install as the models needs to be
 compiled (but no compilation will be required when using the package).
@@ -42,7 +48,10 @@ function library, to work.
 
 The package is loaded with:
 
-    library(EczemaPred)
+``` r
+
+library(EczemaPred)
+```
 
 If you are working on a local, multicore CPU with excess RAM, you may
 want to call `options(mc.cores = parallel::detectCores())` to run Stan
@@ -65,6 +74,15 @@ to the user, the R code and Stan code can be accessed in the
 [R/](https://ghurault.github.io/EczemaPred/R/) and
 [inst/stan](https://ghurault.github.io/EczemaPred/inst/stan)
 directories, respectively.
+
+### Development environment
+
+A [Dockerfile](https://ghurault.github.io/EczemaPred/Dockerfile) is
+provided to develop the package in a container with RStan, the C++
+toolchain, and all package dependencies pre-installed, avoiding the need
+to set these up locally. Run `make docker-run` to build the image and
+start an RStudio Server instance with the repository mounted, then open
+it at `http://localhost:8787`, and finally open the folder as a project.
 
 ## License
 
